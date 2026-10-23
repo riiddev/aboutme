@@ -1388,6 +1388,8 @@ img { display: block; max-width: 100%; height: auto; }
   cursor: grab;
 }
 .hc__btn:active { cursor: grabbing; }
+.bubble { left: 50%; translate: -50% 0; }
+.bubble::after { left: 50%; margin-left: -4px; }
 .hc[data-dragging="true"] .hc__btn { z-index: 12; cursor: grabbing; filter: drop-shadow(4px 5px 0 #17172e88); }
 .hc[data-walking="true"] .hc__btn { cursor: default; pointer-events: none; }
 .hc[data-angry="true"] .hc__btn { filter: drop-shadow(3px 0 0 #ff7f8766); }

@@ -87,6 +87,7 @@ function Hud() {
 // The character can be picked up, gets offended, then walks back to his spawn point.
 function HeroCharacter({ music }) {
   const button = useRef(null);
+  const bubble = useRef(null);
   const eyes = useRef(null);
   const drag = useRef(null);
   const position = useRef({ x: 0, y: 0 });
@@ -169,7 +170,8 @@ function HeroCharacter({ music }) {
     setFacing(x > 4 ? 'left' : x < -4 ? 'right' : 'home');
 
     if (reduced) {
-      gsap.set(button.current, { x: 0, y: 0, rotation: 0 });
+      gsap.set([button.current, bubble.current].filter(Boolean), { x: 0, y: 0 });
+      gsap.set(button.current, { rotation: 0 });
       position.current = { x: 0, y: 0 };
       setWalking(false);
       setFacing('home');
@@ -194,11 +196,12 @@ function HeroCharacter({ music }) {
       .to(button.current, { rotation: x >= 0 ? -3 : 3, duration: 0.065, ease: 'steps(2)' })
       .to(button.current, { rotation: 0, duration: 0.055, ease: 'steps(2)' })
       .add(() => setWalking(true), '+=0.12')
-      .to(button.current, {
-        x: 0, y: 0, rotation: 0,
+      .to([button.current, bubble.current].filter(Boolean), {
+        x: 0, y: 0,
         duration: Math.min(1.45, Math.max(0.42, distance / 285)),
         ease: 'steps(9)',
-      }, '+=0.06');
+      }, '+=0.06')
+      .to(button.current, { rotation: 0, duration: 0.01 }, '<');
   };
 
   const handlePointerDown = (event) => {
@@ -207,6 +210,7 @@ function HeroCharacter({ music }) {
     returnTimeline.current?.kill();
     returnTimeline.current = null;
     gsap.killTweensOf(button.current);
+    gsap.killTweensOf(bubble.current);
     const x = Number(gsap.getProperty(button.current, 'x')) || position.current.x || 0;
     const y = Number(gsap.getProperty(button.current, 'y')) || position.current.y || 0;
     const rect = button.current.getBoundingClientRect();
@@ -249,6 +253,7 @@ function HeroCharacter({ music }) {
     position.current = { x, y };
     setFacing(dx < -2 ? 'left' : dx > 2 ? 'right' : facing);
     gsap.set(button.current, { x, y, rotation: gsap.utils.clamp(-7, 7, dx * 0.055) });
+    if (bubble.current) gsap.set(bubble.current, { x, y });
   };
 
   const handlePointerUp = (event) => {
@@ -278,7 +283,7 @@ function HeroCharacter({ music }) {
     const rect = button.current.getBoundingClientRect();
     const next = pointInScene(currentX + delta[0], currentY + delta[1]);
     setFacing(delta[0] < 0 ? 'left' : delta[0] > 0 ? 'right' : 'home');
-    gsap.to(button.current, {
+    gsap.to([button.current, bubble.current].filter(Boolean), {
       x: next.x, y: next.y,
       duration: reduced ? 0 : 0.18,
       ease: 'steps(4)',
@@ -308,7 +313,7 @@ function HeroCharacter({ music }) {
 
   return (
     <div className="hc" data-music={music} data-mood={mood} data-angry={angry} data-walking={walking} data-dragging={dragging} data-facing={facing}>
-      <p className="bubble px" role="status" aria-live="polite">{line}</p>
+      <p ref={bubble} className="bubble px" role="status" aria-live="polite">{line}</p>
       {music && [0, 1, 2].map((index) => (
         <Note
           key={index}
