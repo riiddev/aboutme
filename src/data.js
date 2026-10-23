@@ -11,20 +11,20 @@ export const NAV = [
 ];
 
 export const PALETTE = {
-  K: '#14141c',
-  S: '#e4917a',
-  s: '#c46f5c',
-  Y: '#1b1218',
-  E: '#1b1218',
-  M: '#9b4638',
-  W: '#f2f5fa',
-  G: '#9aa6bd',
-  N: '#2c2f63',
-  n: '#1c1e46',
-  B: '#e6d0a6',
-  b: '#c4a97b',
-  X: '#15151c',
-  H: '#ffffff',
+  K: '#152338', // hair / deep outline
+  S: '#e4c5bd', // warm skin highlight
+  s: '#b98790', // skin shadow
+  Y: '#091321', // eyes
+  E: '#091321',
+  M: '#8c718f', // muted periwinkle shadow
+  W: '#eaf7ff',
+  G: '#8faec9',
+  N: '#294d87', // jacket blue
+  n: '#172b53',
+  B: '#9cbdf7', // ice-lavender accent
+  b: '#6f8fc8',
+  X: '#101a2b',
+  H: '#f7fcff',
 };
 
 // Pixel sprite. Eye pixels are rendered separately so they can blink and look around.
@@ -68,11 +68,11 @@ export const SPRITE = [
 ];
 
 export const CHEST_PALETTE = {
-  o: '#1d130d',
-  w: '#7a4f2d',
-  l: '#a87443',
-  g: '#BBA9FF',
-  y: '#A9F06D',
+  o: '#091321',
+  w: '#1b3552',
+  l: '#315a7a',
+  g: '#8298eb',
+  y: '#9be8ff',
 };
 
 export const CHEST = [
@@ -99,11 +99,11 @@ export const LINES = [
 
 export const MOOD_LINES = {
   about: "That's me, learning one step at a time.",
-  projects: 'Open a crate. Some are still being built.',
-  skills: "Tools I've used in my projects.",
-  activity: 'Pac-Man is eating my commits.',
+  projects: 'Pick a project. I will show you what is inside.',
+  skills: "Tools I've been learning by building things.",
+  activity: 'Little blocks of progress, one commit at a time.',
   contact: 'Find me on GitHub, Instagram, or Spotify.',
-  music: 'Earbuds in. Playlist on repeat.',
+  music: 'Earbuds in. Blue hour on repeat.',
 };
 
 export const SIGNS = [
@@ -134,72 +134,75 @@ export const TOOLS = [
 export const PROJECTS = [
   {
     id: 'whitman',
+    featured: true,
     displayName: 'Whitman House',
     category: 'COMMUNITY QUEST · CHECK-IN',
-    description: 'Website check-in harian untuk komunitas Whitman House / The Main Ideas. Anggota mengirim screenshot sebagai bukti quest, memeriksa riwayat kehadiran, membuat sertifikat PNG, dan melihat leaderboard serta buku panduan.',
+    description: 'A daily check-in experience for the Whitman House / The Main Ideas community. Members submit screenshot proof, review attendance history, generate PNG certificates, and explore the leaderboard and guide.',
     liveUrl: 'https://whitmanhouse.vercel.app/',
-    liveLabel: 'Buka Whitman House',
+    liveLabel: 'Open Whitman House',
     previewImage: 'https://lh3.googleusercontent.com/d/1pY8QP0cfOvtFKGRmDkCY9alNk2rtFOn_=w1000',
-    alt: 'Screenshot website Whitman House',
+    alt: 'Screenshot of the Whitman House check-in website',
   },
   {
     id: 'nasib62',
+    featured: true,
     displayName: 'NASIB +62',
     category: 'STRATEGY BOARD GAME',
-    description: 'Board game ekonomi satir tentang uang, tanah, dan kejutan hidup sehari-hari. Pemain membeli properti, membangun rumah, mengelola saldo, dan menghadapi bot dengan gaya strategi berbeda.',
+    description: 'A satirical economy board game about money, property, and everyday surprises. Players buy lots, build houses, manage their balance, and face bots with different strategies.',
     liveUrl: 'https://nasib62.vercel.app/',
-    liveLabel: 'Mainkan NASIB +62',
+    liveLabel: 'Play NASIB +62',
     previewImage: 'https://lh3.googleusercontent.com/d/1D-qLFhHv_x4--bYA3p_TpyBpAoSbHvyg=w1000',
-    alt: 'Screenshot permainan NASIB +62',
+    alt: 'Screenshot of the NASIB +62 strategy board game',
   },
   {
     id: 'libris',
+    featured: true,
     displayName: 'Libris',
     category: 'EBOOK READER',
-    description: 'Aplikasi pembaca ebook untuk mengelola banyak berkas buku dan melanjutkan membaca dari posisi terakhir yang tersimpan. Fokus pengalaman membacanya mencakup perpindahan halaman, scroll vertikal, dan swipe horizontal agar tidak perlu mencari halaman dari awal lagi.',
+    description: 'An ebook reader focused on picking up where you left off, with page navigation, vertical reading, and horizontal swipes for moving between pages.',
     liveUrl: 'https://libris.vercel.app/',
-    liveLabel: 'Buka Libris',
+    liveLabel: 'Open Libris',
     previewImage: 'https://lh3.googleusercontent.com/d/1IXrFzd-mw_4aEvlR3nb-TOy8vxEld51k=w1000',
-    alt: 'Screenshot aplikasi pembaca ebook Libris',
+    alt: 'Screenshot of the Libris ebook reader',
   },
   {
     id: 'notecanvas',
     displayName: 'NoteCanvas',
     category: 'PDF ANNOTATION · STUDY',
-    description: 'Notebook digital untuk belajar langsung di materi PDF. Arah pengembangannya menekankan coretan dan anotasi pada halaman dokumen, pengaturan halaman, zoom, serta navigasi vertikal dan geser horizontal agar catatan nyaman dipakai di tablet maupun laptop.',
+    description: 'A study workspace for working directly on PDF material, with document annotations, page controls, zoom, and vertical or horizontal navigation for laptop and tablet use.',
     liveUrl: 'https://notecanvas-studio.vercel.app/',
-    liveLabel: 'Buka NoteCanvas',
+    liveLabel: 'Open NoteCanvas',
     previewImage: 'https://lh3.googleusercontent.com/d/1T-A3uzCDrSmJdf4xmlUAJBeQARWk3Evk=w1000',
-    alt: 'Screenshot aplikasi NoteCanvas untuk mencoret PDF',
+    alt: 'Screenshot of NoteCanvas PDF annotation tools',
   },
   {
     id: 'studywithmbah',
     displayName: 'StudyWithMbah',
     category: 'LEARNING COMMUNITY',
-    description: 'Website komunitas belajar yang mengumpulkan materi, video, tautan latihan, dan bank soal PDF per topik. Proyek ini juga mengeksplorasi maskot interaktif dan animasi untuk membuat kegiatan belajar terasa lebih hidup.',
+    description: 'A learning-community site that brings together topic-based materials, videos, practice links, and PDF question banks, with an interactive mascot and motion experiments.',
     liveUrl: 'https://studywithmbahcommunity.vercel.app/',
-    liveLabel: 'Kunjungi komunitas',
+    liveLabel: 'Visit the community',
     previewImage: 'https://lh3.googleusercontent.com/d/1cV5sOrL5kCOddKvaA4bhYiIlEc9AtTQ-=w1000',
-    alt: 'Screenshot website komunitas belajar StudyWithMbah',
+    alt: 'Screenshot of the StudyWithMbah learning community',
   },
   {
     id: 'essay',
     displayName: 'Simulasi Nulis Esai',
     category: 'ESSAY PRACTICE',
-    description: 'Workspace latihan menulis esai dengan simulasi ujian, paket soal, histori jawaban, dan evaluasi akhir. AI Essay Coach dirancang memberi umpan balik pada tulisan; fitur AI live bergantung pada konfigurasi layanan, dengan evaluasi lokal sebagai fallback.',
+    description: 'An essay-practice workspace with exam simulations, question sets, answer history, and end-of-session feedback. Live AI coaching depends on service configuration; local evaluation is available as a fallback.',
     liveUrl: 'https://tryoutessaypartho.vercel.app/',
-    liveLabel: 'Coba simulasi esai',
+    liveLabel: 'Try essay practice',
     previewImage: 'https://lh3.googleusercontent.com/d/1GMTSJxv0J91HUpMIYxnMcQXwj0tWfDPt=w1000',
-    alt: 'Screenshot aplikasi simulasi menulis esai',
+    alt: 'Screenshot of the essay practice workspace',
   },
   {
     id: 'latveria',
     displayName: 'Latveria Academy',
     category: 'UTBK · SNBT LEARNING',
-    description: 'Eksperimen platform latihan UTBK-SNBT berbahasa Indonesia. Alur belajarnya mencakup katalog paket, pengerjaan soal, riwayat hasil dan EXP, tryout lintas subtes, serta mode battle ketika layanan backend dan datanya tersedia.',
+    description: 'An ongoing UTBK-SNBT practice-platform experiment in Indonesian, exploring test packages, question sessions, result and EXP history, multi-subtest tryouts, and battle mode when backend services and data are available.',
     liveUrl: 'https://latveria-riiddev-web.vercel.app/',
-    liveLabel: 'Buka Latveria Academy',
+    liveLabel: 'Open Latveria Academy',
     previewImage: 'https://lh3.googleusercontent.com/d/1vnhdibEaDWeHRIPvsRVKhTcZGuPcHcKo=w1000',
-    alt: 'Screenshot platform belajar Latveria Academy',
+    alt: 'Screenshot of Latveria Academy',
   },
 ];

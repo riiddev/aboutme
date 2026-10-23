@@ -77,7 +77,7 @@ function ProjectPreview({ project }) {
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
-    <div className={'project-preview-window' + (project ? ' is-active' : '')}>
+    <div id="project-preview" className={'project-preview-window' + (project ? ' is-active' : '')}>
       <div className="project-preview__chrome" aria-hidden="true">
         <span className="window-dot window-dot--red" />
         <span className="window-dot window-dot--yellow" />
@@ -93,7 +93,7 @@ function ProjectPreview({ project }) {
             {imageFailed ? (
               <div className="project-preview__fallback">
                 <span className="project-preview__fallback-mark">?</span>
-                <p>Preview image sedang tidak tersedia.</p>
+                <p>Screenshot preview is unavailable right now.</p>
               </div>
             ) : (
               <img
@@ -120,8 +120,8 @@ function ProjectPreview({ project }) {
             <span /><span /><span /><span /><span /><span /><span /><span /><span />
           </div>
           <p className="project-preview__category">PROJECT EXPLORER</p>
-          <h3>Pilih satu peti.</h3>
-          <p>Arahkan kursor ke proyek di sebelah kiri untuk melihat screenshot websitenya. Klik peti untuk membuka produk live di tab baru.</p>
+          <h3>Choose a project.</h3>
+          <p>Select a crate to preview the work here. You can open the live project from its field notes.</p>
         </div>
       )}
     </div>
@@ -156,21 +156,26 @@ export function Projects() {
         ref={wrap}
         className="project-explorer"
         onKeyDown={(event) => event.key === 'Escape' && setActiveProject(null)}
-        onPointerLeave={() => setActiveProject(null)}
+        onPointerLeave={(event) => {
+          if (event.pointerType === 'mouse' && !wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
+        }}
       >
         <div className="project-explorer__list">
-          <p className="lede">Setiap peti menyimpan satu hal yang pernah kita bangun. Arahkan kursor untuk mengintip tampilannya, klik untuk membuka websitenya.</p>
+          <p className="lede">Each crate holds a small experiment. Select one to inspect the screenshot and the story behind it.</p>
           <ul className="chests chests--stack">
             {PROJECTS.map((project, index) => (
-              <li className="project-row" key={project.id}>
-                <a
+              <li className={'project-row' + (project.featured ? ' project-row--featured' : '')} key={project.id}>
+                <button
+                  type="button"
                   className="chest-btn"
                   data-active={activeProject?.id === project.id}
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={'Buka website ' + project.displayName}
-                  onPointerEnter={() => setActiveProject(project)}
+                  aria-pressed={activeProject?.id === project.id}
+                  aria-controls="project-preview"
+                  aria-label={'Preview ' + project.displayName}
+                  onClick={() => setActiveProject(project)}
+                  onPointerEnter={(event) => {
+                    if (event.pointerType === 'mouse' || event.pointerType === 'pen') setActiveProject(project);
+                  }}
                   onFocus={() => setActiveProject(project)}
                   onBlur={(event) => {
                     if (!wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
@@ -181,19 +186,20 @@ export function Projects() {
                     <span className="project-row__number">{String(index + 1).padStart(2, '0')}</span>
                   </span>
                   <span className="project-row__copy">
+                    {project.featured && <span className="project-row__featured">Featured</span>}
                     <span className="project-row__category">{project.category}</span>
                     <span className="chest-name">{project.displayName}</span>
                     <span className="project-row__summary">{project.description}</span>
-                    <span className="project-row__open">{project.liveLabel} <span aria-hidden="true">↗</span></span>
+                    <span className="project-row__open">Inspect project <span aria-hidden="true">→</span></span>
                   </span>
                   <img className="project-row__mobile-thumb" src={project.previewImage} alt="" loading="lazy" decoding="async" />
-                </a>
+                </button>
               </li>
             ))}
           </ul>
         </div>
 
-        <aside className="project-preview-dock" aria-label="Project screenshot preview" aria-live="polite">
+        <aside className="project-preview-dock" aria-label="Selected project preview" aria-live="polite">
           <ProjectPreview key={activeProject?.id || 'empty'} project={activeProject} />
         </aside>
       </div>

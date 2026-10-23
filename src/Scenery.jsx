@@ -7,18 +7,18 @@ function seeded(seed) {
 
 const TONES = {
   front: {
-    leaf: ['#203b55', '#2f6684', '#4aa4c6'],
-    hi: '#a5edff',
-    stem: '#1a4760',
-    flower: '#afc5ff',
+    leaf: ['#152b42', '#244d70', '#34789c'],
+    hi: '#9be8ff',
+    stem: '#13283f',
+    flower: '#aabaff',
     flowerD: '#8298eb',
-    core: '#edfaff',
+    core: '#e8f5ff',
   },
   back: {
-    leaf: ['#132b44', '#1b3c5a', '#285677'],
-    hi: '#3e82a6',
-    stem: '#10253d',
-    flower: '#7786cf',
+    leaf: ['#0f2035', '#193653', '#245174'],
+    hi: '#5db9e7',
+    stem: '#0d1d31',
+    flower: '#8e9fff',
     flowerD: '#5464a6',
     core: '#b3c5e6',
   },
@@ -101,16 +101,19 @@ const stars = (count, seed, colour) => {
   )).join(',');
 };
 
+const WINDOW_TINTS = ['#9be8ff', '#8e9fff', '#75caff', '#b7c5ff'];
 const FAR_BUILDINGS = Array.from({ length: 24 }, (_, index) => ({
   left: (index * 4.45 - 1) + '%',
   width: (4.1 + ((index * 7) % 3) * 0.9) + '%',
   height: (13 + ((index * 13 + 7) % 18)) + 'vh',
   '--window-delay': ((index * 0.37) % 4) + 's',
+  '--window-tint': WINDOW_TINTS[(index * 3 + 1) % WINDOW_TINTS.length],
 }));
 const NEAR_BUILDINGS = Array.from({ length: 11 }, (_, index) => ({
   left: (index * 9.7 - 2) + '%',
   width: (9 + ((index * 5) % 4)) + '%',
   height: (6 + ((index * 9 + 4) % 11)) + 'vh',
+  '--window-tint': WINDOW_TINTS[(index + 2) % WINDOW_TINTS.length],
 }));
 
 // The skyline is made out of crisp local CSS shapes, not a remote image.
@@ -147,9 +150,9 @@ function useSkyParallax() {
 // garden silhouettes, fireflies, and the existing moonlit sky.
 export const Sky = memo(function Sky() {
   useSkyParallax();
-  const first = useMemo(() => stars(60, 3, '#DDF8FF'), []);
-  const second = useMemo(() => stars(30, 9, '#B4C5FF'), []);
-  const fireflies = useMemo(() => Array.from({ length: 17 }, (_, index) => ({
+  const first = useMemo(() => stars(44, 3, '#DDF8FF'), []);
+  const second = useMemo(() => stars(18, 9, '#B4C5FF'), []);
+  const fireflies = useMemo(() => Array.from({ length: 8 }, (_, index) => ({
     '--left': ((index * 47 + 13) % 100) + '%',
     '--top': (28 + ((index * 31 + 9) % 66)) + '%',
     '--float-delay': '-' + ((index * 0.61) % 8) + 's',

@@ -141,7 +141,9 @@ function HeroCharacter({ music }) {
     }
   };
 
-  const line = music ? MOOD_LINES.music : (MOOD_LINES[mood] || LINES[lineIndex % LINES.length]);
+  const line = music
+    ? MOOD_LINES.music
+    : (lineIndex > 0 ? LINES[(lineIndex - 1) % LINES.length] : (MOOD_LINES[mood] || LINES[0]));
 
   return (
     <div className="hc" data-music={music} data-mood={mood}>
@@ -180,8 +182,8 @@ function Hero({ ready }) {
         .from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: 1, ease: 'steps(10)' }, 0.04)
         .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05)
         .from('.hero__title .ch', {
-          autoAlpha: 0, y: -58, rotation: () => gsap.utils.random(-16, 16),
-          scale: 0.25, duration: 0.56, ease: 'back.out(3.2)', stagger: 0.065,
+          autoAlpha: 0, y: -30, rotation: () => gsap.utils.random(-5, 5),
+          scale: 0.72, duration: 0.46, ease: 'back.out(1.8)', stagger: 0.055,
         }, 0.12)
         .from('.hc', {
           y: '-70vh', scaleX: 0.78, scaleY: 1.12, rotation: -7,
@@ -212,7 +214,7 @@ function Hero({ ready }) {
     <section id="top" ref={root} className="hero" tabIndex={-1}>
       <div className="hero__wall" aria-hidden="true" />
       <div className="hero__particles" aria-hidden="true">
-        {Array.from({ length: 22 }, (_, index) => (
+        {Array.from({ length: 9 }, (_, index) => (
           <i
             key={index}
             style={{
