@@ -11,20 +11,20 @@ export const NAV = [
 ];
 
 export const PALETTE = {
-  K: '#392747', // deep aubergine hair
-  S: '#ffd6a5', // peach skin highlight
-  s: '#e99a88', // warm skin shadow
-  Y: '#27223c', // eyes
-  E: '#27223c',
-  M: '#c0526b', // rosy mouth / shadow
-  W: '#fff2d7',
-  G: '#7be0b6', // mint accent
-  N: '#5868bc', // arcade-blue jacket
-  n: '#343b83', // jacket shadow
-  B: '#ffd166', // golden trousers
-  b: '#e98b63', // warm pixel shadows
-  X: '#312640', // boot outline
-  H: '#fff8e9',
+  K: '#14141c',
+  S: '#e4917a',
+  s: '#c46f5c',
+  Y: '#1b1218',
+  E: '#1b1218',
+  M: '#9b4638',
+  W: '#f2f5fa',
+  G: '#9aa6bd',
+  N: '#2c2f63',
+  n: '#1c1e46',
+  B: '#e6d0a6',
+  b: '#c4a97b',
+  X: '#15151c',
+  H: '#ffffff',
 };
 
 // Pixel sprite. Eye pixels are rendered separately so they can blink and look around.
