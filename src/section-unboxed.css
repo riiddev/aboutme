@@ -157,3 +157,19 @@
     padding-inline: 0;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  #about .sign,
+  #projects .chest-btn,
+  #skills .slot__tile,
+  #skills .slot__name {
+    transition: none !important;
+  }
+
+  #about .sign:hover,
+  #projects .chest-btn:hover,
+  #skills .slot:hover .slot__tile,
+  #skills .slot:focus-within .slot__tile {
+    transform: none !important;
+  }
+}
