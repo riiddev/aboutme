@@ -31,6 +31,7 @@ export const Sprite = memo(function Sprite({
   crop = 40,
   eyesRef,
   decorative = false,
+  angry = false,
   className = '',
 }) {
   const style = { '--px': px, width: (px * 24) + 'px' };
@@ -43,7 +44,7 @@ export const Sprite = memo(function Sprite({
       <img
         src={PORTRAIT_SRC}
         alt={decorative ? '' : 'Pixel portrait of Riiddev'}
-        className={'sprite sprite--img ' + className}
+        className={'sprite sprite--img ' + className + (angry ? ' sprite--angry' : '')}
         style={style}
       />
     );
@@ -51,7 +52,7 @@ export const Sprite = memo(function Sprite({
 
   return (
     <svg
-      className={'sprite ' + className}
+      className={'sprite ' + className + (angry ? ' sprite--angry' : '')}
       style={style}
       viewBox={'0 0 24 ' + crop}
       shapeRendering="crispEdges"
@@ -67,6 +68,12 @@ export const Sprite = memo(function Sprite({
             {EYES.map((path) => <path key={path.colour} d={path.d} fill={PALETTE[path.colour]} />)}
           </g>
         </g>
+        {angry && (
+          <g className="sprite__anger" shapeRendering="crispEdges" aria-hidden="true">
+            <path d="M7 6h4v1H9v1H8V7H7z M13 7V6h4v1h-2v1h-1V7z" fill="#c0526b" />
+            <path d="M20 2h1v2h-1z M22 4h1v1h-1z" fill="#ff7f87" />
+          </g>
+        )}
       </g>
     </svg>
   );

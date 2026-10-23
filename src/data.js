@@ -11,20 +11,20 @@ export const NAV = [
 ];
 
 export const PALETTE = {
-  K: '#152338', // hair / deep outline
-  S: '#e4c5bd', // warm skin highlight
-  s: '#b98790', // skin shadow
-  Y: '#091321', // eyes
-  E: '#091321',
-  M: '#8c718f', // muted periwinkle shadow
-  W: '#eaf7ff',
-  G: '#8faec9',
-  N: '#294d87', // jacket blue
-  n: '#172b53',
-  B: '#9cbdf7', // ice-lavender accent
-  b: '#6f8fc8',
-  X: '#101a2b',
-  H: '#f7fcff',
+  K: '#392747', // deep aubergine hair
+  S: '#ffd6a5', // peach skin highlight
+  s: '#e99a88', // warm skin shadow
+  Y: '#27223c', // eyes
+  E: '#27223c',
+  M: '#c0526b', // rosy mouth / shadow
+  W: '#fff2d7',
+  G: '#7be0b6', // mint accent
+  N: '#5868bc', // arcade-blue jacket
+  n: '#343b83', // jacket shadow
+  B: '#ffd166', // golden trousers
+  b: '#e98b63', // warm pixel shadows
+  X: '#312640', // boot outline
+  H: '#fff8e9',
 };
 
 // Pixel sprite. Eye pixels are rendered separately so they can blink and look around.
@@ -68,11 +68,11 @@ export const SPRITE = [
 ];
 
 export const CHEST_PALETTE = {
-  o: '#091321',
-  w: '#1b3552',
-  l: '#315a7a',
-  g: '#8298eb',
-  y: '#9be8ff',
+  o: '#39243e',
+  w: '#a74759',
+  l: '#ed8a61',
+  g: '#ffd166',
+  y: '#7be0b6',
 };
 
 export const CHEST = [
@@ -98,6 +98,7 @@ export const LINES = [
 ];
 
 export const MOOD_LINES = {
+  top: 'Try moving me. I might get mad.',
   about: "That's me, learning one step at a time.",
   projects: 'Pick a project. I will show you what is inside.',
   skills: "Tools I've been learning by building things.",

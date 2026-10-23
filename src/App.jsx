@@ -84,13 +84,22 @@ function Hud() {
   );
 }
 
-// The portrait follows the pointer with its eyes, hops on click, and reacts to section mood.
+// The character can be picked up, gets offended, then walks back to his spawn point.
 function HeroCharacter({ music }) {
   const button = useRef(null);
   const eyes = useRef(null);
+  const drag = useRef(null);
+  const position = useRef({ x: 0, y: 0 });
+  const returnTimeline = useRef(null);
+  const angerTimer = useRef(null);
+  const suppressClick = useRef(false);
   const reduced = useReducedMotion();
   const mood = useStore(moodStore);
   const [lineIndex, setLineIndex] = useState(0);
+  const [angry, setAngry] = useState(false);
+  const [walking, setWalking] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [facing, setFacing] = useState('home');
 
   useEffect(() => {
     if (reduced || !eyes.current) return undefined;
@@ -99,7 +108,6 @@ function HeroCharacter({ music }) {
     const quickY = gsap.quickTo(eyes.current, 'y', { duration: 0.12, ease: 'none' });
     let frame = 0;
     let last = null;
-
     const look = () => {
       frame = 0;
       if (!last || !button.current) return;
@@ -111,19 +119,13 @@ function HeroCharacter({ music }) {
       quickX(Math.round((dx / distance) * scale * 1.4));
       quickY(Math.round((dy / distance) * scale));
     };
-
     const move = (event) => {
       last = { x: event.clientX, y: event.clientY };
       if (!frame) frame = requestAnimationFrame(look);
     };
-    const leave = () => {
-      quickX(0);
-      quickY(0);
-    };
-
+    const leave = () => { quickX(0); quickY(0); };
     window.addEventListener('pointermove', move, { passive: true });
     document.addEventListener('pointerleave', leave);
-
     return () => {
       window.removeEventListener('pointermove', move);
       document.removeEventListener('pointerleave', leave);
@@ -132,22 +134,181 @@ function HeroCharacter({ music }) {
     };
   }, [reduced]);
 
+  useEffect(() => () => {
+    returnTimeline.current?.kill();
+    if (angerTimer.current) window.clearTimeout(angerTimer.current);
+  }, []);
+
+  const pointInScene = (x, y, geometry) => {
+    if (!button.current) return { x, y };
+    const scene = button.current.closest('.hero')?.getBoundingClientRect();
+    if (!scene) return { x, y };
+    const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
+    const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
+    const rect = geometry || button.current.getBoundingClientRect();
+    const baseLeft = rect.left - (geometry ? 0 : currentX);
+    const baseTop = rect.top - (geometry ? 0 : currentY);
+    const width = rect.width;
+    const height = rect.height;
+    const minX = scene.left + 12 - baseLeft;
+    const maxX = scene.right - 12 - (baseLeft + width);
+    const minY = scene.top + 92 - baseTop;
+    const maxY = scene.bottom - 24 - (baseTop + height);
+    return {
+      x: gsap.utils.clamp(Math.min(minX, maxX), Math.max(minX, maxX), x),
+      y: gsap.utils.clamp(Math.min(minY, maxY), Math.max(minY, maxY), y),
+    };
+  };
+
+  const returnHome = (x, y) => {
+    if (!button.current) return;
+    position.current = { x, y };
+    setAngry(true);
+    setWalking(false);
+    setDragging(false);
+    setFacing(x > 4 ? 'left' : x < -4 ? 'right' : 'home');
+
+    if (reduced) {
+      gsap.set(button.current, { x: 0, y: 0, rotation: 0 });
+      position.current = { x: 0, y: 0 };
+      setWalking(false);
+      setFacing('home');
+      angerTimer.current = window.setTimeout(() => setAngry(false), 1200);
+      return;
+    }
+
+    const distance = Math.hypot(x, y);
+    returnTimeline.current?.kill();
+    returnTimeline.current = gsap.timeline({
+      onComplete: () => {
+        position.current = { x: 0, y: 0 };
+        gsap.set(button.current, { x: 0, y: 0, rotation: 0 });
+        setAngry(false);
+        setWalking(false);
+        setDragging(false);
+        setFacing('home');
+        returnTimeline.current = null;
+      },
+    })
+      .to(button.current, { rotation: x >= 0 ? 3 : -3, duration: 0.065, ease: 'steps(2)' })
+      .to(button.current, { rotation: x >= 0 ? -3 : 3, duration: 0.065, ease: 'steps(2)' })
+      .to(button.current, { rotation: 0, duration: 0.055, ease: 'steps(2)' })
+      .add(() => setWalking(true), '+=0.12')
+      .to(button.current, {
+        x: 0, y: 0, rotation: 0,
+        duration: Math.min(1.45, Math.max(0.42, distance / 285)),
+        ease: 'steps(9)',
+      }, '+=0.06');
+  };
+
+  const handlePointerDown = (event) => {
+    if (event.button !== 0 || angry || walking || !button.current) return;
+    suppressClick.current = false;
+    returnTimeline.current?.kill();
+    returnTimeline.current = null;
+    gsap.killTweensOf(button.current);
+    const x = Number(gsap.getProperty(button.current, 'x')) || position.current.x || 0;
+    const y = Number(gsap.getProperty(button.current, 'y')) || position.current.y || 0;
+    const rect = button.current.getBoundingClientRect();
+    const scene = button.current.closest('.hero')?.getBoundingClientRect();
+    if (!scene) return;
+    drag.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: x,
+      originY: y,
+      baseLeft: rect.left - x,
+      baseTop: rect.top - y,
+      width: rect.width,
+      height: rect.height,
+      scene,
+      moved: false,
+      x,
+      y,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const handlePointerMove = (event) => {
+    const current = drag.current;
+    if (!current || current.pointerId !== event.pointerId || !button.current) return;
+    const dx = event.clientX - current.startX;
+    const dy = event.clientY - current.startY;
+    if (!current.moved && Math.hypot(dx, dy) < 5) return;
+    current.moved = true;
+    setDragging(true);
+    const minX = current.scene.left + 12 - current.baseLeft;
+    const maxX = current.scene.right - 12 - (current.baseLeft + current.width);
+    const minY = current.scene.top + 92 - current.baseTop;
+    const maxY = current.scene.bottom - 24 - (current.baseTop + current.height);
+    const x = gsap.utils.clamp(Math.min(minX, maxX), Math.max(minX, maxX), current.originX + dx);
+    const y = gsap.utils.clamp(Math.min(minY, maxY), Math.max(minY, maxY), current.originY + dy);
+    current.x = x;
+    current.y = y;
+    position.current = { x, y };
+    setFacing(dx < -2 ? 'left' : dx > 2 ? 'right' : facing);
+    gsap.set(button.current, { x, y, rotation: gsap.utils.clamp(-7, 7, dx * 0.055) });
+  };
+
+  const handlePointerUp = (event) => {
+    const current = drag.current;
+    if (!current || current.pointerId !== event.pointerId) return;
+    drag.current = null;
+    if (current.moved) {
+      suppressClick.current = true;
+      returnHome(current.x, current.y);
+    } else {
+      setDragging(false);
+    }
+  };
+
+  const nudgeWithKeyboard = (event) => {
+    const movements = {
+      ArrowLeft: [-54, 0],
+      ArrowRight: [54, 0],
+      ArrowUp: [0, -40],
+      ArrowDown: [0, 40],
+    };
+    const delta = movements[event.key];
+    if (!delta || angry || walking || !button.current) return;
+    event.preventDefault();
+    const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
+    const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
+    const rect = button.current.getBoundingClientRect();
+    const next = pointInScene(currentX + delta[0], currentY + delta[1], rect);
+    setFacing(delta[0] < 0 ? 'left' : delta[0] > 0 ? 'right' : 'home');
+    gsap.to(button.current, {
+      x: next.x, y: next.y,
+      duration: reduced ? 0 : 0.18,
+      ease: 'steps(4)',
+      onComplete: () => {
+        position.current = next;
+        returnHome(next.x, next.y);
+      },
+    });
+  };
+
   const poke = () => {
+    if (suppressClick.current) { suppressClick.current = false; return; }
+    if (angry || walking || !button.current) return;
     setLineIndex((value) => value + 1);
-    if (!reduced && button.current) {
+    if (!reduced) {
       gsap.timeline({ overwrite: 'auto' })
         .to(button.current, { y: -28, duration: 0.14, ease: 'steps(2)' })
         .to(button.current, { y: 0, duration: 0.14, ease: 'steps(2)' });
     }
   };
 
-  const line = music
-    ? MOOD_LINES.music
-    : (lineIndex > 0 ? LINES[(lineIndex - 1) % LINES.length] : (MOOD_LINES[mood] || LINES[0]));
+  const line = angry
+    ? 'HEY! I was standing right there!'
+    : music
+      ? MOOD_LINES.music
+      : (lineIndex > 0 ? LINES[(lineIndex - 1) % LINES.length] : (MOOD_LINES[mood] || LINES[0]));
 
   return (
-    <div className="hc" data-music={music} data-mood={mood}>
-      <p className="bubble px" role="status">{line}</p>
+    <div className="hc" data-music={music} data-mood={mood} data-angry={angry} data-walking={walking} data-dragging={dragging} data-facing={facing}>
+      <p className="bubble px" role="status" aria-live="polite">{line}</p>
       {music && [0, 1, 2].map((index) => (
         <Note
           key={index}
@@ -157,11 +318,17 @@ function HeroCharacter({ music }) {
       ))}
       <button
         ref={button}
+        type="button"
         className="hc__btn"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
         onClick={poke}
-        aria-label="Riiddev's pixel portrait. Press to hear a thought."
+        onKeyDown={nudgeWithKeyboard}
+        aria-label="Riiddev's pixel character. Drag to move him; use the arrow keys to nudge him and watch him walk back home."
       >
-        <Sprite eyesRef={eyes} />
+        <Sprite eyesRef={eyes} angry={angry} />
       </button>
     </div>
   );

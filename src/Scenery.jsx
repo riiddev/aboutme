@@ -7,20 +7,20 @@ function seeded(seed) {
 
 const TONES = {
   front: {
-    leaf: ['#152b42', '#244d70', '#34789c'],
-    hi: '#9be8ff',
-    stem: '#13283f',
-    flower: '#aabaff',
-    flowerD: '#8298eb',
-    core: '#e8f5ff',
+    leaf: ['#285d54', '#37836e', '#76bd76'],
+    hi: '#d5eb78',
+    stem: '#1c4a4c',
+    flower: '#ff9bc2',
+    flowerD: '#de679c',
+    core: '#ffd166',
   },
   back: {
-    leaf: ['#0f2035', '#193653', '#245174'],
-    hi: '#5db9e7',
-    stem: '#0d1d31',
-    flower: '#8e9fff',
-    flowerD: '#5464a6',
-    core: '#b3c5e6',
+    leaf: ['#1f4143', '#285d60', '#36756b'],
+    hi: '#69d7e5',
+    stem: '#18383f',
+    flower: '#b8a3ff',
+    flowerD: '#ff9bc2',
+    core: '#fff2d7',
   },
 };
 
@@ -101,7 +101,7 @@ const stars = (count, seed, colour) => {
   )).join(',');
 };
 
-const WINDOW_TINTS = ['#9be8ff', '#8e9fff', '#75caff', '#b7c5ff'];
+const WINDOW_TINTS = ['#ffd166', '#ff9bc2', '#69d7e5', '#b8a3ff', '#7be0b6', '#ff9f68'];
 const FAR_BUILDINGS = Array.from({ length: 24 }, (_, index) => ({
   left: (index * 4.45 - 1) + '%',
   width: (4.1 + ((index * 7) % 3) * 0.9) + '%',
@@ -150,8 +150,8 @@ function useSkyParallax() {
 // garden silhouettes, fireflies, and the existing moonlit sky.
 export const Sky = memo(function Sky() {
   useSkyParallax();
-  const first = useMemo(() => stars(44, 3, '#DDF8FF'), []);
-  const second = useMemo(() => stars(18, 9, '#B4C5FF'), []);
+  const first = useMemo(() => stars(42, 3, '#ffe5a7'), []);
+  const second = useMemo(() => stars(22, 9, '#ff9bc2'), []);
   const fireflies = useMemo(() => Array.from({ length: 8 }, (_, index) => ({
     '--left': ((index * 47 + 13) % 100) + '%',
     '--top': (28 + ((index * 31 + 9) % 66)) + '%',
