@@ -126,7 +126,8 @@ export const TOOLS = [
   ['vite', 'Vite'],
   ['gsap', 'GSAP'],
   ['remotion', 'Remotion'],
-  ['github', 'Git & GitHub'],
+  ['git', 'Git'],
+  ['github', 'GitHub'],
 ];
 
 // Only entries already confirmed from the README/portfolio are hard-coded.
