@@ -74,62 +74,6 @@ export function About() {
   );
 }
 
-function ProjectPreview({ project }) {
-  const [imageFailed, setImageFailed] = useState(false);
-
-  return (
-    <div id="project-preview" className={'project-preview-window' + (project ? ' is-active' : '')}>
-      <div className="project-preview__chrome" aria-hidden="true">
-        <span className="window-dot window-dot--red" />
-        <span className="window-dot window-dot--yellow" />
-        <span className="window-dot window-dot--green" />
-        <span className="project-preview__address">
-          {project ? project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'riiddev / project-preview'}
-        </span>
-      </div>
-
-      {project ? (
-        <>
-          <div className="project-preview__screen">
-            {imageFailed ? (
-              <div className="project-preview__fallback">
-                <span className="project-preview__fallback-mark">?</span>
-                <p>Screenshot preview is unavailable right now.</p>
-              </div>
-            ) : (
-              <img
-                src={project.previewImage}
-                alt={project.alt}
-                loading="lazy"
-                decoding="async"
-                onError={() => setImageFailed(true)}
-              />
-            )}
-          </div>
-          <div className="project-preview__details">
-            <p className="project-preview__category">{project.category}</p>
-            <h3>{project.displayName}</h3>
-            <p>{project.description}</p>
-            <a className="btn" href={project.liveUrl} target="_blank" rel="noreferrer">
-              {project.liveLabel} <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </>
-      ) : (
-        <div className="project-preview__empty">
-          <div className="project-preview__pixel-art" aria-hidden="true">
-            <span /><span /><span /><span /><span /><span /><span /><span /><span />
-          </div>
-          <p className="project-preview__category">PROJECT EXPLORER</p>
-          <h3>Choose a project.</h3>
-          <p>Select a crate to preview the work here. You can open the live project from its field notes.</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
 function CursorProjectPreview({ project, cursorPoint, reduced }) {
   const preview = useRef(null);
 
@@ -230,7 +174,6 @@ function CursorProjectPreview({ project, cursorPoint, reduced }) {
 export function Projects() {
   const wrap = useRef(null);
   const cursorPoint = useRef({ x: 0, y: 0 });
-  const [activeProject, setActiveProject] = useState(null);
   const [hoveredProject, setHoveredProject] = useState(null);
   const reduced = useReducedMotion();
 
@@ -240,11 +183,11 @@ export function Projects() {
     const context = gsap.context(() => {
       gsap.from('.project-row', {
         autoAlpha: 0,
-        x: -24,
-        duration: 0.6,
-        stagger: 0.07,
+        y: 24,
+        duration: 0.65,
+        stagger: 0.08,
         ease: 'power3.out',
-        scrollTrigger: { trigger: wrap.current, start: 'top 76%', once: true },
+        scrollTrigger: { trigger: wrap.current, start: 'top 78%', once: true },
       });
     }, wrap);
 
@@ -257,10 +200,7 @@ export function Projects() {
         ref={wrap}
         className="project-explorer"
         onKeyDown={(event) => {
-          if (event.key === 'Escape') {
-            setActiveProject(null);
-            setHoveredProject(null);
-          }
+          if (event.key === 'Escape') setHoveredProject(null);
         }}
         onPointerMove={(event) => {
           if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
@@ -268,51 +208,41 @@ export function Projects() {
           }
         }}
         onPointerLeave={(event) => {
-          if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
-            setHoveredProject(null);
-            if (!wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
-          }
+          if (event.pointerType === 'mouse' || event.pointerType === 'pen') setHoveredProject(null);
         }}
       >
         <div className="project-explorer__list">
-          <p className="lede">Each crate holds a small experiment. Select one to inspect the screenshot and the story behind it.</p>
+          <p className="lede">Small experiments, useful tools, and ideas I'm building one level at a time. Hover over a project to peek inside.</p>
           <ul className="chests chests--stack">
             {PROJECTS.map((project, index) => (
               <li
                 className={'project-row' + (project.featured ? ' project-row--featured' : '')}
                 key={project.id}
                 onPointerLeave={(event) => {
-                  if (
-                    (event.pointerType === 'mouse' || event.pointerType === 'pen') &&
-                    !(event.relatedTarget instanceof Element && event.relatedTarget.closest('.chest-btn'))
-                  ) setHoveredProject(null);
+                  if (event.pointerType === 'mouse' || event.pointerType === 'pen') setHoveredProject(null);
                 }}
               >
-                <button
-                  type="button"
+                <a
                   className="chest-btn"
-                  data-active={activeProject?.id === project.id}
-                  aria-pressed={activeProject?.id === project.id}
-                  aria-controls="project-preview"
-                  aria-label={'Preview ' + project.displayName}
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={'Open ' + project.displayName + ' in a new tab'}
                   onPointerEnter={(event) => {
                     if ((event.pointerType === 'mouse' || event.pointerType === 'pen') && !reduced) {
                       cursorPoint.current = { x: event.clientX, y: event.clientY };
                       setHoveredProject(project);
                     }
                   }}
-                  onClick={() => setActiveProject(project)}
-                  onFocus={() => {
-                    setHoveredProject(null);
-                    setActiveProject(project);
-                  }}
-                  onBlur={(event) => {
-                    if (!wrap.current?.contains(event.relatedTarget)) {
-                      setActiveProject(null);
-                      setHoveredProject(null);
-                    }
-                  }}
+                  onFocus={() => setHoveredProject(null)}
                 >
+                  <img
+                    className="project-row__mobile-thumb"
+                    src={project.previewImage}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <span className="project-row__chest">
                     <Chest />
                     <span className="project-row__number">{String(index + 1).padStart(2, '0')}</span>
@@ -322,18 +252,13 @@ export function Projects() {
                     <span className="project-row__category">{project.category}</span>
                     <span className="chest-name">{project.displayName}</span>
                     <span className="project-row__summary">{project.description}</span>
-                    <span className="project-row__open">Inspect project <span aria-hidden="true">→</span></span>
+                    <span className="project-row__open">Open project <span aria-hidden="true">↗</span></span>
                   </span>
-                  <img className="project-row__mobile-thumb" src={project.previewImage} alt="" loading="lazy" decoding="async" />
-                </button>
+                </a>
               </li>
             ))}
           </ul>
         </div>
-
-        <aside className="project-preview-dock" aria-label="Selected project preview" aria-live="polite">
-          <ProjectPreview key={activeProject?.id || 'empty'} project={activeProject} />
-        </aside>
       </div>
       <CursorProjectPreview project={hoveredProject} cursorPoint={cursorPoint} reduced={reduced} />
     </Section>
