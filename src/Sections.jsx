@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Chest } from './PixelArt.jsx';
@@ -128,9 +129,109 @@ function ProjectPreview({ project }) {
   );
 }
 
+
+function CursorProjectPreview({ project, cursorPoint, reduced }) {
+  const preview = useRef(null);
+
+  useEffect(() => {
+    const element = preview.current;
+    if (!element) return undefined;
+
+    if (!project || reduced) {
+      const hide = gsap.to(element, {
+        autoAlpha: 0,
+        scale: 0.94,
+        rotation: 1.5,
+        duration: 0.18,
+        ease: 'power2.in',
+      });
+      return () => hide.kill();
+    }
+
+    const position = (point) => {
+      const width = element.offsetWidth || 324;
+      const height = element.offsetHeight || 248;
+      const gap = 22;
+      let x = point.x + gap;
+      let y = point.y + gap;
+
+      if (x + width > window.innerWidth - 12) x = point.x - width - gap;
+      if (y + height > window.innerHeight - 12) y = point.y - height - gap;
+
+      x = gsap.utils.clamp(12, Math.max(12, window.innerWidth - width - 12), x);
+      y = gsap.utils.clamp(12, Math.max(12, window.innerHeight - height - 12), y);
+      xTo(x);
+      yTo(y);
+    };
+
+    const xTo = gsap.quickTo(element, 'x', { duration: 0.28, ease: 'power3.out' });
+    const yTo = gsap.quickTo(element, 'y', { duration: 0.28, ease: 'power3.out' });
+    const onMove = (event) => position({ x: event.clientX, y: event.clientY });
+    const onResize = () => position(cursorPoint.current);
+
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('resize', onResize);
+    position(cursorPoint.current);
+
+    const show = gsap.fromTo(
+      element,
+      { autoAlpha: 0, scale: 0.92, rotation: -2 },
+      { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.34, ease: 'power3.out' },
+    );
+
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('resize', onResize);
+      show.kill();
+      gsap.killTweensOf(element);
+    };
+  }, [project?.id, reduced]);
+
+  return createPortal(
+    <aside
+      ref={preview}
+      className="project-cursor-preview"
+      aria-hidden="true"
+    >
+      {project && !reduced && (
+        <>
+          <div className="project-cursor-preview__chrome">
+            <span className="window-dot window-dot--red" />
+            <span className="window-dot window-dot--yellow" />
+            <span className="window-dot window-dot--green" />
+            <span className="project-cursor-preview__address">
+              {project.liveUrl.replace(/^https?:\\/\\//, '').replace(/\\/$/, '')}
+            </span>
+            <span className="project-cursor-preview__stamp">SITE SNAPSHOT</span>
+          </div>
+          <div className="project-cursor-preview__screen">
+            <img
+              key={project.id}
+              src={project.previewImage}
+              alt=""
+              draggable="false"
+              decoding="async"
+            />
+          </div>
+          <div className="project-cursor-preview__footer">
+            <div>
+              <p>{project.category}</p>
+              <h3>{project.displayName}</h3>
+            </div>
+            <span aria-hidden="true">↗</span>
+          </div>
+        </>
+      )}
+    </aside>,
+    document.body,
+  );
+}
+
 export function Projects() {
   const wrap = useRef(null);
+  const cursorPoint = useRef({ x: 0, y: 0 });
   const [activeProject, setActiveProject] = useState(null);
+  const [hoveredProject, setHoveredProject] = useState(null);
   const reduced = useReducedMotion();
 
   useEffect(() => {
@@ -155,16 +256,38 @@ export function Projects() {
       <div
         ref={wrap}
         className="project-explorer"
-        onKeyDown={(event) => event.key === 'Escape' && setActiveProject(null)}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            setActiveProject(null);
+            setHoveredProject(null);
+          }
+        }}
+        onPointerMove={(event) => {
+          if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+            cursorPoint.current = { x: event.clientX, y: event.clientY };
+          }
+        }}
         onPointerLeave={(event) => {
-          if (event.pointerType === 'mouse' && !wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
+          if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+            setHoveredProject(null);
+            if (!wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
+          }
         }}
       >
         <div className="project-explorer__list">
           <p className="lede">Each crate holds a small experiment. Select one to inspect the screenshot and the story behind it.</p>
           <ul className="chests chests--stack">
             {PROJECTS.map((project, index) => (
-              <li className={'project-row' + (project.featured ? ' project-row--featured' : '')} key={project.id}>
+              <li
+                className={'project-row' + (project.featured ? ' project-row--featured' : '')}
+                key={project.id}
+                onPointerLeave={(event) => {
+                  if (
+                    (event.pointerType === 'mouse' || event.pointerType === 'pen') &&
+                    !(event.relatedTarget instanceof Element && event.relatedTarget.closest('.chest-btn'))
+                  ) setHoveredProject(null);
+                }}
+              >
                 <button
                   type="button"
                   className="chest-btn"
@@ -174,11 +297,21 @@ export function Projects() {
                   aria-label={'Preview ' + project.displayName}
                   onClick={() => setActiveProject(project)}
                   onPointerEnter={(event) => {
-                    if (event.pointerType === 'mouse' || event.pointerType === 'pen') setActiveProject(project);
+                    if ((event.pointerType === 'mouse' || event.pointerType === 'pen') && !reduced) {
+                      cursorPoint.current = { x: event.clientX, y: event.clientY };
+                      setHoveredProject(project);
+                    }
                   }}
-                  onFocus={() => setActiveProject(project)}
+                  onClick={() => setActiveProject(project)}
+                  onFocus={() => {
+                    setHoveredProject(null);
+                    setActiveProject(project);
+                  }}
                   onBlur={(event) => {
-                    if (!wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
+                    if (!wrap.current?.contains(event.relatedTarget)) {
+                      setActiveProject(null);
+                      setHoveredProject(null);
+                    }
                   }}
                 >
                   <span className="project-row__chest">
@@ -203,6 +336,7 @@ export function Projects() {
           <ProjectPreview key={activeProject?.id || 'empty'} project={activeProject} />
         </aside>
       </div>
+      <CursorProjectPreview project={hoveredProject} cursorPoint={cursorPoint} reduced={reduced} />
     </Section>
   );
 }
