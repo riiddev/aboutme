@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#dff4fb">
+  <meta name="description" content="Riiddev — a curious developer exploring frontend, web design, backend basics, and creative experiments.">
+  <title>Riiddev — Curious by Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+  <nav class="nav" aria-label="Main navigation">
+    <a class="brand" href="#home" aria-label="Riiddev home"><span class="pixel-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>riiddev<span class="pink">.</span></a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links" type="button"><span></span><span></span></button>
+    <div class="nav-links" id="nav-links">
+      <a href="#about">About</a><a href="#exploring">Exploring</a><a href="#work">Selected work</a><a href="#activity">GitHub</a>
+      <a class="nav-cta" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-sky" aria-hidden="true"></div>
+      <svg class="seascape" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <circle cx="185" cy="145" r="57" fill="#ffe3a9" opacity=".84"/>
+        <g fill="none" stroke="#647f91" stroke-width="2" stroke-linecap="round" opacity=".45">
+          <path d="M390 126c-40-29-10-47 15-46 18-32 60-23 74 4 30-4 45 17 33 39"/>
+          <path d="M723 88c29-29 67-14 78 6 30-16 64-1 56 18-19 23-81 8-134 29-34 10-48-11 0-53z"/>
+          <path d="M64 233q16-23 34-2 15-23 34 0M288 168q18-28 35-3 20-28 36-1M427 185q17-23 34-2 19-26 33-1"/>
+          <path d="M965 183q20-27 42-4 22-28 41-5M1062 228q19-20 38-3 16-24 35-2"/>
+          <path d="M285 220q17-30 35 0 15-29 31 0M402 245q14-23 28-1 14-24 29-1M190 280q13-19 27 0 14-20 27 0"/>
+        </g>
+        <path d="M0 405q105-37 190-4t175-2 200 5 225-14 210 13 200-16v333H0z" fill="#8ecde0" opacity=".58"/>
+        <path d="M0 439q120-29 240-4t240-5 240 10 240-14 240 8" fill="none" stroke="#fff" stroke-width="4" opacity=".8"/>
+        <ellipse cx="833" cy="472" rx="295" ry="30" fill="#456a8a" opacity=".2"/>
+        <path d="M548 304q199 33 508-10l-42 122q-164 44-375-2l-63-59z" fill="#f1bd79" stroke="#6d6271" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M578 358q212 50 460-5l-14 34q-203 45-417 4z" fill="#398fbb" stroke="#6d6271" stroke-width="2"/>
+        <path d="M549 303q239 32 507-9" fill="none" stroke="#fff1ce" stroke-width="7" stroke-linecap="round"/>
+        <path d="M580 305 555 157" fill="none" stroke="#786b7d" stroke-width="2.5"/>
+        <g fill="#fff9e8" stroke="#5c76a0" stroke-width="2"><circle cx="755" cy="374" r="7"/><circle cx="782" cy="381" r="5"/><circle cx="812" cy="382" r="8"/></g>
+        <path d="M86 602c33-52 122-96 242-110 81-13 161 5 210 44 32 26 53 64 67 114v70H91c-33-24-37-73-5-118z" fill="#292548" stroke="#635b89" stroke-width="5"/>
+        <path d="M111 670q124-35 243-15t247 25" fill="none" stroke="#8b86b1" stroke-width="4" opacity=".65"/>
+        <path d="M180 602q19-25 49-18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="285" cy="585" rx="7" ry="10" fill="#fff"/><circle cx="287" cy="586" r="3" fill="#292548"/>
+        <path d="M406 630q58-13 104 37-30 41-92 24" fill="#e8f5f5" stroke="#655c8a" stroke-width="4"/>
+        <g fill="none" stroke="#f3fcff" stroke-linecap="round" opacity=".9"><path d="M10 509q22-14 43 0t41 0 41 0" stroke-width="4"/><path d="M630 524q24-15 47 0t46 0 46 0" stroke-width="4"/><path d="M712 573q21-13 42 0t42 0 42 0" stroke-width="4"/><path d="M903 492q18-14 38 0t40 0" stroke-width="4"/><path d="M1010 560q21-15 43 0t44 0" stroke-width="4"/></g>
+        <g fill="none" stroke="#fff" stroke-width="3" opacity=".9"><circle cx="633" cy="473" r="8"/><circle cx="655" cy="451" r="4"/><circle cx="672" cy="477" r="5"/></g>
+      </svg>
+
+      <div class="hero-top"><a href="#home" class="hero-name">Riiddev's little corner</a><span class="edition"><i></i> PERSONAL FIELD GUIDE</span></div>
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> CURIOUS BY DESIGN</p>
+        <h1 id="hero-title" class="hero-title"><span>RIID</span><span class="blue">DEV<span class="pink">.</span></span></h1>
+        <p class="hero-lead">A curious developer, learning how the web <em>looks</em>, <em>feels</em>, and works behind the scenes.</p>
+        <p class="hero-note">Not an expert. Just building, breaking, learning, and trying again.</p>
+        <div class="hero-actions"><a class="button dark" href="#work">Explore my work <span>↘</span></a><a class="button light" href="https://github.com/riiddev" target="_blank" rel="noopener noreferrer">Find me on GitHub <span>↗</span></a></div>
+        <p class="now-note"><b>✳</b> Currently exploring frontend / UI → backend basics</p>
+      </div>
+      <div class="hero-sticker" aria-hidden="true"><span>KEEP</span><span>MAKING</span><span>THINGS</span><svg viewBox="0 0 90 30"><path d="M2 12Q40-5 72 17t15-3M76 5l11 9-11 8" fill="none" stroke="currentColor" stroke-width="2"/></svg></div>
+      <a class="scroll-cue" href="#about"><span></span> SCROLL A LITTLE</a>
+    </section>
+
+    <section class="about panel reveal" id="about" aria-labelledby="about-title">
+      <div class="section-kicker"><span class="handwritten">About me!</span><span>01 / THE PERSON BEHIND THE PIXELS</span></div>
+      <div class="about-grid">
+        <div class="about-copy">
+          <p class="eyebrow"><span></span> HI, I'M RIIDDEV</p>
+          <h2 id="about-title">Still learning.<br><em>Always building.</em></h2>
+          <p class="about-intro">I like learning new things, trying them out, and discovering what I can make along the way.</p>
+          <p>Right now, I'm mostly drawn to frontend development and web design: the details in a layout, the rhythm of a page, and interactions that feel thoughtful instead of distracting.</p>
+          <p>I'm also beginning to explore backend development, understanding how interfaces connect to data and how applications work beneath the surface.</p>
+          <p class="signoff">No rush. One experiment at a time. <span>↗</span></p>
+        </div>
+        <div class="about-visual">
+          <div class="orbit orbit-one" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
+          <figure class="portrait-frame">
+            <div class="portrait"><img src="assets/riiddev-portrait.jpg" alt="Riiddev's temporary illustrated avatar" width="320" height="320" fetchpriority="high"></div>
+            <figcaption><b>THE CURRENT AVATAR</b><span>One small pixel at a time.</span></figcaption>
+          </figure>
+          <span class="doodle star" aria-hidden="true">✳</span><span class="doodle cross" aria-hidden="true">×</span>
+          <a class="social-chip" href="https://github.com/riiddev" target="_blank" rel="noopener noreferrer"><span>↗</span><span><b>GitHub</b><small>@riiddev</small></span></a>
+        </div>
+      </div>
+      <div class="about-bottom"><span>r.</span><p>This portfolio is a living notebook, not a list of things I've supposedly mastered.</p></div>
+    </section>
+
+    <section class="section explore reveal" id="exploring" aria-labelledby="explore-title">
+      <div class="section-heading"><div><p class="eyebrow"><span></span> THE CURRENT CHAPTER</p><h2 id="explore-title">Things on my <em>desk.</em></h2></div><p class="section-intro">A snapshot of what I'm practicing, using, and slowly getting more comfortable with.</p></div>
+      <div class="learning-grid">
+        <article class="learning blue-card"><span class="num">01</span><div><small>IN PRACTICE</small><h3>Frontend & UI</h3><p>Layout, typography, responsive interfaces, accessible controls, and the little details that make a page feel good to use.</p><div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>TypeScript</span><span>React</span><span>Vite</span></div></div><b class="watermark">⌁</b></article>
+        <article class="learning pink-card"><span class="num">02</span><div><small>EXPLORING</small><h3>Motion & interaction</h3><p>Scroll reveals, character movement, expressive feedback, and animation that adds personality without getting in the way.</p><div class="tags"><span>CSS Motion</span><span>GSAP</span><span>Remotion</span></div></div><b class="watermark">↝</b></article>
+        <article class="learning green-card"><span class="num">03</span><div><small>NEXT LEVEL</small><h3>Backend basics</h3><p>Understanding APIs, data flow, validation, and the connection between what happens on screen and on a server.</p><div class="tags"><span>Hono</span><span>Bun</span><span>API concepts</span></div></div><b class="watermark">{ }</b></article>
+        <article class="learning yellow-card"><span class="num">04</span><div><small>ALWAYS CURIOUS</small><h3>Build, break, repeat</h3><p>Testing ideas in real projects, looking for what breaks, and improving things instead of pretending they're perfect.</p><div class="tags"><span>Git</span><span>GitHub Actions</span><span>Debugging</span></div></div><b class="watermark">↻</b></article>
+      </div>
+      <p class="fine-print">Tools used or explored across my projects—not a claim of equal proficiency in every technology.</p>
+    </section>
+
+    <section class="section work reveal" id="work" aria-labelledby="work-title">
+      <div class="section-heading"><div><p class="eyebrow"><span></span> SELECTED EXPERIMENTS</p><h2 id="work-title">Made with curiosity<span class="pink">.</span></h2></div><p class="section-intro">Different ideas, different stacks. Each one teaches me something new.</p></div>
+      <div class="projects">
+        <article class="project"><div class="project-art nasib-art"><small>SIMULASI WARGA</small><span class="sun"></span><div class="board"><div class="tiles"><i></i><i></i><i></i></div><div class="tiles"><i></i><strong>NASIB<br><b>+62</b></strong><i></i></div><div class="tiles"><i></i><i></i><i></i></div><span class="token t1"></span><span class="token t2"></span></div><span class="stamp">ROLL<br>AGAIN!</span></div><div class="project-copy"><div class="project-meta">01 / GAME SYSTEMS <span>✳</span></div><h3>NASIB +62</h3><p>A satirical economy board game about money, property, and everyday curveballs. Features computer opponents, a custom board, and illustrated game events.</p><div class="tags"><span>React</span><span>Vite</span><span>GSAP</span><span>Remotion</span></div><a class="project-link" href="https://github.com/riiddev/NASIB-62" target="_blank" rel="noopener noreferrer">Explore source <b>↗</b></a></div></article>
+        <article class="project"><div class="project-art office-art"><small>AGENT HQ / 3D WORLD</small><span class="window"></span><div class="office-scene"><div class="wall"></div><div class="monitor"><i></i><i></i><i></i></div><div class="desk"></div><div class="person"><i></i><b></b></div><div class="plant"><i></i><i></i><i></i></div></div><span class="note-sticker">WORK<br>IN PROGRESS</span></div><div class="project-copy"><div class="project-meta">02 / INTERACTIVE WORLD <span>✳</span></div><h3>Riiddev Agent HQ</h3><p>A Sims-inspired 3D office playground for exploring rooms, character interactions, and task dispatch. Crew and activity feeds are demo data; no AI agent is connected by default.</p><div class="tags"><span>React</span><span>Three.js</span><span>Vite</span><span>GSAP</span></div><div class="project-links"><a class="project-link" href="https://github.com/riiddev/office" target="_blank" rel="noopener noreferrer">Explore source <b>↗</b></a><a class="project-link" href="https://kantorriddev.vercel.app/" target="_blank" rel="noopener noreferrer">Open live site <b>↗</b></a></div></div></article>
+        <article class="project"><div class="project-art study-art"><small>A LITTLE STUDY SPACE</small><div class="paper back"></div><div class="paper front"><b>STUDY NOTES</b><i></i><i></i><i></i><strong>learn it<br>your way</strong><i></i><i></i></div><div class="pencil"></div><span class="study-sticker">KEEP<br>GROWING</span></div><div class="project-copy"><div class="project-meta">03 / LEARNING EXPERIENCE <span>✳</span></div><h3>StudyWithMbah</h3><p>A study-site experiment with organized learning materials, a motion-rich interface, and a character-mascot studio using React and Remotion.</p><div class="tags"><span>HTML</span><span>CSS</span><span>GSAP</span><span>React</span><span>Remotion</span></div><a class="project-link" href="https://github.com/riiddev/StudyWithMbah" target="_blank" rel="noopener noreferrer">Explore source <b>↗</b></a></div></article>
+        <article class="project"><div class="project-art latveria-art"><small>UTBK / SNBT PRACTICE</small><span class="latveria-sun"></span><div class="dashboard"><div class="sidebar"><i></i><i></i><i></i><i></i></div><div class="dash-content"><b>Your next level</b><div class="stats"><i></i><i></i><i></i></div><div class="question"><i></i><i></i><span></span><span></span><span></span></div></div></div><span class="level-stamp">LEVEL UP</span></div><div class="project-copy"><div class="project-meta">04 / EDUCATION <span>✳</span></div><h3>Latveria</h3><p>An Indonesian UTBK-SNBT practice platform with question sets, saved attempts, progress systems, and administration tools. Frontend and backend have separate responsibilities.</p><div class="tags"><span>React</span><span>Vite</span><span>Hono</span><span>Bun</span></div><a class="project-link" href="https://github.com/riiddev/gemini" target="_blank" rel="noopener noreferrer">Explore source <b>↗</b></a></div></article>
+        <article class="project"><div class="project-art essay-art"><small>THOUGHTS → WORDS</small><div class="essay-sheet"><b>Nulis Esai</b><em>by Parthoo</em><i></i><i></i><i></i><i></i><i></i><span>AI COACH</span></div><span class="essay-flower">✳</span></div><div class="project-copy"><div class="project-meta">05 / WRITING TOOLS <span>✳</span></div><h3>Nulis Esai by Parthoo</h3><p>An essay practice app with exam simulation, answer history, an admin workspace, and an optional server-side AI Essay Coach. Live AI feedback requires an API key.</p><div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Vercel API</span></div><a class="project-link" href="https://github.com/riiddev/tryoutessaypartho" target="_blank" rel="noopener noreferrer">Explore source <b>↗</b></a></div></article>
+      </div>
+      <div class="work-footer"><span>↗</span><p>More experiments live in the repository garden.</p><a href="https://github.com/riiddev?tab=repositories" target="_blank" rel="noopener noreferrer">Browse all repositories</a></div>
+    </section>
+
+    <section class="section activity reveal" id="activity" aria-labelledby="activity-title">
+      <div class="section-heading"><div><p class="eyebrow"><span></span> LITTLE STEPS ADD UP</p><h2 id="activity-title">A trail of <em>progress.</em></h2></div><p class="section-intro">Not a scorecard. Just another way to see the journey of learning through code.</p></div>
+      <div class="activity-card"><div class="activity-copy"><small>FROM MY GITHUB PROFILE</small><h3>One experiment at a time.</h3><p>Building a project, revisiting an old idea, fixing a bug, learning a new concept. Progress doesn't need to be flashy to be real.</p><a class="button white" href="https://github.com/riiddev" target="_blank" rel="noopener noreferrer">Visit my GitHub <span>↗</span></a></div><div class="contribution"><div class="contrib-top"><i></i> CONTRIBUTION LANDSCAPE <span>GITHUB</span></div><img id="contribution-image" src="https://raw.githubusercontent.com/riiddev/riiddev/main/profile-3d-contrib/profile-green.svg" alt="Three-dimensional visualization of Riiddev's GitHub contributions" loading="lazy"><p id="contribution-fallback" hidden>The contribution visual is temporarily unavailable. Visit GitHub to see the profile directly.</p></div></div>
+    </section>
+
+    <section class="contact reveal" id="contact" aria-labelledby="contact-title"><span class="contact-doodle d1" aria-hidden="true">✳</span><span class="contact-doodle d2" aria-hidden="true">↝</span><p class="eyebrow"><span></span> THE NEXT LITTLE ADVENTURE</p><h2 id="contact-title">Have an idea<br>worth <em>trying?</em></h2><p class="contact-description">I'm always up for discovering interesting projects, exchanging ideas, and finding something new to learn from.</p><div class="contact-actions"><a class="button dark" href="https://github.com/riiddev" target="_blank" rel="noopener noreferrer">Find me on GitHub <span>↗</span></a><a class="button light" href="https://open.spotify.com/playlist/5Qn9lmfjJ6KMuYl0jTIbkO?si=37d517eaa993488c" target="_blank" rel="noopener noreferrer">My learning soundtrack <span>♫</span></a></div><p class="contact-note">✳ No grand claims. Just genuine curiosity.</p></section>
+  </main>
+
+  <footer class="footer"><a class="brand" href="#home">riiddev<span class="pink">.</span></a><p>DESIGNED WITH CURIOSITY · BUILT WHILE LEARNING</p><a href="#home">Back to top ↑</a><small>© <span id="current-year"></span></small></footer>
+</body>
+</html>
