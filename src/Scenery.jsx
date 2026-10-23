@@ -163,9 +163,9 @@ const CITY_BUILDINGS = [
   { id: 'last-block', kind: 'office', left: '88.2%', width: '12%', height: '53%', rows: 5, cols: 3, wall: '#202f4d', light: '#ffd69a' },
 ];
 
-export const Cityscape = memo(function Cityscape() {
+export const Cityscape = memo(function Cityscape({ className = '' }) {
   return (
-    <div className="cityscape" aria-hidden="true">
+    <div className={className ? `cityscape ${className}` : "cityscape"} aria-hidden="true">
       <div className="cityscape__ridge cityscape__ridge--one" />
       <div className="cityscape__ridge cityscape__ridge--two" />
       <div className="cityscape__buildings">
@@ -265,6 +265,7 @@ export const Sky = memo(function Sky() {
       <i className="cloud c1" />
       <i className="cloud c2" />
       <div className="sky__horizon" />
+      <Cityscape className="cityscape--world" />
       <div className="skyline skyline--far">
         {FAR_BUILDINGS.map((style, index) => (
           <i className="skyline__building" key={index} style={style} />
