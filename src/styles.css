@@ -1421,3 +1421,512 @@ img { display: block; max-width: 100%; height: auto; }
   .hc[data-walking="true"] .sprite__body,
   .hc[data-walking="true"] .sprite__head { animation: none !important; }
 }
+
+
+
+/* ── A lived-in blue-hour neighbourhood: designed roofs, shopfronts and traffic ── */
+/* Replace the old evenly repeated skyline with one specific, layered streetscape. */
+.skyline { display: none; }
+.hero__wall::after { display: none; }
+
+.cityscape {
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--ground) - 5px);
+  height: min(49svh, 460px);
+  min-height: 250px;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, transparent 0%, #0d1d3514 45%, #0b172b6b 100%);
+}
+.cityscape::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 35% 0 0;
+  background: linear-gradient(180deg, transparent 0%, #11254142 52%, #0c192d 100%);
+}
+.cityscape__ridge {
+  position: absolute;
+  bottom: 38px;
+  width: 62%;
+  height: 29%;
+  background: #20314e;
+  opacity: .55;
+  clip-path: polygon(0 55%, 5% 55%, 5% 38%, 12% 38%, 12% 18%, 18% 18%, 18% 44%, 25% 44%, 25% 8%, 33% 8%, 33% 32%, 40% 32%, 40% 0, 49% 0, 49% 46%, 56% 46%, 56% 24%, 65% 24%, 65% 43%, 73% 43%, 73% 13%, 81% 13%, 81% 35%, 89% 35%, 89% 51%, 100% 51%, 100% 100%, 0 100%);
+}
+.cityscape__ridge--one { left: -10%; }
+.cityscape__ridge--two {
+  right: -12%;
+  bottom: 44px;
+  width: 58%;
+  height: 36%;
+  opacity: .42;
+  background: #35456a;
+  transform: scaleX(-1);
+}
+.cityscape__buildings { position: absolute; inset: 0 0 35px; }
+.city-building {
+  position: absolute;
+  left: var(--left);
+  bottom: 0;
+  width: var(--width);
+  height: var(--height);
+  min-width: 44px;
+  background: var(--wall);
+  border: 2px solid #101b33;
+  border-bottom: 0;
+  box-shadow:
+    inset 5px 0 #a6c5ef0c,
+    inset -7px 0 #080f20a8,
+    3px 0 #131f38;
+}
+.city-building::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 auto;
+  height: 8px;
+  background: #99b8dd;
+  opacity: .36;
+  box-shadow: 0 3px 0 #0c172d;
+}
+.city-building::after {
+  content: "";
+  position: absolute;
+  inset: 10px 4px 0;
+  z-index: 0;
+  opacity: .35;
+  pointer-events: none;
+  background: repeating-linear-gradient(90deg, transparent 0 15px, #090f20 15px 17px);
+}
+.city-building__roof {
+  position: absolute;
+  z-index: 1;
+  left: -3px;
+  right: -3px;
+  top: -7px;
+  height: 7px;
+  background: #4b648b;
+  border: 2px solid #101b33;
+  border-bottom: 1px solid #95b4dc;
+}
+.city-building--rowhouse .city-building__roof {
+  top: -16px;
+  height: 16px;
+  clip-path: polygon(0 100%,0 75%,12% 75%,12% 48%,24% 48%,24% 23%,37% 23%,37% 0,64% 0,64% 23%,78% 23%,78% 48%,90% 48%,90% 75%,100% 75%,100% 100%);
+  background: #41557a;
+}
+.city-building--tower .city-building__roof {
+  top: -12px;
+  height: 12px;
+  left: 17%;
+  right: 17%;
+  background: #536b98;
+  box-shadow: -9px 6px 0 -2px #263a5d, 9px 6px 0 -2px #263a5d;
+}
+.city-building--tower::before {
+  left: 17%;
+  right: 17%;
+  height: 14px;
+  background: repeating-linear-gradient(90deg, #7892b7 0 3px, #1b2b49 3px 6px);
+}
+.city-building--cafe { border-top: 3px solid #e9bc83; }
+.city-building--cafe .city-building__roof { background: #bf7f70; border-color: #30243f; }
+.city-building--hotel .city-building__roof {
+  left: 8%;
+  right: 8%;
+  height: 11px;
+  top: -11px;
+  background: #536b88;
+}
+.city-building--water .city-building__roof {
+  left: 12%;
+  right: 12%;
+  top: -12px;
+  height: 12px;
+  background: #677ca0;
+}
+.city-building--office .city-building__roof { background: #657797; }
+.city-building__antenna {
+  position: absolute;
+  z-index: 3;
+  top: -29px;
+  left: 50%;
+  width: 2px;
+  height: 22px;
+  background: #7f9fc5;
+  box-shadow: 4px 3px 0 -1px #7f9fc5;
+}
+.city-building__antenna::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  top: -3px;
+  left: -1px;
+  background: #ffb7bd;
+  box-shadow: 0 0 0 2px #ff8eaa24;
+  animation: antenna-blink 2.8s steps(2,end) infinite;
+}
+@keyframes antenna-blink { 0%, 72%, 100% { opacity: .95; } 73%, 78% { opacity: .2; } }
+.city-building__sign {
+  position: absolute;
+  z-index: 4;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 2px 4px;
+  overflow: hidden;
+  border: 1px solid #ffd6a866;
+  background: #172640;
+  color: #ffd9a6;
+  font: 700 clamp(6px, .55vw, 8px)/1.35 var(--fd);
+  letter-spacing: .07em;
+  white-space: nowrap;
+  text-shadow: 0 0 5px #ffd9a655;
+  box-shadow: 0 2px 0 #101b33;
+}
+.city-building--hotel .city-building__sign { color: #b9eaf2; border-color: #8cddec88; }
+.city-building__windows {
+  position: absolute;
+  z-index: 2;
+  inset: 23px 7px 8px;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows), minmax(5px, 1fr));
+  gap: clamp(4px, .55vw, 8px) clamp(3px, .45vw, 6px);
+  align-content: stretch;
+}
+.city-building__windows i {
+  display: block;
+  min-width: 2px;
+  min-height: 5px;
+  border: 1px solid #101c34;
+  background: var(--window-light);
+  opacity: .66;
+  box-shadow: inset 1px 1px #fff4, 0 0 5px color-mix(in srgb, var(--window-light) 18%, transparent);
+  animation: window-life 5.8s steps(2,end) var(--window-delay) infinite;
+}
+.city-building__windows i:nth-child(5n + 2) { opacity: .13; animation-duration: 8.6s; }
+.city-building__windows i:nth-child(7n + 3) { background: #506a92; opacity: .6; }
+.city-building__windows i:nth-child(11n + 4) { background: #ffcf94; }
+@keyframes window-life { 0%, 72%, 100% { opacity: .62; } 74%, 78% { opacity: .17; } }
+.city-building__balconies {
+  position: absolute;
+  z-index: 3;
+  top: 28px;
+  right: 5px;
+  bottom: 9px;
+  width: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.city-building__balconies i {
+  display: block;
+  height: 4px;
+  width: 8px;
+  border-top: 1px solid #a8c6e6;
+  border-bottom: 1px solid #111e35;
+  background: #61779a;
+  box-shadow: 0 3px 0 #111e35;
+}
+.city-building__awning {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 11px;
+  display: flex;
+  border-top: 2px solid #151b31;
+  border-bottom: 2px solid #151b31;
+}
+.city-building__awning i { flex: 1; background: #df9c8b; border-right: 1px solid #302943; }
+.city-building__awning i:nth-child(even) { background: #f3d1a0; }
+.city-tree {
+  position: absolute;
+  z-index: 3;
+  bottom: 32px;
+  width: 26px;
+  height: 44px;
+}
+.city-tree i {
+  position: absolute;
+  bottom: 0;
+  left: 11px;
+  width: 5px;
+  height: 18px;
+  background: #493d59;
+  box-shadow: 2px 0 0 #111d34;
+}
+.city-tree b {
+  position: absolute;
+  left: 2px;
+  top: 0;
+  width: 22px;
+  height: 25px;
+  background: #275d64;
+  clip-path: polygon(30% 0,70% 0,70% 15%,88% 15%,88% 35%,100% 35%,100% 70%,80% 70%,80% 100%,18% 100%,18% 78%,0 78%,0 32%,20% 32%,20% 14%,30% 14%);
+  box-shadow: inset 3px 0 #69a6a0;
+}
+.city-tree--left { left: 3%; }
+.city-tree--right { right: 5%; transform: scale(1.15); transform-origin: bottom; }
+.city-lamp {
+  position: absolute;
+  z-index: 5;
+  bottom: 35px;
+  height: 40px;
+  width: 3px;
+  background: #617ba0;
+  box-shadow: 2px 0 #131f38;
+}
+.city-lamp::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -5px;
+  width: 13px;
+  height: 3px;
+  background: #839fc2;
+}
+.city-lamp i {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 9px;
+  height: 6px;
+  background: #ffdfab;
+  box-shadow: 0 0 0 2px #ffd59a22, 0 0 15px 5px #ffd59a22;
+  animation: lamp-pulse 3.5s steps(2,end) infinite;
+}
+.city-lamp--left { left: 14%; }
+.city-lamp--right { right: 16%; height: 48px; }
+@keyframes lamp-pulse { 0%, 100% { opacity: 1; } 48%, 53% { opacity: .68; } }
+.city-sidewalk {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 27px;
+  height: 11px;
+  border-top: 2px solid #7b93b2;
+  background: repeating-linear-gradient(90deg, #36496a 0 23px, #263853 23px 26px);
+}
+.city-sidewalk::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: #111b32;
+}
+.city-sidewalk__crack {
+  position: absolute;
+  left: 41%;
+  top: 2px;
+  width: 13px;
+  height: 4px;
+  border-left: 2px solid #97a9be;
+  border-bottom: 1px solid #97a9be;
+  transform: skewX(-30deg);
+  opacity: .48;
+}
+.city-street {
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 29px;
+  background: linear-gradient(180deg, #1b2a40 0%, #111b2c 100%);
+  border-top: 2px solid #607392;
+  box-shadow: 0 -3px 0 #121e33;
+}
+.city-street__lane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 12px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #b7c7dc 0 16px, transparent 16px 37px);
+  opacity: .42;
+}
+.city-street__crossing {
+  position: absolute;
+  right: 12%;
+  top: 2px;
+  width: 39px;
+  height: 5px;
+  background: repeating-linear-gradient(90deg, #b4c5d8 0 5px, transparent 5px 8px);
+  opacity: .4;
+}
+.city-vehicle {
+  position: absolute;
+  z-index: 7;
+  left: -110px;
+  bottom: 8px;
+  width: 81px;
+  height: 22px;
+  animation: city-drive 23s linear infinite;
+  animation-delay: -8s;
+}
+.city-vehicle__body {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 81px;
+  height: 13px;
+  background: #63bdcf;
+  border: 2px solid #0d1b31;
+  box-shadow: inset 0 -3px #397a98, 0 2px 0 #091326;
+}
+.city-vehicle__windows {
+  position: absolute;
+  left: 7px;
+  bottom: 8px;
+  width: 55px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #bdeaf0 0 9px, #243651 9px 12px);
+  border: 1px solid #0d1b31;
+}
+.city-vehicle__wheels {
+  position: absolute;
+  bottom: -3px;
+  left: 10px;
+  width: 8px;
+  height: 6px;
+  background: #0e1727;
+  border: 1px solid #8295b6;
+  box-shadow: 48px 0 0 -1px #0e1727, 48px 0 0 0 #8295b6;
+}
+.city-vehicle__lamp {
+  position: absolute;
+  right: -2px;
+  bottom: 4px;
+  width: 3px;
+  height: 3px;
+  background: #ffd9a0;
+  box-shadow: 0 0 5px #ffd9a088;
+}
+@keyframes city-drive {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(100vw + 230px)); }
+}
+.city-person {
+  position: absolute;
+  z-index: 6;
+  bottom: 29px;
+  left: var(--person-left);
+  width: 11px;
+  height: 20px;
+  animation: city-wander var(--walk-duration) steps(34,end) var(--walk-delay) infinite alternate;
+}
+.city-person__head {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: 5px;
+  height: 5px;
+  background: #e9bf9e;
+  border: 1px solid #17233b;
+  box-shadow: 0 -2px 0 #202843;
+}
+.city-person__body {
+  position: absolute;
+  top: 5px;
+  left: 2px;
+  width: 7px;
+  height: 9px;
+  background: var(--coat);
+  border: 1px solid #152138;
+  box-shadow: -2px 2px 0 -1px var(--coat), 2px 3px 0 -1px #10192b;
+}
+.city-person__legs {
+  position: absolute;
+  top: 13px;
+  left: 3px;
+  width: 3px;
+  height: 6px;
+  background: #182641;
+  box-shadow: 4px 0 0 #182641;
+  transform-origin: top;
+  animation: city-step .32s steps(2,end) infinite alternate;
+}
+@keyframes city-step { from { transform: skewX(-13deg); } to { transform: skewX(16deg) translateY(1px); } }
+.city-person--one { --walk-range: 8vw; }
+.city-person--two { --walk-range: -10vw; }
+.city-person--three { --walk-range: 6vw; }
+@keyframes city-wander {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--walk-range, 7vw)); }
+}
+.cityscape__signal {
+  position: absolute;
+  z-index: 8;
+  right: 9%;
+  bottom: 42px;
+  width: 5px;
+  height: 16px;
+  background: #243752;
+  border: 1px solid #101b31;
+  box-shadow: 0 -5px 0 -1px #617da4, 0 -5px 0 1px #101b31;
+}
+.cityscape__signal::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -1px;
+  width: 3px;
+  height: 3px;
+  background: #e98491;
+  box-shadow: 0 5px 0 #d3bb7b, 0 10px 0 #79d9d0;
+}
+.cityscape__window-glow {
+  position: absolute;
+  z-index: -1;
+  bottom: 10%;
+  left: 38%;
+  width: 24%;
+  height: 30%;
+  background: #8cdff30a;
+  filter: blur(18px);
+}
+@media (max-width: 820px) {
+  .cityscape { height: min(40svh, 360px); min-height: 215px; }
+  .city-building__windows { inset: 18px 5px 8px; gap: 4px 3px; }
+  .city-building__sign { top: 12px; letter-spacing: 0; }
+  .city-tree--left { left: 1%; }
+  .city-tree--right { right: 2%; }
+  .city-person--three { display: none; }
+  .city-vehicle { animation-duration: 27s; }
+}
+@media (max-width: 520px) {
+  .cityscape { height: 33svh; min-height: 190px; }
+  .city-building { min-width: 26px; border-width: 1px; }
+  .city-building__windows { inset: 18px 3px 6px; grid-template-rows: repeat(var(--rows), minmax(3px, 1fr)); gap: 3px 2px; }
+  .city-building__windows i { min-height: 3px; border-width: 1px; }
+  .city-building__sign { max-width: 94%; font-size: 5px; padding: 1px 2px; }
+  .city-building__balconies { right: 1px; width: 3px; }
+  .city-building__awning { height: 7px; bottom: 5px; }
+  .city-tree { transform: scale(.75); transform-origin: bottom; }
+  .city-tree--right { transform: scale(.85); }
+  .city-lamp { transform: scale(.8); transform-origin: bottom; }
+  .city-person--two { display: none; }
+  .city-street__crossing { right: 6%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .city-building__windows i,
+  .city-building__antenna::after,
+  .city-lamp i,
+  .city-person,
+  .city-person__legs,
+  .city-vehicle { animation: none !important; }
+  .city-vehicle { left: 62%; }
+}
+
