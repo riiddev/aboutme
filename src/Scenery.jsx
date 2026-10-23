@@ -7,20 +7,20 @@ function seeded(seed) {
 
 const TONES = {
   front: {
-    leaf: ['#25492c', '#3b7036', '#4f8f3f'],
-    hi: '#A9F06D',
-    stem: '#2f5a2e',
-    flower: '#BBA9FF',
-    flowerD: '#8d78e6',
-    core: '#EAF0F7',
+    leaf: ['#203b55', '#2f6684', '#4aa4c6'],
+    hi: '#a5edff',
+    stem: '#1a4760',
+    flower: '#afc5ff',
+    flowerD: '#8298eb',
+    core: '#edfaff',
   },
   back: {
-    leaf: ['#1a3320', '#24472a', '#2f5a32'],
-    hi: '#4f8f3f',
-    stem: '#1f3d24',
-    flower: '#7f72c4',
-    flowerD: '#5f55a0',
-    core: '#a9a4c9',
+    leaf: ['#132b44', '#1b3c5a', '#285677'],
+    hi: '#3e82a6',
+    stem: '#10253d',
+    flower: '#7786cf',
+    flowerD: '#5464a6',
+    core: '#b3c5e6',
   },
 };
 
@@ -147,8 +147,8 @@ function useSkyParallax() {
 // garden silhouettes, fireflies, and the existing moonlit sky.
 export const Sky = memo(function Sky() {
   useSkyParallax();
-  const first = useMemo(() => stars(60, 3, '#EAF0F7'), []);
-  const second = useMemo(() => stars(30, 9, '#BBA9FF'), []);
+  const first = useMemo(() => stars(60, 3, '#DDF8FF'), []);
+  const second = useMemo(() => stars(30, 9, '#B4C5FF'), []);
   const fireflies = useMemo(() => Array.from({ length: 17 }, (_, index) => ({
     '--left': ((index * 47 + 13) % 100) + '%',
     '--top': (28 + ((index * 31 + 9) % 66)) + '%',
