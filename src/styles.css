@@ -202,9 +202,8 @@ img { display: block; max-width: 100%; height: auto; }
 .hud__head {
   position: absolute;
   bottom: 4px;
-  left: 0;
-  transform: translateX(calc(var(--p) * 100%));
-  will-change: transform;
+  left: calc(var(--p) * (100% - 48px));
+  will-change: left;
 }
 @media (max-width: 640px) {
   .hud__brand { display: none; }
