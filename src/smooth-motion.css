@@ -1,0 +1,36 @@
+/* Smooth motion pass: keep pixel edges crisp, soften the movement between poses. */
+.sprite {
+  transition: translate 320ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.sprite__head {
+  animation: nod 3.2s ease-in-out infinite;
+}
+
+.hc[data-music="true"] .sprite__head {
+  animation: bob 900ms ease-in-out infinite;
+}
+
+.hc[data-walking="true"] .sprite__body {
+  animation: pixel-walk-step 220ms ease-in-out infinite;
+}
+
+.hc[data-walking="true"] .sprite__head {
+  animation: pixel-walk-head 220ms ease-in-out infinite;
+}
+
+@keyframes pixel-walk-step {
+  50% { transform: translateY(-1px); }
+}
+
+.cloud {
+  animation-timing-function: linear;
+}
+
+.city-person {
+  animation-timing-function: ease-in-out;
+}
+
+.chest {
+  transition: transform 280ms cubic-bezier(.22, 1, .36, 1);
+}
