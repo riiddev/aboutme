@@ -236,16 +236,13 @@ export function Projects() {
                   }}
                   onFocus={() => setHoveredProject(null)}
                 >
-                  <img
-                    className="project-row__mobile-thumb"
-                    src={project.previewImage}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span className="project-row__chest">
-                    <Chest />
+                  <span className="project-row__visual" aria-hidden="true">
                     <span className="project-row__number">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="project-row__spark project-row__spark--one" />
+                    <span className="project-row__spark project-row__spark--two" />
+                    <span className="project-row__spark project-row__spark--three" />
+                    <span className="project-row__chest"><Chest /></span>
+                    <span className="project-row__loot">OPEN CRATE <b>↗</b></span>
                   </span>
                   <span className="project-row__copy">
                     {project.featured && <span className="project-row__featured">Featured</span>}
