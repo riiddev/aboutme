@@ -273,7 +273,7 @@ function HeroCharacter({ music }) {
         .to(targets, {
           x: 0,
           duration: Math.min(1.35, Math.max(0.32, walkDistance / 300)),
-          ease: 'steps(9)',
+          ease: 'power2.inOut',
         }, walkStart + 0.02);
     }
   };
@@ -359,8 +359,8 @@ function HeroCharacter({ music }) {
     setWalking(true);
     gsap.to([button.current, bubble.current].filter(Boolean), {
       x: next.x, y: next.y,
-      duration: reduced ? 0 : 0.18,
-      ease: 'steps(4)',
+      duration: reduced ? 0 : 0.3,
+      ease: 'power2.inOut',
       onComplete: () => {
         position.current = next;
         returnHome(next.x, next.y);
@@ -374,8 +374,8 @@ function HeroCharacter({ music }) {
     setLineIndex((value) => value + 1);
     if (!reduced) {
       gsap.timeline({ overwrite: 'auto' })
-        .to(button.current, { y: -28, duration: 0.14, ease: 'steps(2)' })
-        .to(button.current, { y: 0, duration: 0.14, ease: 'steps(2)' });
+        .to(button.current, { y: -28, duration: 0.18, ease: 'power2.out' })
+        .to(button.current, { y: 0, duration: 0.22, ease: 'power2.inOut' });
     }
   };
 
