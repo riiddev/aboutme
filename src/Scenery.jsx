@@ -146,6 +146,99 @@ function useSkyParallax() {
   }, []);
 }
 
+
+
+// A deliberately composed pixel neighbourhood: varied rooflines, small shops,
+// apartment lights, street furniture and traffic give the hero an inhabited scale.
+const CITY_BUILDINGS = [
+  { id: 'old-row', kind: 'rowhouse', left: '0.5%', width: '10.8%', height: '42%', rows: 4, cols: 3, sign: 'OPEN', wall: '#263858', light: '#f4c988' },
+  { id: 'walkup', kind: 'apartment', left: '9.2%', width: '11.6%', height: '64%', rows: 6, cols: 3, wall: '#233653', light: '#a7dff0', balconies: true },
+  { id: 'brick-office', kind: 'office', left: '19.1%', width: '8.9%', height: '50%', rows: 5, cols: 2, wall: '#26324f', light: '#d8c4ff' },
+  { id: 'clock-tower', kind: 'tower', left: '27.1%', width: '10.8%', height: '84%', rows: 8, cols: 3, wall: '#1c2c4b', light: '#d2e3fa', antenna: true },
+  { id: 'corner-cafe', kind: 'cafe', left: '37.4%', width: '12.8%', height: '35%', rows: 3, cols: 3, sign: 'CAFE', wall: '#302d4e', light: '#ffd6a0' },
+  { id: 'mid-rise', kind: 'apartment', left: '48.4%', width: '11.8%', height: '59%', rows: 6, cols: 3, wall: '#233752', light: '#b8a3ff', balconies: true },
+  { id: 'narrow-house', kind: 'rowhouse', left: '59.2%', width: '8.1%', height: '48%', rows: 5, cols: 2, wall: '#2c3455', light: '#ffd9a3' },
+  { id: 'night-hotel', kind: 'hotel', left: '66.4%', width: '12.9%', height: '72%', rows: 7, cols: 3, sign: 'INN', wall: '#202e4b', light: '#a9e3f1' },
+  { id: 'water-tower', kind: 'water', left: '78.3%', width: '10.6%', height: '43%', rows: 4, cols: 3, wall: '#283757', light: '#d4c4ff', antenna: true },
+  { id: 'last-block', kind: 'office', left: '88.2%', width: '12%', height: '53%', rows: 5, cols: 3, wall: '#202f4d', light: '#ffd69a' },
+];
+
+export const Cityscape = memo(function Cityscape() {
+  return (
+    <div className="cityscape" aria-hidden="true">
+      <div className="cityscape__ridge cityscape__ridge--one" />
+      <div className="cityscape__ridge cityscape__ridge--two" />
+      <div className="cityscape__buildings">
+        {CITY_BUILDINGS.map((building, index) => (
+          <div
+            key={building.id}
+            className={'city-building city-building--' + building.kind}
+            style={{
+              '--left': building.left,
+              '--width': building.width,
+              '--height': building.height,
+              '--cols': building.cols,
+              '--rows': building.rows,
+              '--wall': building.wall,
+              '--window-light': building.light,
+            }}
+          >
+            <i className="city-building__roof" />
+            {building.antenna && <i className="city-building__antenna" />}
+            {building.sign && <span className="city-building__sign">{building.sign}</span>}
+            <div className="city-building__windows">
+              {Array.from({ length: building.rows * building.cols }, (_, windowIndex) => (
+                <i
+                  key={windowIndex}
+                  style={{
+                    '--window-delay': '-' + (((index * 11 + windowIndex * 7) % 31) / 10) + 's',
+                  }}
+                />
+              ))}
+            </div>
+            {building.balconies && (
+              <div className="city-building__balconies">
+                {Array.from({ length: building.rows - 1 }, (_, balconyIndex) => (
+                  <i key={balconyIndex} />
+                ))}
+              </div>
+            )}
+            {building.kind === 'cafe' && <div className="city-building__awning"><i /><i /><i /><i /><i /><i /></div>}
+          </div>
+        ))}
+      </div>
+
+      <span className="city-tree city-tree--left"><i /><b /></span>
+      <span className="city-tree city-tree--right"><i /><b /></span>
+      <span className="city-lamp city-lamp--left"><i /></span>
+      <span className="city-lamp city-lamp--right"><i /></span>
+      <div className="city-sidewalk"><i className="city-sidewalk__crack" /></div>
+      <div className="city-street">
+        <i className="city-street__lane" />
+        <i className="city-street__crossing" />
+        <span className="city-vehicle">
+          <i className="city-vehicle__body" />
+          <i className="city-vehicle__windows" />
+          <i className="city-vehicle__wheels" />
+          <i className="city-vehicle__lamp" />
+        </span>
+        <span className="city-person city-person--one" style={{ '--person-left': '24%', '--coat': '#a7c5e8', '--walk-duration': '17s', '--walk-delay': '-5s' }}>
+          <i className="city-person__head" /><i className="city-person__body" /><i className="city-person__legs" />
+        </span>
+        <span className="city-person city-person--two" style={{ '--person-left': '73%', '--coat': '#c9a7ec', '--walk-duration': '21s', '--walk-delay': '-13s' }}>
+          <i className="city-person__head" /><i className="city-person__body" /><i className="city-person__legs" />
+        </span>
+        <span className="city-person city-person--three" style={{ '--person-left': '47%', '--coat': '#e5b17d', '--walk-duration': '26s', '--walk-delay': '-9s' }}>
+          <i className="city-person__head" /><i className="city-person__body" /><i className="city-person__legs" />
+        </span>
+      </div>
+      <i className="cityscape__signal" />
+      <i className="cityscape__window-glow" />
+    </div>
+  );
+});
+
+
 // A cozy pixel backstreet: distant rooftops, lit windows, foreground rooftops,
 // garden silhouettes, fireflies, and the existing moonlit sky.
 export const Sky = memo(function Sky() {
