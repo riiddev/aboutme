@@ -102,7 +102,7 @@ export const MOOD_LINES = {
   projects: 'Open a crate. Some are still being built.',
   skills: "Tools I've used in my projects.",
   activity: 'Pac-Man is eating my commits.',
-  contact: 'Say hi on GitHub.',
+  contact: 'Find me on GitHub, Instagram, or Spotify.',
   music: 'Earbuds in. Playlist on repeat.',
 };
 

@@ -283,12 +283,11 @@ export function Activity() {
 export function Contact() {
   return (
     <Section id="contact" title="Say hi">
-      <p className="lede">GitHub is where my work lives. Follow along, look around, or listen to what I code to.</p>
+      <p className="lede">Three little corners of the internet where you can find me.</p>
       <div className="contact">
-        <a className="btn" href={GITHUB} target="_blank" rel="noreferrer">GitHub profile</a>
-        <a className="btn btn--ghost" href={GITHUB + '?tab=repositories'} target="_blank" rel="noreferrer">Repositories</a>
-        <a className="btn btn--ghost" href="https://riiddev.github.io/portooo/" target="_blank" rel="noreferrer">Current portfolio</a>
-        <a className="btn btn--ghost" href={SPOTIFY} target="_blank" rel="noreferrer">Playlist</a>
+        <a className="btn" href={GITHUB} target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        <a className="btn btn--ghost" href="https://www.instagram.com/ahmdmfrd._/" target="_blank" rel="noreferrer">Instagram <span aria-hidden="true">↗</span></a>
+        <a className="btn btn--ghost" href={SPOTIFY} target="_blank" rel="noreferrer">Spotify <span aria-hidden="true">↗</span></a>
       </div>
     </Section>
   );
