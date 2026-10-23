@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import Lenis from 'lenis';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sprite, Note } from './PixelArt.jsx';
 import { Vines, Sky } from './Scenery.jsx';
@@ -13,6 +14,7 @@ import {
   moodStore,
   moodProps,
   goTo,
+  setSmoothScroller,
 } from './lib.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -513,6 +515,30 @@ function Hero({ ready }) {
 
 export default function App() {
   const [loaded, setLoaded] = useState(prefersReduced);
+
+  useEffect(() => {
+    if (prefersReduced()) return undefined;
+
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+      smoothWheel: true,
+    });
+    setSmoothScroller(lenis);
+    lenis.on('scroll', ScrollTrigger.update);
+
+    // Keep Lenis and GSAP on one animation clock so scroll-linked motion stays in sync.
+    const tick = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(tick);
+      lenis.destroy();
+      setSmoothScroller(null);
+      gsap.ticker.lagSmoothing(500, 33);
+    };
+  }, []);
 
   useEffect(() => {
     const context = gsap.context(() => {
