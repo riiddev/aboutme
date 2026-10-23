@@ -182,8 +182,6 @@ function HeroCharacter({ music }) {
     const fallDistance = Math.abs(y);
     const walkDistance = Math.abs(x);
     const targets = [button.current, bubble.current].filter(Boolean);
-    returnTimeline.current?.kill();
-
     const timeline = gsap.timeline({
       onComplete: () => {
         position.current = { x: 0, y: 0 };
@@ -196,68 +194,85 @@ function HeroCharacter({ music }) {
         returnTimeline.current = null;
       },
     });
+    returnTimeline.current?.kill();
     returnTimeline.current = timeline;
 
-    // A short offended shake, then gravity pulls an airborne character straight down.
-    timeline
-      .to(button.current, { rotation: x >= 0 ? 3 : -3, duration: 0.065, ease: 'steps(2)' })
-      .to(button.current, { rotation: x >= 0 ? -3 : 3, duration: 0.065, ease: 'steps(2)' })
-      .to(button.current, { rotation: 0, duration: 0.055, ease: 'steps(2)' });
+    let walkStart = 0;
 
     if (y < -6) {
-      // Negative Y means the character was lifted above his spawn point: fall vertically first.
+      // Gravity starts immediately on release; no horizontal motion until he lands.
+      const fallDuration = Math.min(0.72, Math.max(0.24, fallDistance / 520));
       timeline
         .to(targets, {
           y: 0,
-          duration: Math.min(0.72, Math.max(0.24, fallDistance / 520)),
+          duration: fallDuration,
           ease: 'power1.in',
-        }, '+=0.02')
+        }, 0)
+        .to(button.current, {
+          rotation: x >= 0 ? 3 : -3,
+          duration: 0.07,
+          ease: 'steps(2)',
+        }, 0)
+        .to(button.current, {
+          rotation: 0,
+          duration: 0.07,
+          ease: 'steps(2)',
+        }, 0.07)
         .to(button.current, {
           scaleX: 1.12,
           scaleY: 0.82,
           duration: 0.065,
           ease: 'steps(2)',
-        }, 'landing')
+        }, fallDuration)
         .to(button.current, {
           scaleX: 1,
           scaleY: 1,
           duration: 0.14,
           ease: 'power2.out',
-        }, 'landing+=0.06');
+        }, fallDuration + 0.06);
+      walkStart = fallDuration + 0.22;
     } else if (y > 6) {
-      // If dragged below his normal floor, he hops back up instead of walking vertically.
+      // When dropped below his normal floor, he pops up to the standing height.
+      const recoverDuration = Math.min(0.42, Math.max(0.2, fallDistance / 600));
       timeline
         .to(targets, {
           y: 0,
-          duration: Math.min(0.42, Math.max(0.2, fallDistance / 600)),
+          duration: recoverDuration,
           ease: 'power2.out',
-        }, '+=0.02')
+        }, 0)
         .to(button.current, {
           scaleX: 1.08,
           scaleY: 0.9,
           duration: 0.06,
           ease: 'steps(2)',
-        }, 'landing')
+        }, recoverDuration)
         .to(button.current, {
           scaleX: 1,
           scaleY: 1,
           duration: 0.12,
           ease: 'power2.out',
-        }, 'landing+=0.05');
+        }, recoverDuration + 0.05);
+      walkStart = recoverDuration + 0.17;
+    } else {
+      timeline
+        .to(button.current, { rotation: x >= 0 ? 3 : -3, duration: 0.065, ease: 'steps(2)' }, 0)
+        .to(button.current, { rotation: x >= 0 ? -3 : 3, duration: 0.065, ease: 'steps(2)' }, 0.065)
+        .to(button.current, { rotation: 0, duration: 0.055, ease: 'steps(2)' }, 0.13);
+      walkStart = 0.2;
     }
 
-    // Only after landing does he walk horizontally back to the original spot.
+    // Once feet are back on the ground, only the horizontal walk takes him home.
     if (walkDistance > 8) {
       timeline
         .add(() => {
           setWalking(true);
           setFacing(x > 0 ? 'left' : 'right');
-        }, '+=0.04')
+        }, walkStart)
         .to(targets, {
           x: 0,
           duration: Math.min(1.35, Math.max(0.32, walkDistance / 300)),
           ease: 'steps(9)',
-        }, '+=0.02');
+        }, walkStart + 0.02);
     }
   };
 
