@@ -200,7 +200,7 @@ function CursorProjectPreview({ project, cursorPoint, reduced }) {
             <span className="window-dot window-dot--yellow" />
             <span className="window-dot window-dot--green" />
             <span className="project-cursor-preview__address">
-              {project.liveUrl.replace(/^https?:\\/\\//, '').replace(/\\/$/, '')}
+              {project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </span>
             <span className="project-cursor-preview__stamp">SITE SNAPSHOT</span>
           </div>
@@ -295,7 +295,6 @@ export function Projects() {
                   aria-pressed={activeProject?.id === project.id}
                   aria-controls="project-preview"
                   aria-label={'Preview ' + project.displayName}
-                  onClick={() => setActiveProject(project)}
                   onPointerEnter={(event) => {
                     if ((event.pointerType === 'mouse' || event.pointerType === 'pen') && !reduced) {
                       cursorPoint.current = { x: event.clientX, y: event.clientY };
