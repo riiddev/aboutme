@@ -1930,3 +1930,35 @@ img { display: block; max-width: 100%; height: auto; }
   .city-vehicle { left: 62%; }
 }
 
+
+
+/* The skyline belongs to the sections below the hero, never the opening wall. */
+.sky .cityscape--world {
+  z-index: 1;
+  bottom: 0;
+  height: min(58svh, 540px);
+  min-height: 220px;
+  opacity: calc(var(--t) * .96);
+  transform: translateY(calc((1 - var(--t)) * 24px));
+  transition: opacity 180ms linear;
+}
+.sky .cityscape--world::before {
+  inset: 31% 0 0;
+  background: linear-gradient(180deg, transparent 0%, #0b172b30 60%, #091423a8 100%);
+}
+.cityscape--world .cityscape__ridge { bottom: 38px; }
+@media (max-width: 820px) {
+  .sky .cityscape--world {
+    height: min(49svh, 420px);
+    min-height: 205px;
+  }
+}
+@media (max-width: 520px) {
+  .sky .cityscape--world {
+    height: 38svh;
+    min-height: 185px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky .cityscape--world { transform: none; transition: none; }
+}
