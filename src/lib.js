@@ -46,6 +46,10 @@ export const sectionStore = createStore('top');
 export const moodStore = createStore('top');
 export const resetMood = () => moodStore.set(sectionStore.get());
 
+// Shared scroll controller lets navigation use the same weighted motion as wheel scrolling.
+let smoothScroller = null;
+export const setSmoothScroller = (instance) => { smoothScroller = instance; };
+
 export const moodProps = (key) => ({
   onPointerEnter: () => moodStore.set(key),
   onPointerLeave: resetMood,
@@ -59,10 +63,20 @@ export function goTo(id, event) {
   if (!element) return;
 
   const reduced = prefersReduced();
-  element.scrollIntoView({
-    behavior: reduced ? 'auto' : 'smooth',
-    block: 'start',
-  });
+  if (!reduced && smoothScroller) {
+    const hud = document.querySelector('.hud');
+    const offset = -(hud?.getBoundingClientRect().height ?? 74) - 14;
+    smoothScroller.scrollTo(element, {
+      offset,
+      duration: 1.15,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+    });
+  } else {
+    element.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
   history.replaceState(null, '', '#' + id);
   element.focus({ preventScroll: true });
 
