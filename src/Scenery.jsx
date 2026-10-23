@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 
 function seeded(seed) {
   let value = seed;
@@ -24,7 +24,7 @@ const TONES = {
   },
 };
 
-// Procedural bougainvillea: canopy, hanging vines, and lavender blossoms.
+// Procedural bougainvillea canopy and pixel blossoms.
 export const Vines = memo(function Vines({
   seed,
   tone = 'front',
@@ -53,7 +53,7 @@ export const Vines = memo(function Vines({
     for (let i = 0; i < 15; i += 1) {
       let x = Math.floor(random() * width);
       let y = Math.floor(depth(x));
-      const length = 6 + Math.floor(random() * (maxHang - 6));
+      const length = 6 + Math.floor(random() * Math.max(1, maxHang - 6));
 
       for (let k = 0; k < length; k += 1, y += 1) {
         put(x, y, palette.stem);
@@ -101,14 +101,66 @@ const stars = (count, seed, colour) => {
   )).join(',');
 };
 
-// Fixed sky: dusk fades to night using --t (set from scroll progress).
+const FAR_BUILDINGS = Array.from({ length: 24 }, (_, index) => ({
+  left: (index * 4.45 - 1) + '%',
+  width: (4.1 + ((index * 7) % 3) * 0.9) + '%',
+  height: (13 + ((index * 13 + 7) % 18)) + 'vh',
+  '--window-delay': ((index * 0.37) % 4) + 's',
+}));
+const NEAR_BUILDINGS = Array.from({ length: 11 }, (_, index) => ({
+  left: (index * 9.7 - 2) + '%',
+  width: (9 + ((index * 5) % 4)) + '%',
+  height: (6 + ((index * 9 + 4) % 11)) + 'vh',
+}));
+
+// The skyline is made out of crisp local CSS shapes, not a remote image.
+// Pointer movement gives the distant and near layers different parallax speeds.
+function useSkyParallax() {
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return undefined;
+    const root = document.documentElement;
+    let last = 0;
+
+    const move = (event) => {
+      if (last) return;
+      last = requestAnimationFrame(() => {
+        last = 0;
+        const x = (event.clientX / Math.max(1, window.innerWidth) - 0.5);
+        const y = (event.clientY / Math.max(1, window.innerHeight) - 0.5);
+        root.style.setProperty('--sky-far-x', (x * -14).toFixed(2) + 'px');
+        root.style.setProperty('--sky-far-y', (y * -6).toFixed(2) + 'px');
+        root.style.setProperty('--sky-near-x', (x * 24).toFixed(2) + 'px');
+        root.style.setProperty('--sky-near-y', (y * 8).toFixed(2) + 'px');
+      });
+    };
+
+    window.addEventListener('pointermove', move, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', move);
+      if (last) cancelAnimationFrame(last);
+    };
+  }, []);
+}
+
+// A cozy pixel backstreet: distant rooftops, lit windows, foreground rooftops,
+// garden silhouettes, fireflies, and the existing moonlit sky.
 export const Sky = memo(function Sky() {
+  useSkyParallax();
   const first = useMemo(() => stars(60, 3, '#EAF0F7'), []);
   const second = useMemo(() => stars(30, 9, '#BBA9FF'), []);
+  const fireflies = useMemo(() => Array.from({ length: 17 }, (_, index) => ({
+    '--left': ((index * 47 + 13) % 100) + '%',
+    '--top': (28 + ((index * 31 + 9) % 66)) + '%',
+    '--float-delay': '-' + ((index * 0.61) % 8) + 's',
+    '--float-duration': (5 + ((index * 3) % 7)) + 's',
+    '--fly-size': (index % 3 === 0 ? '4px' : '2px'),
+  })), []);
 
   return (
     <div className="sky" aria-hidden="true">
       <div className="sky__dusk" />
+      <div className="sky__nebula" />
       <div className="sky__stars">
         <i style={{ boxShadow: first }} />
         <i className="twinkle" style={{ boxShadow: second }} />
@@ -116,6 +168,23 @@ export const Sky = memo(function Sky() {
       <i className="moon" />
       <i className="cloud c1" />
       <i className="cloud c2" />
+      <div className="sky__horizon" />
+      <div className="skyline skyline--far">
+        {FAR_BUILDINGS.map((style, index) => (
+          <i className="skyline__building" key={index} style={style} />
+        ))}
+      </div>
+      <div className="skyline skyline--near">
+        {NEAR_BUILDINGS.map((style, index) => (
+          <i className="skyline__building" key={index} style={style} />
+        ))}
+        <span className="skyline__garden skyline__garden--one" />
+        <span className="skyline__garden skyline__garden--two" />
+      </div>
+      <div className="sky__fireflies">
+        {fireflies.map((style, index) => <i key={index} style={style} />)}
+      </div>
+      <div className="sky__groundlight" />
     </div>
   );
 });

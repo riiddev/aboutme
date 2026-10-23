@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Chest } from './PixelArt.jsx';
 import PixelLogo from './PixelLogo.jsx';
-import { SIGNS, LANGS, TOOLS, VERIFIED, GITHUB, SPOTIFY } from './data.js';
+import { SIGNS, LANGS, TOOLS, VERIFIED, PROJECT_DETAILS, GITHUB, SPOTIFY } from './data.js';
 import { useReducedMotion, moodProps } from './lib.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -77,14 +77,21 @@ export function About() {
 const KEY = 'riiddev:repos:v1';
 
 function merge(apiRepos) {
-  const map = new Map(VERIFIED.map((repo) => [repo.name, repo]));
+  const map = new Map(VERIFIED.map((repo) => [
+    repo.name,
+    { ...repo, ...(PROJECT_DETAILS[repo.name] || {}) },
+  ]));
   apiRepos.filter((repo) => !repo.fork).forEach((repo) => {
     const previous = map.get(repo.name);
+    const curated = PROJECT_DETAILS[repo.name] || {};
     map.set(repo.name, {
       ...previous,
+      ...curated,
       name: repo.name,
       repoUrl: repo.html_url,
-      description: repo.description || (previous && previous.description),
+      description: curated.description || repo.description || (previous && previous.description)
+        || 'Repository ini belum memiliki deskripsi yang cukup. Buka README atau repositorinya untuk melihat konteks lengkap.',
+      category: curated.category || (previous && previous.category) || 'PROJECT EXPERIMENT',
       language: repo.language,
       pushed: repo.pushed_at,
       live: repo.homepage || (previous && previous.live),
@@ -196,7 +203,7 @@ export function Projects() {
               >
                 <Chest />
                 {Array.from({ length: 8 }, (_, index) => <i className="spark" key={index} aria-hidden="true" />)}
-                <span className="chest-name">{repo.name}</span>
+                <span className="chest-name">{repo.displayName || repo.name}</span>
               </button>
             </li>
           ))}
@@ -205,11 +212,15 @@ export function Projects() {
         <div id="repo-panel" role="region" aria-live="polite" aria-label="Project details">
           {current ? (
             <article ref={panel} className="panel px px--green">
-              <h3>{current.name}</h3>
-              <p>{current.description || 'No description yet.'}</p>
+              <p className="panel__eyebrow">{current.category || 'PROJECT'}</p>
+              <h3>{current.displayName || current.name}</h3>
+              <div className="panel__story">
+                <span className="panel__story-label">Tentang proyek</span>
+                <p>{current.description || 'Buka repositori untuk melihat konteks dan perkembangan terbaru proyek ini.'}</p>
+              </div>
               <p className="meta">
                 {current.language && <span className="chip">{current.language}</span>}
-                {current.pushed && <span>Last pushed {formatDate(current.pushed)}</span>}
+                {current.pushed && <span>Pembaruan terakhir {formatDate(current.pushed)}</span>}
               </p>
               <div className="panel__links">
                 {current.repoUrl && <a className="btn" href={current.repoUrl} target="_blank" rel="noreferrer">View on GitHub</a>}
