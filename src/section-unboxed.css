@@ -1,0 +1,159 @@
+/*
+ * Unboxed editorial sections.
+ * Keep the pixel identity and small intentional elements (project chests),
+ * but remove the large white card around About, Projects, and Toolbox.
+ */
+#about > .wrap,
+#projects > .wrap,
+#skills > .wrap {
+  --free-ink: color-mix(in srgb, #172b47 calc(100% - var(--p) * 100%), #f2f7ff calc(var(--p) * 100%));
+  --free-muted: color-mix(in srgb, #435a77 calc(100% - var(--p) * 100%), #c6d7ee calc(var(--p) * 100%));
+  --free-accent: color-mix(in srgb, #176b84 calc(100% - var(--p) * 100%), #91e8f7 calc(var(--p) * 100%));
+  padding: clamp(18px, 3vw, 34px) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--free-ink);
+  box-shadow: none;
+}
+
+#about > .wrap .title,
+#projects > .wrap .title,
+#skills > .wrap .title {
+  color: var(--free-ink);
+}
+
+#about > .wrap .lede,
+#projects > .wrap .lede,
+#skills > .wrap .lede {
+  color: var(--free-muted);
+}
+
+#about .about__text {
+  color: var(--free-ink);
+}
+
+#about .about__mood {
+  align-self: start;
+  max-width: 46ch;
+  padding: 8px 0 8px 14px;
+  border: 0;
+  border-left: 3px solid var(--free-accent);
+  background: transparent;
+  color: var(--free-ink);
+  box-shadow: none;
+}
+
+#about .sign {
+  padding: 17px 4px;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--free-ink) 25%, transparent);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition: translate 240ms cubic-bezier(.22, 1, .36, 1);
+}
+
+#about .sign:nth-child(even),
+#about .sign:nth-child(even):hover {
+  transform: none;
+}
+
+#about .sign h3 {
+  color: var(--free-accent);
+}
+
+#about .sign p {
+  color: var(--free-muted);
+}
+
+#about .sign::after {
+  right: 4px;
+  top: 18px;
+}
+
+#about .sign:hover {
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
+#projects .project-row {
+  border-bottom-color: color-mix(in srgb, var(--free-ink) 24%, transparent);
+}
+
+#projects .chest-btn {
+  color: var(--free-ink);
+  border-color: transparent;
+  background: transparent;
+  transition: transform 260ms cubic-bezier(.22, 1, .36, 1);
+}
+
+#projects .chest-btn:hover,
+#projects .chest-btn:focus-visible {
+  border-color: transparent;
+  background: transparent;
+  transform: translateX(4px);
+}
+
+#projects .project-row__category {
+  color: var(--free-accent);
+}
+
+#projects .chest-name {
+  color: var(--free-ink);
+}
+
+#projects .project-row__summary,
+#projects .project-row__open {
+  color: var(--free-muted);
+}
+
+#skills .sub {
+  color: var(--free-accent);
+}
+
+#skills .slot__name {
+  color: var(--free-muted);
+  transition: color 200ms ease;
+}
+
+#skills .slot__tile {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  transition: transform 240ms cubic-bezier(.22, 1, .36, 1);
+}
+
+#skills .slot__tile::before,
+#skills .slot__tile::after {
+  display: none;
+}
+
+#skills .slot:hover .slot__tile,
+#skills .slot:focus-within .slot__tile {
+  box-shadow: none;
+  transform: translateY(-4px);
+}
+
+#skills .slot:hover .slot__name,
+#skills .slot:focus-within .slot__name {
+  color: var(--free-ink);
+}
+
+#skills .slot--ghost .slot__tile {
+  color: var(--free-accent);
+}
+
+@media (max-width: 640px) {
+  #about > .wrap,
+  #projects > .wrap,
+  #skills > .wrap {
+    padding-block: 18px;
+  }
+
+  #about .sign {
+    padding-inline: 0;
+  }
+}
