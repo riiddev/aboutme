@@ -182,7 +182,7 @@ img { display: block; max-width: 100%; height: auto; }
   justify-content: space-between;
   gap: 12px;
   padding: 10px clamp(12px, 3vw, 32px) 0;
-  background: #081321f2;
+  background: #17172ef0;
 }
 .hud__brand {
   font: 700 22px var(--fd);
@@ -246,7 +246,7 @@ img { display: block; max-width: 100%; height: auto; }
   background-color: var(--plum);
   background-color: color-mix(in srgb, var(--plum) calc(var(--h) * 100%), var(--edge));
   background-image:
-    linear-gradient(#0000 calc(100% - 2px), #0000002e 0),
+    linear-gradient(#0000 calc(100% - 2px), #17172e3b 0),
     linear-gradient(90deg, #0000 calc(100% - 2px), #0000002e 0);
   background-size: 100% 40px, 80px 100%;
 }
@@ -652,7 +652,7 @@ img { display: block; max-width: 100%; height: auto; }
   z-index: -1;
   opacity: .65;
   background:
-    linear-gradient(90deg, transparent 49%, #ffffff08 50%),
+    linear-gradient(90deg, transparent 49%, #fff2d70a 50%),
     linear-gradient(transparent 49%, #ffffff08 50%);
   background-size: 8px 8px;
 }
@@ -770,8 +770,8 @@ img { display: block; max-width: 100%; height: auto; }
   height: 48vh;
   opacity: calc(.24 + var(--t) * .26);
   background:
-    radial-gradient(ellipse at 50% 100%, #70cfff30 0, transparent 54%),
-    linear-gradient(180deg, transparent 0%, #101f3342 60%, var(--night) 100%);
+    radial-gradient(ellipse at 50% 100%, #ffd16630 0, transparent 54%),
+    linear-gradient(180deg, transparent 0%, #ff9bc222 60%, var(--night) 100%);
 }
 .skyline {
   position: absolute;
@@ -798,19 +798,19 @@ img { display: block; max-width: 100%; height: auto; }
   bottom: 0;
   display: block;
   overflow: hidden;
-  border-top: 2px solid #5d8fb555;
-  background: #12243a;
-  box-shadow: inset 3px 0 #1a2e4755, inset -3px 0 #111319aa;
+  border-top: 2px solid #b8a3ff55;
+  background: #262644;
+  box-shadow: inset 3px 0 #62517d55, inset -3px 0 #17172eaa;
 }
 .skyline--far .skyline__building:nth-child(3n + 1) {
-  background: #182c44;
-  border-top-color: #416b8d55;
+  background: #302e52;
+  border-top-color: #7a658e55;
 }
 .skyline--far .skyline__building:nth-child(4n + 2) {
-  background: #1b304a;
+  background: #373557;
 }
 .skyline--far .skyline__building:nth-child(5n) {
-  background: #1e314e;
+  background: #3c365b;
 }
 .skyline__building::before {
   content: "";
@@ -837,7 +837,7 @@ img { display: block; max-width: 100%; height: auto; }
   20%, 72% { opacity: .22; }
 }
 .skyline--near .skyline__building {
-  border-top-color: #2f3d4f;
+  border-top-color: #4d4d72;
   background: var(--night);
   box-shadow: inset 3px 0 var(--indigo), inset -3px 0 var(--night);
 }
@@ -903,13 +903,13 @@ img { display: block; max-width: 100%; height: auto; }
 .hero__wall {
   background-image:
     radial-gradient(ellipse at 15% 15%, #b8a3ff20 0, transparent 34%),
-    linear-gradient(90deg, transparent 8%, #040b1630 8% 8.4%, transparent 8.4% 92%, #040b1630 92% 92.4%, transparent 92.4%),
+    linear-gradient(90deg, transparent 8%, #17172e30 8% 8.4%, transparent 8.4% 92%, #040b1630 92% 92.4%, transparent 92.4%),
     linear-gradient(#0000 calc(100% - 2px), #0000002e 0),
     linear-gradient(90deg, #0000 calc(100% - 2px), #0000002e 0);
   background-size: auto, 100% 100%, 100% 40px, 80px 100%;
 }
 .hero__ground {
-  box-shadow: 0 -10px 28px #08132155;
+  box-shadow: 0 -10px 28px #17172e55;
   background:
     linear-gradient(180deg, var(--night) 0%, var(--night) 72%),
     var(--night);
@@ -933,20 +933,20 @@ img { display: block; max-width: 100%; height: auto; }
   content: ""; position: absolute; z-index: 0; top: 13%; right: 15%;
   width: clamp(94px, 10vw, 136px); aspect-ratio: 1; pointer-events: none;
   clip-path: polygon(25% 0,75% 0,75% 7%,93% 7%,93% 25%,100% 25%,100% 75%,93% 75%,93% 93%,75% 93%,75% 100%,25% 100%,25% 93%,7% 93%,7% 75%,0 75%,0 25%,7% 25%,7% 7%,25% 7%);
-  background: radial-gradient(circle at 66% 32%, #77b8da 0 7%, transparent 8%), radial-gradient(circle at 35% 67%, #8dbbd5 0 10%, transparent 11%), linear-gradient(135deg, #f0fcff 0%, #bceeff 44%, #77bedf 75%, #4a8dbb 100%);
+  background: radial-gradient(circle at 66% 32%, #ffbd83 0 7%, transparent 8%), radial-gradient(circle at 35% 67%, #ff9bc2 0 10%, transparent 11%), linear-gradient(135deg, #fff4b8 0%, #ffd166 38%, #ffad92 72%, #b86e91 100%);
   box-shadow: 0 0 0 5px #ffd16610, 0 0 30px #ff9bc21a;
   transform: translate3d(calc(var(--sky-far-x) * -.35), calc(var(--sky-far-y) * -.35), 0);
 }
 .hero__wall::after {
   content: ""; position: absolute; left: -2%; bottom: -1px; width: 104%; height: 34%; pointer-events: none;
   clip-path: polygon(0 40%,5% 40%,5% 22%,11% 22%,11% 38%,17% 38%,17% 13%,25% 13%,25% 45%,32% 45%,32% 28%,39% 28%,39% 5%,47% 5%,47% 39%,55% 39%,55% 18%,62% 18%,62% 43%,70% 43%,70% 25%,78% 25%,78% 8%,86% 8%,86% 39%,93% 39%,93% 24%,100% 24%,100% 100%,0 100%);
-  background: repeating-linear-gradient(90deg, transparent 0 13px, #ff9bc224 13px 15px, transparent 15px 24px), repeating-linear-gradient(180deg, transparent 0 12px, #aabaff18 12px 14px, transparent 14px 25px), linear-gradient(180deg, #56518a 0%, #292744 88%);
+  background: repeating-linear-gradient(90deg, transparent 0 13px, #ff9bc224 13px 15px, transparent 15px 24px), repeating-linear-gradient(180deg, transparent 0 12px, #b8a3ff18 12px 14px, transparent 14px 25px), linear-gradient(180deg, #56518a 0%, #292744 88%);
   border-top: 2px solid #ff9bc288; opacity: .9;
 }
 .skyline--far .skyline__building:nth-child(5n + 1) { clip-path: polygon(0 12%,22% 12%,22% 0,68% 0,68% 12%,100% 12%,100% 100%,0 100%); }
 .skyline--far .skyline__building:nth-child(8n + 4) { clip-path: polygon(0 18%,18% 18%,18% 0,82% 0,82% 18%,100% 18%,100% 100%,0 100%); }
 .skyline--far .skyline__building:nth-child(9n + 6) { clip-path: polygon(0 10%,32% 10%,32% 0,65% 0,65% 10%,100% 10%,100% 100%,0 100%); }
-.skyline--far .skyline__building:nth-child(7n) { --window-tint: #aabaff; }
+.skyline--far .skyline__building:nth-child(7n) { --window-tint: #b8a3ff; }
 .skyline--far .skyline__building:nth-child(5n + 2) { --window-tint: #75caff; }
 .skyline--near .skyline__building:nth-child(3n + 1) { clip-path: polygon(0 9%,25% 9%,25% 0,75% 0,75% 9%,100% 9%,100% 100%,0 100%); }
 .skyline--near .skyline__building:nth-child(4n + 2) { --window-tint: #8e9fff; }
@@ -1154,7 +1154,7 @@ img { display: block; max-width: 100%; height: auto; }
   place-items: center;
   overflow: hidden;
   background:
-    linear-gradient(90deg, #ffffff04 1px, transparent 1px),
+    linear-gradient(90deg, #fff2d706 1px, transparent 1px),
     linear-gradient(#ffffff04 1px, transparent 1px),
     var(--night);
   background-size: 12px 12px;

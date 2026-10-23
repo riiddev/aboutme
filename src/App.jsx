@@ -139,15 +139,15 @@ function HeroCharacter({ music }) {
     if (angerTimer.current) window.clearTimeout(angerTimer.current);
   }, []);
 
-  const pointInScene = (x, y, geometry) => {
+  const pointInScene = (x, y) => {
     if (!button.current) return { x, y };
     const scene = button.current.closest('.hero')?.getBoundingClientRect();
     if (!scene) return { x, y };
     const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
     const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
-    const rect = geometry || button.current.getBoundingClientRect();
-    const baseLeft = rect.left - (geometry ? 0 : currentX);
-    const baseTop = rect.top - (geometry ? 0 : currentY);
+    const rect = button.current.getBoundingClientRect();
+    const baseLeft = rect.left - currentX;
+    const baseTop = rect.top - currentY;
     const width = rect.width;
     const height = rect.height;
     const minX = scene.left + 12 - baseLeft;
@@ -276,7 +276,7 @@ function HeroCharacter({ music }) {
     const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
     const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
     const rect = button.current.getBoundingClientRect();
-    const next = pointInScene(currentX + delta[0], currentY + delta[1], rect);
+    const next = pointInScene(currentX + delta[0], currentY + delta[1]);
     setFacing(delta[0] < 0 ? 'left' : delta[0] > 0 ? 'right' : 'home');
     gsap.to(button.current, {
       x: next.x, y: next.y,
