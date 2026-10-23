@@ -547,28 +547,62 @@ export default function App() {
       });
 
       if (!prefersReduced()) {
-        gsap.utils.toArray('.sec').forEach((section) => {
+        gsap.utils.toArray('.sec').forEach((section, index) => {
+          const panel = section.querySelector('.wrap');
+          const title = section.querySelector('.title');
           const targets = section.querySelectorAll(
-            '.lede, .about__text > p, .sign, .sub, .slot, .chest-btn, .fig, .contact .btn',
+            '.lede, .about__text > p, .about__mood, .sign, .sub, .slot, .chest-btn, .project-preview-dock, .fig, .contact .btn',
           );
-          if (targets.length) {
-            gsap.fromTo(targets,
-              { autoAlpha: 0, y: 38, rotateX: -7, transformPerspective: 800 },
+
+          if (panel) {
+            gsap.fromTo(panel,
+              { y: 42, autoAlpha: 0, scale: 0.99, rotateX: 1.2, transformPerspective: 1200 },
               {
-                autoAlpha: 1, y: 0, rotateX: 0, duration: 0.72,
-                stagger: 0.045, ease: 'power3.out',
-                scrollTrigger: { trigger: section, start: 'top 72%', once: true },
+                y: 0, autoAlpha: 1, scale: 1, rotateX: 0,
+                duration: 0.9, ease: 'power3.out',
+                scrollTrigger: { trigger: section, start: 'top 84%', once: true },
               },
             );
           }
-          const title = section.querySelector('.title');
+          if (targets.length) {
+            gsap.fromTo(targets,
+              { autoAlpha: 0, y: 24, filter: 'blur(4px)' },
+              {
+                autoAlpha: 1, y: 0, filter: 'blur(0px)',
+                duration: 0.72, stagger: { each: 0.06, from: 'start' },
+                ease: 'power3.out',
+                scrollTrigger: { trigger: section, start: 'top 68%', once: true },
+                delay: 0.04,
+              },
+            );
+          }
           if (title) {
-            gsap.to(title, {
-              y: -14, ease: 'none',
-              scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.7 },
+            gsap.fromTo(title,
+              { clipPath: 'inset(0 0 16% 0)', y: 16 },
+              {
+                clipPath: 'inset(0 0 0% 0)', y: 0,
+                duration: 0.8, ease: 'power3.out',
+                scrollTrigger: { trigger: title, start: 'top 86%', once: true },
+              },
+            );
+          }
+          if (panel) {
+            gsap.to(panel, {
+              y: index % 2 === 0 ? -8 : -5, ease: 'none',
+              scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
             });
           }
         });
+        const preview = document.querySelector('.project-preview-dock');
+        if (preview) {
+          gsap.fromTo(preview,
+            { y: 22, rotateY: -1.5, transformPerspective: 1000 },
+            {
+              y: -10, rotateY: 0, ease: 'none',
+              scrollTrigger: { trigger: '#projects', start: 'top bottom', end: 'bottom top', scrub: 0.7 },
+            },
+          );
+        }
       }
     });
 
