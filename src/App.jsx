@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sprite, Note } from './PixelArt.jsx';
-import { Vines, Sky } from './Scenery.jsx';
+import { Vines, Sky, Cityscape } from './Scenery.jsx';
 import { About, Projects, Skills, Activity, Contact } from './Sections.jsx';
 import { NAV, SPOTIFY, LINES, MOOD_LINES } from './data.js';
 import {
@@ -457,6 +457,7 @@ function Hero({ ready }) {
   return (
     <section id="top" ref={root} className="hero" tabIndex={-1}>
       <div className="hero__wall" aria-hidden="true" />
+      <Cityscape />
       <div className="hero__particles" aria-hidden="true">
         {Array.from({ length: 9 }, (_, index) => (
           <i
