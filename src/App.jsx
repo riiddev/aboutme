@@ -475,6 +475,7 @@ function Hero({ ready }) {
       <div className="hero__ground" aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">
+          <p className="hero__eyebrow"><i aria-hidden="true" /> Independent developer in progress</p>
           <h1 className="hero__title" aria-label="Riiddev">
             {[...'Riiddev'].map((character, index) => (
               <span className="ch" aria-hidden="true" key={index}>{character}</span>
@@ -494,10 +495,18 @@ function Hero({ ready }) {
               Open the playlist on Spotify
             </a>
           )}
+          <div className="hero__meta" aria-label="Current focus">
+            <span>Frontend &amp; UI</span>
+            <span>Learning backend</span>
+            <span>Pixel &amp; motion</span>
+          </div>
         </div>
         <HeroCharacter music={music} />
       </div>
       <Vines seed={29} tone="front" maxHang={11} className="vines vines--front" />
+      <a className="hero__scroll" href="#about" onClick={(event) => goTo('about', event)}>
+        <span>SCROLL TO EXPLORE</span><i aria-hidden="true">↓</i>
+      </a>
     </section>
   );
 }
