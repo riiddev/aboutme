@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#D6EAFB">
+  <meta name="description" content="Riiddev — a curious developer learning frontend, web design and backend basics by building.">
+  <title>Riiddev — frontend, one level at a time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Outfit:wght@500;700;800;900&family=Poppins:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="content.js"></script>
+  <script defer src="main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#about">Skip to content</a>
+
+  <header class="nav">
+    <a class="nav__brand" href="#top">Riiddev<span aria-hidden="true">.</span></a>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#about" data-nav>About</a></li>
+        <li><a href="#projects" data-nav>Projects</a></li>
+        <li><a href="#activity" data-nav>Activity</a></li>
+        <li><a href="#contact" data-nav>Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero__sky" aria-hidden="true">
+        <div class="halftone"></div>
+        <div class="sun" data-speed="0.25"></div>
+        <svg class="cloud cloud--1" data-speed="0.4" viewBox="0 0 220 80"><path d="M20 70C0 70 0 44 22 42C24 22 52 14 66 30C78 8 118 10 124 36C148 24 176 38 170 60C190 60 200 70 190 76H30Z"/></svg>
+        <svg class="cloud cloud--2" data-speed="0.6" viewBox="0 0 220 80"><path d="M20 70C0 70 0 44 22 42C24 22 52 14 66 30C78 8 118 10 124 36C148 24 176 38 170 60C190 60 200 70 190 76H30Z"/></svg>
+        <svg class="bird bird--1" data-speed="0.5" viewBox="0 0 40 20"><path d="M2 4Q12 2 20 14Q28 2 38 4"/></svg>
+        <svg class="bird bird--2" data-speed="0.7" viewBox="0 0 40 20"><path d="M2 4Q12 2 20 14Q28 2 38 4"/></svg>
+        <svg class="bird bird--3" data-speed="0.35" viewBox="0 0 40 20"><path d="M2 4Q12 2 20 14Q28 2 38 4"/></svg>
+      </div>
+
+      <div class="hero__inner">
+        <div class="hero__title">
+          <h1 id="hero-title" aria-label="Riiddev">
+            <span class="line line--navy" data-split>RIID</span>
+            <span class="line line--blue" data-split>DEV</span>
+          </h1>
+          <p class="hero__sub"><em>Web design &amp; frontend</em><span class="brush">2026</span></p>
+        </div>
+
+        <div class="hero__stage">
+          <svg class="doodle-arrow" viewBox="0 0 160 110" aria-hidden="true">
+            <path d="M6 12C50 -2 110 12 140 80M140 80L120 66M140 80L152 58"/>
+          </svg>
+          <p class="doodle-note brush" aria-hidden="true">that's me</p>
+          <button class="portrait" type="button" aria-label="Portrait of Riiddev. Press for another line." aria-describedby="bubble">
+            <span class="portrait__ring" aria-hidden="true"></span>
+            <span class="portrait__disc">
+              <!-- Replace assets/riiddev-portrait.jpg to use another portrait. Tune --zoom, --fx, and --fy in styles.css. -->
+              <img class="portrait__img" src="assets/riiddev-portrait.jpg" width="800" height="800"
+                   alt="Temporary illustrated avatar of Riiddev in a navy jacket and earphones, standing in front of flowering vines">
+            </span>
+          </button>
+          <p class="bubble" id="bubble" aria-live="polite">Hey, I'm Riiddev.</p>
+        </div>
+      </div>
+
+      <div class="sea" aria-hidden="true">
+        <div class="wave wave--3"></div>
+        <div class="wave wave--2"></div>
+        <div class="sprite-lane">
+          <div class="sprite">
+            <svg class="sprite__svg" viewBox="0 0 12 14" width="48" height="56" shape-rendering="crispEdges">
+              <rect x="3" y="0" width="6" height="5" fill="#25205F"/>
+              <rect x="3" y="2" width="6" height="1" fill="#A9F06D"/>
+              <rect x="4" y="3" width="4" height="1" fill="#F2C9A0"/>
+              <rect x="4" y="3" width="1" height="1" fill="#1B1840"/>
+              <rect x="7" y="3" width="1" height="1" fill="#1B1840"/>
+              <rect x="3" y="5" width="6" height="5" fill="#25205F"/>
+              <rect x="3" y="7" width="6" height="1" fill="#A9F06D"/>
+              <rect x="2" y="5" width="1" height="4" fill="#25205F"/>
+              <rect x="9" y="5" width="1" height="4" fill="#25205F"/>
+              <g class="step step--a"><rect x="3" y="10" width="2" height="3" fill="#1B1840"/><rect x="7" y="10" width="2" height="3" fill="#1B1840"/></g>
+              <g class="step step--b"><rect x="4" y="10" width="2" height="3" fill="#1B1840"/><rect x="6" y="10" width="2" height="3" fill="#1B1840"/></g>
+            </svg>
+          </div>
+        </div>
+        <div class="wave wave--1"></div>
+      </div>
+    </section>
+
+    <section class="sheet" id="about" aria-labelledby="about-title">
+      <div class="wrap">
+        <p class="label"><em>About me!</em></p>
+        <div class="about">
+          <div class="about__main">
+            <h2 class="bigname" id="about-title" aria-label="Riiddev">
+              <span data-split>RIID</span><span data-split>DEV</span>
+            </h2>
+            <p class="intro"><span class="brush">Hey!</span> I'm Riiddev. I'm not an expert, and I'm not trying to act like one. I like learning new things, trying them out, and seeing what I can make.</p>
+            <p class="intro">These days that mostly means web design and frontend development: the little details, smooth interactions, and making a page feel good to use. I'm also starting to explore backend development, one level at a time.</p>
+          </div>
+          <aside class="about__side">
+            <div class="mood">
+              <h3>Current mood</h3>
+              <p>Curious, a little pixelated, and taking it one step at a time.</p>
+            </div>
+            <ul class="mini-links" id="mini-links"></ul>
+          </aside>
+        </div>
+
+        <div class="about__row">
+          <section aria-labelledby="exploring-title">
+            <h3 class="h-md" id="exploring-title">What I'm exploring</h3>
+            <ul class="exploring" id="exploring-list"></ul>
+          </section>
+          <section aria-labelledby="tools-title">
+            <h3 class="h-md" id="tools-title">Languages &amp; tools in my projects</h3>
+            <ul class="tools" id="tool-list"></ul>
+            <p class="small">Taken from my repositories. It's a list of what I've used, not a skill ranking.</p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet sheet--wash" id="projects" aria-labelledby="projects-title">
+      <div class="wrap">
+        <h2 class="h2" id="projects-title" data-wipe>Things I've been building</h2>
+        <p class="lede">Real repositories with real links. Open a card to see what's inside.</p>
+        <div class="projects" id="project-list"></div>
+        <noscript><p>Project cards need JavaScript here. You can also <a href="https://github.com/riiddev?tab=repositories">browse all repositories on GitHub</a>.</p></noscript>
+      </div>
+    </section>
+
+    <section class="sheet sheet--night" id="activity" aria-labelledby="activity-title">
+      <div class="wrap">
+        <h2 class="h2" id="activity-title" data-wipe>Activity</h2>
+        <p class="lede">These visuals are generated from the contribution workflows in my GitHub profile repository.</p>
+        <div class="activity">
+          <figure class="graphic" data-pop>
+            <img src="https://raw.githubusercontent.com/riiddev/riiddev/main/profile-3d-contrib/profile-green.svg"
+                 alt="Three-dimensional visualization of Riiddev's GitHub contribution history" loading="lazy">
+            <p class="graphic__fallback">The graphic didn't load. <a href="https://github.com/riiddev">See it on my GitHub profile</a>.</p>
+            <figcaption>My contributions in 3D</figcaption>
+          </figure>
+          <figure class="graphic" data-pop>
+            <img src="https://raw.githubusercontent.com/riiddev/riiddev/output/pacman-contribution-graph.svg"
+                 alt="Animated Pac-Man eating the blocks of Riiddev's GitHub contribution graph" loading="lazy">
+            <p class="graphic__fallback">The graphic didn't load. <a href="https://github.com/riiddev">See it on my GitHub profile</a>.</p>
+            <figcaption>Pac-Man chasing the little blocks of progress</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet sheet--blush" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <h2 class="h2" id="contact-title" data-wipe>Say hi</h2>
+        <p class="lede">If something here made you curious, the code is the best place to look next.</p>
+        <ul class="contact" id="contact-list"></ul>
+        <p class="footer">Built by Riiddev. Still learning.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

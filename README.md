@@ -1,37 +1,38 @@
-# Riiddev — frontend, one level at a time
+# Riiddev — a curious developer's pixel world
 
-A personal portfolio inspired by illustrated editorial layouts and Riiddev's pixel-art GitHub identity. The hero combines a pastel sky, layered waves, a pixel ninja, and a clickable portrait speech bubble.
+A scrolling pixel-art portfolio built with React, Vite, and GSAP. The page moves from dusk to night as you explore the sections, with a hand-authored pixel portrait, procedural bougainvillea, animated project crates, and a GitHub activity corner.
 
 ## Run locally
 
-No build step or package installation is required. Open `index.html` in a browser or use a local static server such as VS Code Live Server. The page loads GSAP and ScrollTrigger from a CDN for the richer motion; the content and core layout do not depend on a backend.
+Requires Node.js 18 or newer.
 
-## File structure
+npm install
+npm run dev
 
-- `index.html` — page structure, hero scene, editorial sections, and GitHub graphics.
-- `styles.css` — responsive styling, CSS illustrations, waves, pixel sprite, and reduced-motion styles.
-- `content.js` — the single place to edit the speech bubble lines, projects, tool tiles, and social links.
-- `main.js` — dynamic content rendering, project detail toggles, navigation progress, and optional GSAP motion.
-- `assets/riiddev-portrait.jpg` — the temporary avatar supplied for the portfolio.
+Open the local URL printed by Vite. To verify a production build, run npm run build and npm run preview.
 
-## Replace the portrait
+## What's inside
 
-Replace `assets/riiddev-portrait.jpg` with another image while keeping the same filename. The circular crop and zoom are controlled by `--zoom`, `--fx`, and `--fy` on `.portrait__img` in `styles.css`.
+- React + Vite for the app and local development.
+- GSAP + ScrollTrigger for the intro sequence, scroll-driven dusk-to-night transition, and project interactions.
+- Pixel portrait hand-authored as an SVG sprite. It blinks, follows the pointer, reacts to the active section, and hops when clicked.
+- Project crates start with entries confirmed from the portfolio/README and merge public non-fork repositories from the GitHub API in the visitor's browser.
+- Reduced-motion support, keyboard navigation, and responsive styling.
+- No backend, API key, or paid service is required. Public GitHub API limits still apply.
 
-## Edit project cards
+## Customize
 
-Update the `projects` array in `content.js`. Each project has a short summary, technology labels, expandable details, and links. For a real screenshot, add an `image: { src, alt }` property to a project and place the image in `assets/`; otherwise the project uses a lightweight typographic cover.
+- Edit copy, links, tools, and sprite colours in src/data.js.
+- Replace the portrait with an image by setting PORTRAIT_SRC in src/data.js to a public asset path, for example /portrait.png.
+- Tune the visual system and responsive behavior in src/styles.css.
+- The old static portfolio is preserved in legacy/; the previous portrait asset remains in assets/.
 
-The project descriptions are based on available repository READMEs. NASIB +62 is marked as work in progress. Agent HQ's simulated crew/activity and setup requirements are stated explicitly; the portfolio does not imply AI agents are connected by default.
+## Build and hosting
 
-## Motion and accessibility
+npm run build writes the production app to dist/. Deploy the repository as a Vite project on Vercel or another static host. For GitHub Pages, configure the Pages source to use an appropriate workflow that builds the Vite app and publishes dist/.
 
-- GSAP animates the title and selected scroll reveals when its CDN scripts are available.
-- CSS keeps the experience usable if GSAP is unavailable.
-- The site respects `prefers-reduced-motion`.
-- Project-detail buttons expose their expanded state to assistive technology.
-- No API keys, database, or paid backend service is required for the portfolio itself.
+## Notes
 
-## Static hosting
-
-The site can be hosted on GitHub Pages or any static host. For GitHub Pages, open **Settings → Pages**, select **Deploy from a branch**, choose `main` and `/ (root)`, then save. Hosting settings must be enabled in GitHub before a public Pages URL becomes available.
+- The Earbuds in toggle displays floating music notes and a Spotify playlist link; it does not autoplay audio.
+- Activity graphics are loaded from the configured jsDelivr URLs. If a graph cannot load, the section displays a fallback link to GitHub.
+- GitHub repository data is public and cached in sessionStorage for ten minutes when available; the portfolio still shows its confirmed entries when the API is unavailable.
