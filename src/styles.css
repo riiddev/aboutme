@@ -2047,3 +2047,52 @@ img { display: block; max-width: 100%; height: auto; }
     transform: none;
   }
 }
+
+
+/* Readable foreground colors for the scroll-driven day cycle. */
+/* Keep free-floating copy dark over daylight and pastel sunset, then ease into
+   the existing light palette as the sky becomes genuinely nocturnal. */
+:root {
+  --world-text-shift: clamp(0, calc((var(--p) - .55) * 2.6), 1);
+  --world-text: color-mix(in srgb, #172b45 calc((1 - var(--world-text-shift)) * 100%), #fff2d7 calc(var(--world-text-shift) * 100%));
+  --world-muted: color-mix(in srgb, #3d526b calc((1 - var(--world-text-shift)) * 100%), #c1cbe0 calc(var(--world-text-shift) * 100%));
+  --world-accent: color-mix(in srgb, #245b88 calc((1 - var(--world-text-shift)) * 100%), #80dfea calc(var(--world-text-shift) * 100%));
+  --world-accent-soft: color-mix(in srgb, #345b83 calc((1 - var(--world-text-shift)) * 100%), #b8a3ff calc(var(--world-text-shift) * 100%));
+}
+
+/* These elements sit directly on the sky, not inside the dark pixel panels. */
+.sec .title,
+.sec .about__text > p:not(.about__mood),
+.sec .lede,
+.sec .hint,
+.sec .textlink,
+.sec .chest-name,
+.sec .slot__name,
+.foot {
+  color: var(--world-text);
+}
+
+.sec .lede,
+.sec .hint,
+.sec .project-row__summary {
+  color: var(--world-muted);
+}
+
+.sec .sub,
+.sec .project-row__category {
+  color: var(--world-accent);
+}
+
+.sec .project-row__open {
+  color: var(--world-accent-soft);
+}
+
+.sec .title {
+  text-shadow: 0 1px 0 color-mix(in srgb, #fff 22%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --world-text-shift: clamp(0, calc((var(--p) - .55) * 2.6), 1);
+  }
+}
