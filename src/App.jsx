@@ -280,9 +280,9 @@ function HeroCharacter({ music }) {
     event.preventDefault();
     const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
     const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
-    const rect = button.current.getBoundingClientRect();
     const next = pointInScene(currentX + delta[0], currentY + delta[1]);
     setFacing(delta[0] < 0 ? 'left' : delta[0] > 0 ? 'right' : 'home');
+    setWalking(true);
     gsap.to([button.current, bubble.current].filter(Boolean), {
       x: next.x, y: next.y,
       duration: reduced ? 0 : 0.18,
