@@ -1962,3 +1962,88 @@ img { display: block; max-width: 100%; height: auto; }
 @media (prefers-reduced-motion: reduce) {
   .sky .cityscape--world { transform: none; transition: none; }
 }
+
+
+/* Scroll-driven day cycle: clear morning -> warm afternoon -> sunset -> night.
+   The --p variable is the page's continuous 0..1 ScrollTrigger progress. */
+.sky {
+  background: linear-gradient(180deg, #85bfe9 0%, #b8d7ea 43%, #f2d7b1 72%, #9eb8d0 100%);
+}
+.sky__day {
+  position: absolute;
+  inset: 0;
+  opacity: clamp(0, calc(1 - var(--p) * 1.8), 1);
+  background:
+    radial-gradient(ellipse at 20% 22%, #fff6d047 0, #fff6d000 27%),
+    linear-gradient(180deg, #8bc8f280 0%, #bedff080 43%, #ffe7bf78 100%);
+  will-change: opacity;
+}
+.sky__day::after {
+  content: "";
+  position: absolute;
+  top: 14%;
+  left: 16%;
+  width: 24px;
+  height: 24px;
+  background: #fff2b0;
+  box-shadow:
+    0 0 0 5px #fff0b455,
+    0 0 0 12px #ffe6a52d,
+    0 0 28px 11px #ffe9b447;
+  image-rendering: pixelated;
+  opacity: clamp(0, calc(1 - var(--p) * 2.05), 1);
+  transform: translate(calc(var(--p) * 46vw), calc(var(--p) * 20vh));
+  will-change: transform, opacity;
+}
+.sky__dusk {
+  background:
+    radial-gradient(ellipse at 72% 68%, #ffb46e76 0, #ffb46e00 42%),
+    linear-gradient(180deg, #8aa7d7 0%, #e2a6a8 42%, #f2a66f 70%, #3d4267 100%);
+  opacity: clamp(0, calc((var(--p) - .18) * 1.95), .96);
+  will-change: opacity;
+}
+.sky__nightfall {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 74% 71%, #574467 0, #57446700 43%),
+    linear-gradient(180deg, #111c36 0%, #202a4a 41%, #373653 69%, #111a2b 100%);
+  opacity: clamp(0, calc((var(--p) - .62) * 2.65), 1);
+  will-change: opacity;
+}
+.sky__nebula {
+  opacity: calc(var(--p) * .72);
+}
+.sky__stars {
+  opacity: clamp(0, calc((var(--p) - .52) * 2.2), 1);
+}
+.moon {
+  opacity: clamp(0, calc((var(--p) - .55) * 2.25), 1);
+  transform: translate(calc(var(--p) * -18vw), calc(var(--p) * 10vh));
+}
+.cloud {
+  filter: brightness(calc(1.8 - var(--p) * .78));
+}
+.sky__horizon {
+  opacity: calc(.07 + var(--p) * .35);
+}
+.sky .cityscape--world {
+  filter: brightness(calc(1.3 - var(--p) * .65)) saturate(calc(.82 + var(--p) * .38));
+}
+.cityscape--world .city-building__windows i {
+  filter: brightness(calc(.58 + var(--p) * 1.45));
+}
+.cityscape--world .city-lamp i {
+  filter: brightness(calc(.5 + var(--p) * .9));
+}
+.cityscape--world .city-building__sign {
+  opacity: calc(.6 + var(--p) * .4);
+}
+.cityscape--world .cityscape__window-glow {
+  opacity: var(--p);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky__day::after {
+    transform: none;
+  }
+}
