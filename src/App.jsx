@@ -176,11 +176,24 @@ function Hero({ ready }) {
 
     const context = gsap.context(() => {
       timeline.current = gsap.timeline({ paused: true })
-        .from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: 1, ease: 'steps(10)' }, 0)
-        .from('.hero__title .ch', { autoAlpha: 0, y: -30, duration: 0.3, ease: 'steps(3)', stagger: 0.07 }, 0.15)
-        .from('.hc', { y: '-70vh', duration: 0.7, ease: 'steps(9)' }, 0.55)
-        .from('.hero__sub, .hero__actions', { clipPath: 'inset(0 100% 0 0)', duration: 0.5, ease: 'steps(8)', stagger: 0.15 }, 1.1)
-        .from('.bubble', { scale: 0, transformOrigin: '0 100%', duration: 0.2, ease: 'steps(2)' }, 1.5);
+        .from('.hero__wall', { scale: 1.08, duration: 1.35, ease: 'power2.out' }, 0)
+        .from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: 1, ease: 'steps(10)' }, 0.04)
+        .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05)
+        .from('.hero__title .ch', {
+          autoAlpha: 0, y: -58, rotation: () => gsap.utils.random(-16, 16),
+          scale: 0.25, duration: 0.56, ease: 'back.out(3.2)', stagger: 0.065,
+        }, 0.12)
+        .from('.hc', {
+          y: '-70vh', scaleX: 0.78, scaleY: 1.12, rotation: -7,
+          duration: 0.95, ease: 'bounce.out',
+        }, 0.47)
+        .to('.hc', { scaleX: 1.06, scaleY: 0.92, duration: 0.09, ease: 'power1.out' }, 1.31)
+        .to('.hc', { scaleX: 1, scaleY: 1, duration: 0.16, ease: 'power1.out' }, 1.4)
+        .from('.hero__sub, .hero__actions', {
+          autoAlpha: 0, y: 18, clipPath: 'inset(0 100% 0 0)',
+          duration: 0.48, ease: 'power3.out', stagger: 0.12,
+        }, 1.16)
+        .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 1.55);
 
       const scrub = { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true };
       gsap.to('.vines--back', { yPercent: 14, ease: 'none', scrollTrigger: scrub });
@@ -198,6 +211,19 @@ function Hero({ ready }) {
   return (
     <section id="top" ref={root} className="hero" tabIndex={-1}>
       <div className="hero__wall" aria-hidden="true" />
+      <div className="hero__particles" aria-hidden="true">
+        {Array.from({ length: 22 }, (_, index) => (
+          <i
+            key={index}
+            style={{
+              '--x': ((index * 37 + 11) % 100) + '%',
+              '--y': ((index * 23 + 7) % 76) + '%',
+              '--delay': '-' + ((index % 7) * 0.43) + 's',
+              '--size': ((index % 3) + 1) * 3 + 'px',
+            }}
+          />
+        ))}
+      </div>
       <Vines seed={11} tone="back" className="vines vines--back" />
       <div className="lamp" aria-hidden="true"><i /><b /></div>
       <div className="hero__ground" aria-hidden="true" />
@@ -264,6 +290,31 @@ export default function App() {
           },
         });
       });
+
+      if (!prefersReduced()) {
+        gsap.utils.toArray('.sec').forEach((section) => {
+          const targets = section.querySelectorAll(
+            '.lede, .about__text > p, .sign, .sub, .slot, .chest-btn, .fig, .contact .btn',
+          );
+          if (targets.length) {
+            gsap.fromTo(targets,
+              { autoAlpha: 0, y: 38, rotateX: -7, transformPerspective: 800 },
+              {
+                autoAlpha: 1, y: 0, rotateX: 0, duration: 0.72,
+                stagger: 0.045, ease: 'power3.out',
+                scrollTrigger: { trigger: section, start: 'top 72%', once: true },
+              },
+            );
+          }
+          const title = section.querySelector('.title');
+          if (title) {
+            gsap.to(title, {
+              y: -14, ease: 'none',
+              scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.7 },
+            });
+          }
+        });
+      }
     });
 
     document.fonts?.ready.then(() => ScrollTrigger.refresh());

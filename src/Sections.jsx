@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Chest } from './PixelArt.jsx';
+import PixelLogo from './PixelLogo.jsx';
 import { SIGNS, LANGS, TOOLS, VERIFIED, GITHUB, SPOTIFY } from './data.js';
 import { useReducedMotion, moodProps } from './lib.js';
 
@@ -229,9 +230,12 @@ export function Projects() {
 
 const Slots = ({ items, tone }) => (
   <ul className="slots">
-    {items.map(([code, name]) => (
+    {items.map(([logo, name], index) => (
       <li key={name} className={'slot slot--' + tone} {...moodProps('skills')}>
-        <span className="slot__tile px" aria-hidden="true">{code}</span>
+        <span className="slot__tile px" aria-hidden="true" data-index={String(index + 1).padStart(2, '0')}>
+          <PixelLogo name={logo} />
+          <i className="slot__scan" />
+        </span>
         <span className="slot__name">{name}</span>
       </li>
     ))}

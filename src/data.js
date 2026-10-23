@@ -114,19 +114,19 @@ export const SIGNS = [
 ];
 
 export const LANGS = [
-  ['HT', 'HTML'],
-  ['CS', 'CSS'],
-  ['JS', 'JavaScript'],
-  ['TS', 'TypeScript'],
-  ['AS', 'Google Apps Script'],
+  ['html', 'HTML'],
+  ['css', 'CSS'],
+  ['javascript', 'JavaScript'],
+  ['typescript', 'TypeScript'],
+  ['appsScript', 'Google Apps Script'],
 ];
 
 export const TOOLS = [
-  ['RE', 'React'],
-  ['VI', 'Vite'],
-  ['GS', 'GSAP'],
-  ['RM', 'Remotion'],
-  ['GT', 'Git & GitHub'],
+  ['react', 'React'],
+  ['vite', 'Vite'],
+  ['gsap', 'GSAP'],
+  ['remotion', 'Remotion'],
+  ['github', 'Git & GitHub'],
 ];
 
 // Only entries already confirmed from the README/portfolio are hard-coded.
