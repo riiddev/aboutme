@@ -255,7 +255,9 @@ export const Sky = memo(function Sky() {
 
   return (
     <div className="sky" aria-hidden="true">
+      <div className="sky__day" />
       <div className="sky__dusk" />
+      <div className="sky__nightfall" />
       <div className="sky__nebula" />
       <div className="sky__stars">
         <i style={{ boxShadow: first }} />
