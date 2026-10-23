@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Chest } from './PixelArt.jsx';
 import PixelLogo from './PixelLogo.jsx';
-import { SIGNS, LANGS, TOOLS, VERIFIED, PROJECT_DETAILS, GITHUB, SPOTIFY } from './data.js';
+import { SIGNS, LANGS, TOOLS, PROJECTS, GITHUB, SPOTIFY } from './data.js';
 import { useReducedMotion, moodProps } from './lib.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -73,167 +73,129 @@ export function About() {
   );
 }
 
-// Confirmed entries first; public repositories are merged in at runtime.
-const KEY = 'riiddev:repos:v1';
+function ProjectPreview({ project }) {
+  const [imageFailed, setImageFailed] = useState(false);
 
-function merge(apiRepos) {
-  const map = new Map(VERIFIED.map((repo) => [
-    repo.name,
-    { ...repo, ...(PROJECT_DETAILS[repo.name] || {}) },
-  ]));
-  apiRepos.filter((repo) => !repo.fork).forEach((repo) => {
-    const previous = map.get(repo.name);
-    const curated = PROJECT_DETAILS[repo.name] || {};
-    map.set(repo.name, {
-      ...previous,
-      ...curated,
-      name: repo.name,
-      repoUrl: repo.html_url,
-      description: curated.description || repo.description || (previous && previous.description)
-        || 'Repository ini belum memiliki deskripsi yang cukup. Buka README atau repositorinya untuk melihat konteks lengkap.',
-      category: curated.category || (previous && previous.category) || 'PROJECT EXPERIMENT',
-      language: repo.language,
-      pushed: repo.pushed_at,
-      live: repo.homepage || (previous && previous.live),
-    });
-  });
-  return [...map.values()].slice(0, 8);
-}
+  return (
+    <div className={'project-preview-window' + (project ? ' is-active' : '')}>
+      <div className="project-preview__chrome" aria-hidden="true">
+        <span className="window-dot window-dot--red" />
+        <span className="window-dot window-dot--yellow" />
+        <span className="window-dot window-dot--green" />
+        <span className="project-preview__address">
+          {project ? project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'riiddev / project-preview'}
+        </span>
+      </div>
 
-function useRepos() {
-  const [state, setState] = useState({ repos: VERIFIED, source: 'verified' });
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    (async () => {
-      try {
-        const cached = JSON.parse(sessionStorage.getItem(KEY) || 'null');
-        if (cached && Date.now() - cached.t < 600000) {
-          setState({ repos: merge(cached.d), source: 'github' });
-          return;
-        }
-      } catch {
-        // Ignore unavailable storage or invalid cached JSON.
-      }
-
-      try {
-        const response = await fetch('https://api.github.com/users/riiddev/repos?per_page=30&sort=pushed', {
-          signal: controller.signal,
-          headers: { Accept: 'application/vnd.github+json' },
-        });
-        if (!response.ok) throw new Error('GitHub API returned ' + response.status);
-
-        const data = await response.json();
-        try {
-          sessionStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d: data }));
-        } catch {
-          // Storage is optional; projects can still render.
-        }
-        setState({ repos: merge(data), source: 'github' });
-      } catch (error) {
-        if (error?.name !== 'AbortError') {
-          setState((current) => ({ ...current, source: 'offline' }));
-        }
-      }
-    })();
-
-    return () => controller.abort();
-  }, []);
-
-  return state;
+      {project ? (
+        <>
+          <div className="project-preview__screen">
+            {imageFailed ? (
+              <div className="project-preview__fallback">
+                <span className="project-preview__fallback-mark">?</span>
+                <p>Preview image sedang tidak tersedia.</p>
+              </div>
+            ) : (
+              <img
+                src={project.previewImage}
+                alt={project.alt}
+                loading="lazy"
+                decoding="async"
+                onError={() => setImageFailed(true)}
+              />
+            )}
+          </div>
+          <div className="project-preview__details">
+            <p className="project-preview__category">{project.category}</p>
+            <h3>{project.displayName}</h3>
+            <p>{project.description}</p>
+            <a className="btn" href={project.liveUrl} target="_blank" rel="noreferrer">
+              {project.liveLabel} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </>
+      ) : (
+        <div className="project-preview__empty">
+          <div className="project-preview__pixel-art" aria-hidden="true">
+            <span /><span /><span /><span /><span /><span /><span /><span /><span />
+          </div>
+          <p className="project-preview__category">PROJECT EXPLORER</p>
+          <h3>Pilih satu peti.</h3>
+          <p>Arahkan kursor ke proyek di sebelah kiri untuk melihat screenshot websitenya. Klik peti untuk membuka produk live di tab baru.</p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function Projects() {
-  const { repos, source } = useRepos();
-  const [open, setOpen] = useState(null);
   const wrap = useRef(null);
-  const panel = useRef(null);
+  const [activeProject, setActiveProject] = useState(null);
   const reduced = useReducedMotion();
-  const current = repos.find((repo) => repo.name === open);
 
   useEffect(() => {
-    ScrollTrigger.refresh();
-  }, [repos.length]);
-
-  useEffect(() => {
-    if (!open || reduced) return undefined;
+    if (reduced) return undefined;
 
     const context = gsap.context(() => {
-      gsap.fromTo(
-        panel.current,
-        { clipPath: 'inset(0 0 100% 0)' },
-        { clipPath: 'inset(0 0 0% 0)', duration: 0.35, ease: 'steps(6)', clearProps: 'clipPath' },
-      );
-      gsap.fromTo('[data-open="true"] .spark',
-        { x: 0, y: 0, opacity: 1 },
-        {
-          x: (index) => Math.cos((index * Math.PI) / 4) * 38,
-          y: (index) => Math.sin((index * Math.PI) / 4) * 38 - 10,
-          opacity: 0,
-          duration: 0.55,
-          ease: 'steps(5)',
-        },
-      );
+      gsap.from('.project-row', {
+        autoAlpha: 0,
+        x: -24,
+        duration: 0.6,
+        stagger: 0.07,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: wrap.current, start: 'top 76%', once: true },
+      });
     }, wrap);
 
     return () => context.revert();
-  }, [open, reduced]);
-
-  const formatDate = (date) => new Date(date).toLocaleDateString('en', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+  }, [reduced]);
 
   return (
-    <Section id="projects" title="Discoveries">
-      <div ref={wrap} onKeyDown={(event) => event.key === 'Escape' && setOpen(null)}>
-        <p className="lede">Crates I found while building. Open one to see what's inside.</p>
-        <ul className="chests">
-          {repos.map((repo) => (
-            <li key={repo.name}>
-              <button
-                className="chest-btn"
-                data-open={open === repo.name}
-                aria-expanded={open === repo.name}
-                aria-controls="repo-panel"
-                onClick={() => setOpen((currentOpen) => currentOpen === repo.name ? null : repo.name)}
-                {...moodProps('projects')}
-              >
-                <Chest />
-                {Array.from({ length: 8 }, (_, index) => <i className="spark" key={index} aria-hidden="true" />)}
-                <span className="chest-name">{repo.displayName || repo.name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <div id="repo-panel" role="region" aria-live="polite" aria-label="Project details">
-          {current ? (
-            <article ref={panel} className="panel px px--green">
-              <p className="panel__eyebrow">{current.category || 'PROJECT'}</p>
-              <h3>{current.displayName || current.name}</h3>
-              <div className="panel__story">
-                <span className="panel__story-label">Tentang proyek</span>
-                <p>{current.description || 'Buka repositori untuk melihat konteks dan perkembangan terbaru proyek ini.'}</p>
-              </div>
-              <p className="meta">
-                {current.language && <span className="chip">{current.language}</span>}
-                {current.pushed && <span>Pembaruan terakhir {formatDate(current.pushed)}</span>}
-              </p>
-              <div className="panel__links">
-                {current.repoUrl && <a className="btn" href={current.repoUrl} target="_blank" rel="noreferrer">View on GitHub</a>}
-                {current.live && <a className="btn btn--ghost" href={current.live} target="_blank" rel="noreferrer">Open live site</a>}
-              </div>
-            </article>
-          ) : (
-            <p className="hint">Pick a crate. Escape closes it.</p>
-          )}
+    <Section id="projects" title="My projects">
+      <div
+        ref={wrap}
+        className="project-explorer"
+        onKeyDown={(event) => event.key === 'Escape' && setActiveProject(null)}
+        onPointerLeave={() => setActiveProject(null)}
+      >
+        <div className="project-explorer__list">
+          <p className="lede">Setiap peti menyimpan satu hal yang pernah kita bangun. Arahkan kursor untuk mengintip tampilannya, klik untuk membuka websitenya.</p>
+          <ul className="chests chests--stack">
+            {PROJECTS.map((project, index) => (
+              <li className="project-row" key={project.id}>
+                <a
+                  className="chest-btn"
+                  data-active={activeProject?.id === project.id}
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={'Buka website ' + project.displayName}
+                  onPointerEnter={() => setActiveProject(project)}
+                  onFocus={() => setActiveProject(project)}
+                  onBlur={(event) => {
+                    if (!wrap.current?.contains(event.relatedTarget)) setActiveProject(null);
+                  }}
+                >
+                  <span className="project-row__chest">
+                    <Chest />
+                    <span className="project-row__number">{String(index + 1).padStart(2, '0')}</span>
+                  </span>
+                  <span className="project-row__copy">
+                    <span className="project-row__category">{project.category}</span>
+                    <span className="chest-name">{project.displayName}</span>
+                    <span className="project-row__summary">{project.description}</span>
+                    <span className="project-row__open">{project.liveLabel} <span aria-hidden="true">↗</span></span>
+                  </span>
+                  <img className="project-row__mobile-thumb" src={project.previewImage} alt="" loading="lazy" decoding="async" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
-        {source === 'offline' && (
-          <p className="hint">Couldn't reach GitHub just now, so this shows the projects I could confirm from my README.</p>
-        )}
+
+        <aside className="project-preview-dock" aria-label="Project screenshot preview" aria-live="polite">
+          <ProjectPreview key={activeProject?.id || 'empty'} project={activeProject} />
+        </aside>
       </div>
     </Section>
   );

@@ -130,81 +130,76 @@ export const TOOLS = [
   ['github', 'GitHub'],
 ];
 
-// Curated summaries based on each public repository's README, so project panels explain what the project does.
-export const PROJECT_DETAILS = {
-  riiddev: {
-    displayName: 'GitHub Profile README',
-    category: 'PROFILE README',
-    description: 'Profil GitHub bergaya pixel yang memperkenalkan Riiddev lewat ninja animasi, tautan playlist Spotify, grafik kontribusi 3D, dan Pac-Man yang berjalan di atas riwayat commit.',
+// Projects shown in the portfolio. Links intentionally point to the live product, never source repositories.
+export const PROJECTS = [
+  {
+    id: 'whitman',
+    displayName: 'Whitman House',
+    category: 'COMMUNITY QUEST · CHECK-IN',
+    description: 'Website check-in harian untuk komunitas Whitman House / The Main Ideas. Anggota mengirim screenshot sebagai bukti quest, memeriksa riwayat kehadiran, membuat sertifikat PNG, dan melihat leaderboard serta buku panduan.',
+    liveUrl: 'https://whitmanhouse.vercel.app/',
+    liveLabel: 'Buka Whitman House',
+    previewImage: 'https://lh3.googleusercontent.com/d/1pY8QP0cfOvtFKGRmDkCY9alNk2rtFOn_=w1000',
+    alt: 'Screenshot website Whitman House',
   },
-  portooo: {
-    displayName: 'Portooo — previous portfolio',
-    category: 'PORTFOLIO LAMA',
-    description: 'Portofolio personal versi sebelumnya. Disimpan sebagai arsip untuk membandingkan arah visual, konten, dan eksperimen UI sebelum Pixel World dibuat.',
-  },
-  aboutme: {
-    displayName: 'Pixel World Portfolio',
-    category: 'PERSONAL PORTFOLIO',
-    description: 'Portofolio interaktif bertema dunia pixel: karakter kecil, latar kota malam, animasi scroll, peti proyek, toolbox, aktivitas GitHub, dan tautan kontak.',
-  },
-  'NASIB-62': {
+  {
+    id: 'nasib62',
     displayName: 'NASIB +62',
     category: 'STRATEGY BOARD GAME',
-    description: 'Board game ekonomi satir tentang uang, tanah, dan kejutan hidup sehari-hari. Pemain membeli properti, membangun rumah, mengatur saldo, dan bisa berhadapan dengan 1–3 bot dengan gaya strategi berbeda. Intro Remotion, animasi GSAP, dan efek suara menambah nuansa game.',
+    description: 'Board game ekonomi satir tentang uang, tanah, dan kejutan hidup sehari-hari. Pemain membeli properti, membangun rumah, mengelola saldo, dan menghadapi bot dengan gaya strategi berbeda.',
+    liveUrl: 'https://nasib62.vercel.app/',
+    liveLabel: 'Mainkan NASIB +62',
+    previewImage: 'https://lh3.googleusercontent.com/d/1D-qLFhHv_x4--bYA3p_TpyBpAoSbHvyg=w1000',
+    alt: 'Screenshot permainan NASIB +62',
   },
-  office: {
-    displayName: 'Riiddev Agent HQ',
-    category: '3D OFFICE SIMULATION',
-    description: 'Simulasi kantor 3D bergaya life-sim untuk menjelajahi ruang kerja, lounge, pantry, dan ruang game sambil melihat karakter kru serta feed aktivitas. Catatan: kru/feed masih berupa data simulasi; pengiriman tugas cloud memerlukan setup token dan workflow secara terpisah.',
+  {
+    id: 'libris',
+    displayName: 'Libris',
+    category: 'EBOOK READER',
+    description: 'Aplikasi pembaca ebook untuk mengelola banyak berkas buku dan melanjutkan membaca dari posisi terakhir yang tersimpan. Fokus pengalaman membacanya mencakup perpindahan halaman, scroll vertikal, dan swipe horizontal agar tidak perlu mencari halaman dari awal lagi.',
+    liveUrl: 'https://libris.vercel.app/',
+    liveLabel: 'Buka Libris',
+    previewImage: 'https://lh3.googleusercontent.com/d/1IXrFzd-mw_4aEvlR3nb-TOy8vxEld51k=w1000',
+    alt: 'Screenshot aplikasi pembaca ebook Libris',
   },
-  gemini: {
-    displayName: 'Latveria Academy Sandbox',
-    category: 'UTBK-SNBT STUDY PLATFORM · SANDBOX',
-    description: 'Sandbox eksperimen berbasis codebase Latveria Academy, platform latihan UTBK-SNBT berbahasa Indonesia. README-nya mencakup katalog paket latihan, pengerjaan soal, riwayat dan EXP, dashboard admin untuk bank soal, tryout lintas subtes, serta mode battle. Fitur yang memerlukan API dan database hanya aktif setelah setup lokal/servisnya lengkap.',
+  {
+    id: 'notecanvas',
+    displayName: 'NoteCanvas',
+    category: 'PDF ANNOTATION · STUDY',
+    description: 'Notebook digital untuk belajar langsung di materi PDF. Arah pengembangannya menekankan coretan dan anotasi pada halaman dokumen, pengaturan halaman, zoom, serta navigasi vertikal dan geser horizontal agar catatan nyaman dipakai di tablet maupun laptop.',
+    liveUrl: 'https://notecanvas-studio.vercel.app/',
+    liveLabel: 'Buka NoteCanvas',
+    previewImage: 'https://lh3.googleusercontent.com/d/1T-A3uzCDrSmJdf4xmlUAJBeQARWk3Evk=w1000',
+    alt: 'Screenshot aplikasi NoteCanvas untuk mencoret PDF',
   },
-  'Quest-Whitman': {
-    displayName: 'The Play Goes On',
-    category: 'DAILY QUEST CHECK-IN',
-    description: 'Website check-in harian The Main Ideas untuk Whitman House. Peserta mengirim bukti screenshot, melihat konfirmasi dan total kehadiran, mengecek riwayat, membuat sertifikat PNG, serta membaca panduan quest. Pencatatan terhubung ke Google Sheets melalui Apps Script.',
-  },
-  'Tracker-sobal-': {
-    displayName: 'Tracker Sobal',
-    category: 'FEE & TRANSACTION TRACKER',
-    description: 'Aplikasi untuk mencatat transaksi dan fee dari berbagai program, memisahkan status sudah/belum cair, melihat grafik tren per program, memfilter riwayat, dan mengimpor atau mengekspor data. Data transaksi pada versi ini disimpan di browser melalui localStorage.',
-  },
-  tryoutessaypartho: {
-    displayName: 'Nulis Esai by Parthoo',
-    category: 'ESSAY PRACTICE TOOL',
-    description: 'Nulis Esai by Parthoo adalah workspace latihan esai dengan simulasi ujian, histori jawaban, paket soal, evaluasi akhir, dan AI Essay Coach untuk umpan balik tulisan secara langsung. Fitur AI server membutuhkan konfigurasi API key; evaluasi lokal tetap menjadi fallback jika AI belum aktif.',
-  },
-  StudyWithMbah: {
+  {
+    id: 'studywithmbah',
     displayName: 'StudyWithMbah',
-    category: 'STUDY & LEARNING WEBSITE',
-    description: 'Website belajar dengan materi dan tautan latihan, video, serta bank soal PDF per topik. Proyek ini juga mengeksplorasi animasi GSAP dan mascot lab berbasis React/Remotion tanpa memaksa seluruh situs statis bermigrasi ke bundler.',
-  },
-  'notecanvas-studio': {
-    displayName: 'NoteCanvas Studio',
-    category: 'DIGITAL NOTEBOOK',
-    description: 'Aplikasi notebook digital untuk membuat dan mengatur buku catatan multi-halaman. Fokus pengembangannya meliputi menggambar dengan mouse/touch/stylus, pen dan highlighter, eraser, undo-redo, template kertas, dukungan PDF, ekspor, dan autosave lokal agar catatan tidak bergantung pada layanan cloud berbayar.',
-  },
-  script: {
-    displayName: 'Profile README Experiment',
-    category: 'PROFILE README EXPERIMENT',
-    description: 'Repository eksperimen seputar struktur README profil GitHub dan template generator. README yang tersedia masih merujuk pada Profile Readme Generator upstream, jadi anggap ini sebagai ruang eksplorasi/template, bukan aplikasi orisinal yang sudah terverifikasi terpisah.',
-  },
-};
-
-// Only entries already confirmed from the README/portfolio are hard-coded.
-// Live GitHub data is merged into this list at runtime.
-export const VERIFIED = [
-  {
-    name: 'riiddev',
-    repoUrl: 'https://github.com/riiddev/riiddev',
-    description: 'My GitHub profile README: a pixel-style intro, a ninja patrol animation, a Spotify player, a 3D contribution graph, and a Pac-Man contribution graph that GitHub Actions keeps updated.',
+    category: 'LEARNING COMMUNITY',
+    description: 'Website komunitas belajar yang mengumpulkan materi, video, tautan latihan, dan bank soal PDF per topik. Proyek ini juga mengeksplorasi maskot interaktif dan animasi untuk membuat kegiatan belajar terasa lebih hidup.',
+    liveUrl: 'https://studywithmbahcommunity.vercel.app/',
+    liveLabel: 'Kunjungi komunitas',
+    previewImage: 'https://lh3.googleusercontent.com/d/1cV5sOrL5kCOddKvaA4bhYiIlEc9AtTQ-=w1000',
+    alt: 'Screenshot website komunitas belajar StudyWithMbah',
   },
   {
-    name: 'portooo',
-    live: 'https://riiddev.github.io/portooo/',
-    description: 'My existing portfolio site.',
+    id: 'essay',
+    displayName: 'Simulasi Nulis Esai',
+    category: 'ESSAY PRACTICE',
+    description: 'Workspace latihan menulis esai dengan simulasi ujian, paket soal, histori jawaban, dan evaluasi akhir. AI Essay Coach dirancang memberi umpan balik pada tulisan; fitur AI live bergantung pada konfigurasi layanan, dengan evaluasi lokal sebagai fallback.',
+    liveUrl: 'https://tryoutessaypartho.vercel.app/',
+    liveLabel: 'Coba simulasi esai',
+    previewImage: 'https://lh3.googleusercontent.com/d/1GMTSJxv0J91HUpMIYxnMcQXwj0tWfDPt=w1000',
+    alt: 'Screenshot aplikasi simulasi menulis esai',
+  },
+  {
+    id: 'latveria',
+    displayName: 'Latveria Academy',
+    category: 'UTBK · SNBT LEARNING',
+    description: 'Eksperimen platform latihan UTBK-SNBT berbahasa Indonesia. Alur belajarnya mencakup katalog paket, pengerjaan soal, riwayat hasil dan EXP, tryout lintas subtes, serta mode battle ketika layanan backend dan datanya tersedia.',
+    liveUrl: 'https://latveria-riiddev-web.vercel.app/',
+    liveLabel: 'Buka Latveria Academy',
+    previewImage: 'https://lh3.googleusercontent.com/d/1vnhdibEaDWeHRIPvsRVKhTcZGuPcHcKo=w1000',
+    alt: 'Screenshot platform belajar Latveria Academy',
   },
 ];
