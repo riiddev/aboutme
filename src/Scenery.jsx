@@ -8,19 +8,19 @@ function seeded(seed) {
 const TONES = {
   front: {
     leaf: ['#285d54', '#37836e', '#76bd76'],
-    hi: '#d5eb78',
+    hi: '#A9F06D',
     stem: '#1c4a4c',
-    flower: '#ff9bc2',
-    flowerD: '#de679c',
-    core: '#ffd166',
+    flower: '#BBA9FF',
+    flowerD: '#6f5fc2',
+    core: '#EAF0F7',
   },
   back: {
     leaf: ['#1f4143', '#285d60', '#36756b'],
-    hi: '#69d7e5',
+    hi: '#A9F06D',
     stem: '#18383f',
-    flower: '#b8a3ff',
-    flowerD: '#ff9bc2',
-    core: '#fff2d7',
+    flower: '#8f80d6',
+    flowerD: '#6f5fc2',
+    core: '#EAF0F7',
   },
 };
 
@@ -101,23 +101,8 @@ const stars = (count, seed, colour) => {
   )).join(',');
 };
 
-const WINDOW_TINTS = ['#ffd166', '#ff9bc2', '#69d7e5', '#b8a3ff', '#7be0b6', '#ff9f68'];
-const FAR_BUILDINGS = Array.from({ length: 24 }, (_, index) => ({
-  left: (index * 4.45 - 1) + '%',
-  width: (4.1 + ((index * 7) % 3) * 0.9) + '%',
-  height: (13 + ((index * 13 + 7) % 18)) + 'vh',
-  '--window-delay': ((index * 0.37) % 4) + 's',
-  '--window-tint': WINDOW_TINTS[(index * 3 + 1) % WINDOW_TINTS.length],
-}));
-const NEAR_BUILDINGS = Array.from({ length: 11 }, (_, index) => ({
-  left: (index * 9.7 - 2) + '%',
-  width: (9 + ((index * 5) % 4)) + '%',
-  height: (6 + ((index * 9 + 4) % 11)) + 'vh',
-  '--window-tint': WINDOW_TINTS[(index + 2) % WINDOW_TINTS.length],
-}));
-
-// The skyline is made out of crisp local CSS shapes, not a remote image.
-// Pointer movement gives the distant and near layers different parallax speeds.
+const WINDOW_TINTS = ['#EAF0F7', '#BBA9FF', '#A9F06D', '#BBA9FF', '#A9F06D', '#ffd9a3'];
+// Pointer movement shifts the distant ridges and the near buildings at different speeds.
 function useSkyParallax() {
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -152,14 +137,14 @@ function useSkyParallax() {
 // apartment lights, street furniture and traffic give the hero an inhabited scale.
 const CITY_BUILDINGS = [
   { id: 'old-row', kind: 'rowhouse', left: '0.5%', width: '10.8%', height: '42%', rows: 4, cols: 3, sign: 'OPEN', wall: '#263858', light: '#f4c988' },
-  { id: 'walkup', kind: 'apartment', left: '9.2%', width: '11.6%', height: '64%', rows: 6, cols: 3, wall: '#233653', light: '#a7dff0', balconies: true },
-  { id: 'brick-office', kind: 'office', left: '19.1%', width: '8.9%', height: '50%', rows: 5, cols: 2, wall: '#26324f', light: '#d8c4ff' },
-  { id: 'clock-tower', kind: 'tower', left: '27.1%', width: '10.8%', height: '84%', rows: 8, cols: 3, wall: '#1c2c4b', light: '#d2e3fa', antenna: true },
+  { id: 'walkup', kind: 'apartment', left: '9.2%', width: '11.6%', height: '64%', rows: 6, cols: 3, wall: '#233653', light: '#cfeeb5', balconies: true },
+  { id: 'brick-office', kind: 'office', left: '19.1%', width: '8.9%', height: '50%', rows: 5, cols: 2, wall: '#26324f', light: '#BBA9FF' },
+  { id: 'clock-tower', kind: 'tower', left: '27.1%', width: '10.8%', height: '84%', rows: 8, cols: 3, wall: '#1c2c4b', light: '#EAF0F7', antenna: true },
   { id: 'corner-cafe', kind: 'cafe', left: '37.4%', width: '12.8%', height: '35%', rows: 3, cols: 3, sign: 'CAFE', wall: '#302d4e', light: '#ffd6a0' },
-  { id: 'mid-rise', kind: 'apartment', left: '48.4%', width: '11.8%', height: '59%', rows: 6, cols: 3, wall: '#233752', light: '#b8a3ff', balconies: true },
+  { id: 'mid-rise', kind: 'apartment', left: '48.4%', width: '11.8%', height: '59%', rows: 6, cols: 3, wall: '#233752', light: '#BBA9FF', balconies: true },
   { id: 'narrow-house', kind: 'rowhouse', left: '59.2%', width: '8.1%', height: '48%', rows: 5, cols: 2, wall: '#2c3455', light: '#ffd9a3' },
-  { id: 'night-hotel', kind: 'hotel', left: '66.4%', width: '12.9%', height: '72%', rows: 7, cols: 3, sign: 'INN', wall: '#202e4b', light: '#a9e3f1' },
-  { id: 'water-tower', kind: 'water', left: '78.3%', width: '10.6%', height: '43%', rows: 4, cols: 3, wall: '#283757', light: '#d4c4ff', antenna: true },
+  { id: 'night-hotel', kind: 'hotel', left: '66.4%', width: '12.9%', height: '72%', rows: 7, cols: 3, sign: 'INN', wall: '#202e4b', light: '#c9f59d' },
+  { id: 'water-tower', kind: 'water', left: '78.3%', width: '10.6%', height: '43%', rows: 4, cols: 3, wall: '#283757', light: '#BBA9FF', antenna: true },
   { id: 'last-block', kind: 'office', left: '88.2%', width: '12%', height: '53%', rows: 5, cols: 3, wall: '#202f4d', light: '#ffd69a' },
 ];
 
@@ -255,7 +240,6 @@ export const Sky = memo(function Sky() {
 
   return (
     <div className="sky" aria-hidden="true">
-      <div className="sky__day" />
       <div className="sky__dusk" />
       <div className="sky__nightfall" />
       <div className="sky__nebula" />
@@ -268,18 +252,6 @@ export const Sky = memo(function Sky() {
       <i className="cloud c2" />
       <div className="sky__horizon" />
       <Cityscape className="cityscape--world" />
-      <div className="skyline skyline--far">
-        {FAR_BUILDINGS.map((style, index) => (
-          <i className="skyline__building" key={index} style={style} />
-        ))}
-      </div>
-      <div className="skyline skyline--near">
-        {NEAR_BUILDINGS.map((style, index) => (
-          <i className="skyline__building" key={index} style={style} />
-        ))}
-        <span className="skyline__garden skyline__garden--one" />
-        <span className="skyline__garden skyline__garden--two" />
-      </div>
       <div className="sky__fireflies">
         {fireflies.map((style, index) => <i key={index} style={style} />)}
       </div>

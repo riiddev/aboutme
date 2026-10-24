@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Chest } from './PixelArt.jsx';
 import PixelLogo from './PixelLogo.jsx';
 import { SIGNS, LANGS, TOOLS, PROJECTS, GITHUB, SPOTIFY } from './data.js';
-import { useReducedMotion, moodProps } from './lib.js';
+import { useReducedMotion, moodProps, resetMood } from './lib.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -146,7 +146,7 @@ function CursorProjectPreview({ project, cursorPoint, reduced }) {
             <span className="project-cursor-preview__address">
               {project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}
             </span>
-            <span className="project-cursor-preview__stamp">SITE SNAPSHOT</span>
+            <span className="project-cursor-preview__stamp">Live site</span>
           </div>
           <div className="project-cursor-preview__screen">
             <img
@@ -155,6 +155,7 @@ function CursorProjectPreview({ project, cursorPoint, reduced }) {
               alt=""
               draggable="false"
               decoding="async"
+              onError={(event) => { event.currentTarget.style.visibility = 'hidden'; }}
             />
           </div>
           <div className="project-cursor-preview__footer">
@@ -212,13 +213,15 @@ export function Projects() {
         }}
       >
         <div className="project-explorer__list">
-          <p className="lede">Small experiments, useful tools, and ideas I'm building one level at a time. Hover over a project to peek inside.</p>
+          <p className="lede">Small experiments, useful tools, and ideas I'm building one level at a time. Every one is live. Hover a row to peek inside, or open it to try it.</p>
           <ul className="chests chests--stack">
-            {PROJECTS.map((project, index) => (
+            {PROJECTS.map((project) => (
               <li
                 className={'project-row' + (project.featured ? ' project-row--featured' : '')}
                 key={project.id}
+                {...moodProps('projects')}
                 onPointerLeave={(event) => {
+                  resetMood();
                   if (event.pointerType === 'mouse' || event.pointerType === 'pen') setHoveredProject(null);
                 }}
               >
@@ -238,7 +241,6 @@ export function Projects() {
                 >
                   <span className="project-row__chest" aria-hidden="true">
                     <Chest />
-                    <span className="project-row__number">{String(index + 1).padStart(2, '0')}</span>
                   </span>
                   <span className="project-row__copy">
                     {project.featured && <span className="project-row__featured">Featured</span>}
@@ -260,9 +262,9 @@ export function Projects() {
 
 const Slots = ({ items, tone }) => (
   <ul className="slots">
-    {items.map(([logo, name], index) => (
+    {items.map(([logo, name]) => (
       <li key={name} className={'slot slot--' + tone} {...moodProps('skills')}>
-        <span className="slot__tile px" aria-hidden="true" data-index={String(index + 1).padStart(2, '0')}>
+        <span className="slot__tile" aria-hidden="true">
           <PixelLogo name={logo} />
           <i className="slot__scan" />
         </span>
@@ -283,7 +285,7 @@ export function Skills() {
       <h3 className="sub">Just starting</h3>
       <ul className="slots">
         <li className="slot slot--ghost" {...moodProps('skills')}>
-          <span className="slot__tile px" aria-hidden="true">?</span>
+          <span className="slot__tile" aria-hidden="true">?</span>
           <span className="slot__name">Backend basics</span>
         </li>
       </ul>

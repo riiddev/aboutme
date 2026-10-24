@@ -48,7 +48,20 @@ export const resetMood = () => moodStore.set(sectionStore.get());
 
 // Shared scroll controller lets navigation use the same weighted motion as wheel scrolling.
 let smoothScroller = null;
-export const setSmoothScroller = (instance) => { smoothScroller = instance; };
+let scrollLocked = false;
+export const setSmoothScroller = (instance) => {
+  smoothScroller = instance;
+  if (instance && scrollLocked) instance.stop();
+};
+
+// The intro locks scrolling (native and Lenis) until its handoff.
+export function setScrollLocked(on) {
+  scrollLocked = on;
+  if (typeof document !== 'undefined') document.documentElement.classList.toggle('is-intro', on);
+  if (!smoothScroller) return;
+  if (on) smoothScroller.stop();
+  else smoothScroller.start();
+}
 
 export const moodProps = (key) => ({
   onPointerEnter: () => moodStore.set(key),
