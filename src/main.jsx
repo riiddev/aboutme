@@ -4,6 +4,7 @@ import App from './App.jsx';
 import './styles.css';
 import './smooth-motion.css';
 import './section-unboxed.css';
+import './world.css';
 import 'lenis/dist/lenis.css';
 
 createRoot(document.getElementById('root')).render(
