@@ -49,6 +49,16 @@ export const resetMood = () => moodStore.set(sectionStore.get());
 // Shared scroll controller lets navigation use the same weighted motion as wheel scrolling.
 let smoothScroller = null;
 export const setSmoothScroller = (instance) => { smoothScroller = instance; };
+export const getSmoothScroller = () => smoothScroller;
+
+// The opening sequence plays once per browser; the footer offers a replay.
+const INTRO_KEY = 'riiddev:intro:v1';
+export const hasSeenIntro = () => {
+  try { return window.localStorage.getItem(INTRO_KEY) === '1'; } catch { return false; }
+};
+export const markIntroSeen = () => {
+  try { window.localStorage.setItem(INTRO_KEY, '1'); } catch { /* storage unavailable: intro simply plays again */ }
+};
 
 export const moodProps = (key) => ({
   onPointerEnter: () => moodStore.set(key),
