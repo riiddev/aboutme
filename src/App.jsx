@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import Lenis from 'lenis';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sprite, Note } from './PixelArt.jsx';
+import Intro from './Intro.jsx';
 import { Vines, Sky } from './Scenery.jsx';
 import { About, Projects, Skills, Activity, Contact } from './Sections.jsx';
 import { NAV, SPOTIFY, LINES, MOOD_LINES } from './data.js';
@@ -15,45 +16,12 @@ import {
   moodProps,
   goTo,
   setSmoothScroller,
+  hasSeenIntro,
+  markIntroSeen,
 } from './lib.js';
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
-
-// Brief, non-blocking loader. Any key or pointer press skips it.
-function Loader({ onDone }) {
-  const root = useRef(null);
-
-  useEffect(() => {
-    let timeline;
-    const context = gsap.context(() => {
-      timeline = gsap.timeline({ onComplete: onDone })
-        .fromTo('.loader__fill', { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: 'steps(10)' })
-        .to('.loader__box', { opacity: 0, duration: 0.01 }, '+=0.05')
-        .to(root.current, { clipPath: 'inset(0 0 100% 0)', duration: 0.45, ease: 'steps(6)' });
-    }, root);
-
-    const skip = () => timeline?.progress(1);
-    window.addEventListener('keydown', skip, { once: true });
-    window.addEventListener('pointerdown', skip, { once: true });
-
-    return () => {
-      window.removeEventListener('keydown', skip);
-      window.removeEventListener('pointerdown', skip);
-      context.revert();
-    };
-  }, [onDone]);
-
-  return (
-    <div ref={root} className="loader" aria-hidden="true">
-      <div className="loader__box px">
-        <p>Loading Riiddev's world</p>
-        <div className="loader__bar"><i className="loader__fill" /></div>
-        <small>Press any key to skip</small>
-      </div>
-    </div>
-  );
-}
 
 // HUD navigation and the tiny character that travels along the progress rail.
 function Hud() {
@@ -413,7 +381,7 @@ function HeroCharacter({ music }) {
   );
 }
 
-function Hero({ ready }) {
+function Hero({ ready, held }) {
   const root = useRef(null);
   const timeline = useRef(null);
   const reduced = useReducedMotion();
@@ -423,25 +391,37 @@ function Hero({ ready }) {
     if (reduced) return undefined;
 
     const context = gsap.context(() => {
-      timeline.current = gsap.timeline({ paused: true })
-        .from('.hero__wall', { scale: 1.08, duration: 1.35, ease: 'power2.out' }, 0)
-        .from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: 1, ease: 'steps(10)' }, 0.04)
-        .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05)
-        .from('.hero__title .ch', {
+      // After the intro the character and ground already exist on screen, so the hero
+      // continues the scene instead of re-staging its own entrance.
+      const tl = gsap.timeline({ paused: true });
+      timeline.current = tl;
+      if (!held) tl.from('.hero__wall', { scale: 1.08, duration: 1.35, ease: 'power2.out' }, 0);
+      tl.from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: held ? 0.5 : 1, ease: 'steps(10)' }, 0.04)
+        .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05);
+      if (held) {
+        tl.from('.hero__title .ch', { autoAlpha: 0, y: 14, duration: 0.14, ease: 'steps(3)', stagger: 0.04 }, 0.06)
+          .from('.hc', { autoAlpha: 0, duration: 0.01 }, 0)
+          .from('.hero__sub, .hero__actions', {
+            autoAlpha: 0, y: 12, clipPath: 'inset(0 100% 0 0)', duration: 0.4, ease: 'power3.out', stagger: 0.1,
+          }, 0.3)
+          .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 0.55);
+      } else {
+        tl.from('.hero__title .ch', {
           autoAlpha: 0, y: -30, rotation: () => gsap.utils.random(-5, 5),
           scale: 0.72, duration: 0.46, ease: 'back.out(1.8)', stagger: 0.055,
         }, 0.12)
-        .from('.hc', {
-          y: '-70vh', scaleX: 0.78, scaleY: 1.12, rotation: -7,
-          duration: 0.95, ease: 'bounce.out',
-        }, 0.47)
-        .to('.hc', { scaleX: 1.06, scaleY: 0.92, duration: 0.09, ease: 'power1.out' }, 1.31)
-        .to('.hc', { scaleX: 1, scaleY: 1, duration: 0.16, ease: 'power1.out' }, 1.4)
-        .from('.hero__sub, .hero__actions', {
-          autoAlpha: 0, y: 18, clipPath: 'inset(0 100% 0 0)',
-          duration: 0.48, ease: 'power3.out', stagger: 0.12,
-        }, 1.16)
-        .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 1.55);
+          .from('.hc', {
+            y: '-70vh', scaleX: 0.78, scaleY: 1.12, rotation: -7,
+            duration: 0.95, ease: 'bounce.out',
+          }, 0.47)
+          .to('.hc', { scaleX: 1.06, scaleY: 0.92, duration: 0.09, ease: 'power1.out' }, 1.31)
+          .to('.hc', { scaleX: 1, scaleY: 1, duration: 0.16, ease: 'power1.out' }, 1.4)
+          .from('.hero__sub, .hero__actions', {
+            autoAlpha: 0, y: 18, clipPath: 'inset(0 100% 0 0)',
+            duration: 0.48, ease: 'power3.out', stagger: 0.12,
+          }, 1.16)
+          .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 1.55);
+      }
 
       const scrub = { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true };
       gsap.to('.vines--back', { yPercent: 14, ease: 'none', scrollTrigger: scrub });
@@ -450,7 +430,7 @@ function Hero({ ready }) {
     }, root);
 
     return () => context.revert();
-  }, [reduced]);
+  }, [reduced, held]);
 
   useEffect(() => {
     if (ready) timeline.current?.play();
@@ -477,7 +457,7 @@ function Hero({ ready }) {
       <div className="hero__ground" aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">
-          <p className="hero__eyebrow"><i aria-hidden="true" /> Independent developer in progress</p>
+          <p className="hero__eyebrow"><i aria-hidden="true" /> Curious developer, learning by building</p>
           <h1 className="hero__title" aria-label="Riiddev">
             {[...'Riiddev'].map((character, index) => (
               <span className="ch" aria-hidden="true" key={index}>{character}</span>
@@ -507,14 +487,23 @@ function Hero({ ready }) {
       </div>
       <Vines seed={29} tone="front" maxHang={11} className="vines vines--front" />
       <a className="hero__scroll" href="#about" onClick={(event) => goTo('about', event)}>
-        <span>SCROLL TO EXPLORE</span><i aria-hidden="true">↓</i>
+        <span>Scroll to explore</span><i aria-hidden="true">↓</i>
       </a>
     </section>
   );
 }
 
 export default function App() {
-  const [loaded, setLoaded] = useState(prefersReduced);
+  // held is fixed at first render: the hero hands its entrance to the intro when one plays.
+  const [flow, setFlow] = useState(() => {
+    const play = !prefersReduced() && !hasSeenIntro();
+    return { intro: play, ready: !play, held: play };
+  });
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    if (flow.intro) markIntroSeen();
+  }, [flow.intro]);
 
   useEffect(() => {
     if (prefersReduced()) return undefined;
@@ -642,15 +631,27 @@ export default function App() {
       <Sky />
       <Hud />
       <main>
-        <Hero ready={loaded} />
+        <Hero ready={flow.ready} held={flow.held} />
         <About />
         <Projects />
         <Skills />
         <Activity />
         <Contact />
       </main>
-      <footer className="foot"><p>Built with React, GSAP and a lot of tiny squares.</p></footer>
-      {!loaded && <Loader onDone={() => setLoaded(true)} />}
+      <footer className="foot">
+        <p>Built with React, GSAP and a lot of tiny squares.</p>
+        {!reduced && (
+          <button type="button" className="foot__replay" onClick={() => setFlow((f) => ({ ...f, intro: true }))}>
+            Replay intro
+          </button>
+        )}
+      </footer>
+      {flow.intro && (
+        <Intro
+          onCover={() => setFlow((f) => (f.ready ? f : { ...f, ready: true }))}
+          onDone={() => setFlow((f) => ({ ...f, intro: false }))}
+        />
+      )}
     </>
   );
 }
