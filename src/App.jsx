@@ -4,6 +4,7 @@ import Lenis from 'lenis';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sprite, Note } from './PixelArt.jsx';
 import Intro from './Intro.jsx';
+import Companion from './Companion.jsx';
 import { Vines, Sky } from './Scenery.jsx';
 import { About, Projects, Skills, Activity, Contact } from './Sections.jsx';
 import { NAV, SPOTIFY, LINES, MOOD_LINES } from './data.js';
@@ -47,611 +48,238 @@ function Hud() {
         </ul>
       </nav>
       <div className="hud__rail" aria-hidden="true">
-        <div className="hud__fill" />
-        <Sprite px={2} crop={14} decorative className="hud__head" />
-      </div>
-    </header>
-  );
-}
+      ÕÈZ®Ëkºwµçkz»§Â+a…æş
+Ş§ûZŠWè­û¥–‹­¦ëZ[™ÊLˆÈ	ÛY	ÈˆˆˆÈ	ÜšYÚ	Èˆ˜XÚ[™ÊNÂˆÜØ\œÙ]
+]Û‹˜İ\œ™[ÈK›İ][ÛˆÜØ\][Ë˜Û[\
+MËË
+ˆŒMJHJNÂˆYˆ
+X˜›K˜İ\œ™[
+HÜØ\œÙ]
+X˜›K˜İ\œ™[ÈHJNÂˆNÂ‚ˆÛÛœİ[™TÚ[\•\H
+]™[
+HOˆÂˆÛÛœİİ\œ™[H˜YË˜İ\œ™[ÂˆYˆ
+Xİ\œ™[İ\œ™[œÚ[\’YOOH]™[œÚ[\’Y
+H™]\›Âˆ˜YË˜İ\œ™[H[ÂˆYˆ
+İ\œ™[›[İ™Y
+HÂˆİ\™\ÜĞÛXÚË˜İ\œ™[HYNÂˆ™]\›’ÛYJİ\œ™[İ\œ™[JNÂˆH[ÙHÂˆÙ]˜YÙÚ[™Ê˜[ÙJNÂˆBˆNÂ‚ˆÛÛœİYÙUÚ]Ù^X›Ø\™H
+]™[
+HOˆÂˆÛÛœİ[İ™[Y[ÈHÂˆ\œ›İÓYˆËMMKˆ\œ›İÔšYÚˆÍMKˆ\œ›İÕ\ˆÌMKˆ\œ›İÑİÛˆÌKˆNÂˆÛÛœİ[HH[İ™[Y[ÖÙ]™[šÙ^WNÂˆYˆ
+Y[H[™ÜHØ[Ú[™ÈX]Û‹˜İ\œ™[
+H™]\›Âˆ]™[œ™]™[Y˜][
 
-// The character can be picked up, gets offended, then walks back to his spawn point.
-function HeroCharacter({ music }) {
-  const button = useRef(null);
-  const bubble = useRef(null);
-  const eyes = useRef(null);
-  const drag = useRef(null);
-  const position = useRef({ x: 0, y: 0 });
-  const returnTimeline = useRef(null);
-  const angerTimer = useRef(null);
-  const suppressClick = useRef(false);
-  const reduced = useReducedMotion();
-  const mood = useStore(moodStore);
-  const [lineIndex, setLineIndex] = useState(0);
-  const [angry, setAngry] = useState(false);
-  const [walking, setWalking] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const [facing, setFacing] = useState('home');
+NÂˆÛÛœİİ\œ™[H[X™\ŠÜØ\™Ù]›Ü\J]Û‹˜İ\œ™[	Ş	ÊJHÂˆÛÛœİİ\œ™[HH[X™\ŠÜØ\™Ù]›Ü\J]Û‹˜İ\œ™[	ŞIÊJHÂˆÛÛœİ™^HÚ[[”ØÙ[™Jİ\œ™[
+È[VÌKİ\œ™[H
+È[VÌWJNÂˆÙ]˜XÚ[™Ê[VÌHÈ	ÛY	Èˆ[VÌHˆÈ	ÜšYÚ	Èˆ	ÚÛYIÊNÂˆÙ]Ø[Ú[™ÊYJNÂˆÜØ\ÊØ]Û‹˜İ\œ™[X˜›K˜İ\œ™[K™š[\Š›ÛÛX[ŠKÂˆˆ™^Nˆ™^Kˆ\˜][Ûˆ™YXÙYÈˆŒËˆX\ÙNˆ	ÜİÙ\Œ‹š[“İ]	ËˆÛÛÛ\]Nˆ
 
-  useEffect(() => {
-    if (reduced || !eyes.current) return undefined;
+HOˆÂˆÜÚ][Û‹˜İ\œ™[H™^Âˆ™]\›’ÛYJ™^™^JNÂˆKˆJNÂˆNÂ‚ˆÛÛœİÚÙHH
 
-    const quickX = gsap.quickTo(eyes.current, 'x', { duration: 0.12, ease: 'none' });
-    const quickY = gsap.quickTo(eyes.current, 'y', { duration: 0.12, ease: 'none' });
-    let frame = 0;
-    let last = null;
-    const look = () => {
-      frame = 0;
-      if (!last || !button.current) return;
-      const rect = button.current.getBoundingClientRect();
-      const dx = last.x - (rect.left + rect.width / 2);
-      const dy = last.y - (rect.top + rect.height * 0.25);
-      const distance = Math.hypot(dx, dy) || 1;
-      const scale = Math.min(1, distance / 220);
-      quickX(Math.round((dx / distance) * scale * 1.4));
-      quickY(Math.round((dy / distance) * scale));
-    };
-    const move = (event) => {
-      last = { x: event.clientX, y: event.clientY };
-      if (!frame) frame = requestAnimationFrame(look);
-    };
-    const leave = () => { quickX(0); quickY(0); };
-    window.addEventListener('pointermove', move, { passive: true });
-    document.addEventListener('pointerleave', leave);
-    return () => {
-      window.removeEventListener('pointermove', move);
-      document.removeEventListener('pointerleave', leave);
-      cancelAnimationFrame(frame);
-      gsap.killTweensOf(eyes.current);
-    };
-  }, [reduced]);
+HOˆÂˆYˆ
+İ\™\ÜĞÛXÚË˜İ\œ™[
+HÈİ\™\ÜĞÛXÚË˜İ\œ™[H˜[ÙNÈ™]\›ÈBˆYˆ
+[™ÜHØ[Ú[™ÈX]Û‹˜İ\œ™[
+H™]\›ÂˆÙ][™R[™^
 
-  useEffect(() => () => {
-    returnTimeline.current?.kill();
-    if (angerTimer.current) window.clearTimeout(angerTimer.current);
-  }, []);
+˜[YJHOˆ˜[YH
+ÈJNÂˆYˆ
+\™YXÙY
+HÂˆÜØ\[Y[[™JÈİ™\Üš]Nˆ	Ø]]ÉÈJBˆÊ]Û‹˜İ\œ™[ÈNˆL\˜][ÛˆŒNX\ÙNˆ	ÜİÙ\Œ‹›İ]	ÈJBˆÊ]Û‹˜İ\œ™[ÈNˆ\˜][ÛˆŒŒ‹X\ÙNˆ	ÜİÙ\Œ‹š[“İ]	ÈJNÂˆBˆNÂ‚ˆÛÛœİ[™HH[™ÜBˆÈ	ÒVHHHØ\Èİ[™[™ÈšYÚ\™HIÂˆˆ]\ÚXÂˆÈSÓÑÓS‘TË›]\ÚXÂˆˆ
+[™R[™^ˆÈS‘TÖÊ[™R[™^HJH	HS‘TË›[™İHˆ
+SÓÑÓS‘TÖÛ[ÛÙHS‘TÖÌJJNÂ‚ˆ™]\›ˆ
+ˆ]ˆÛ\ÜÓ˜[YOHšÈˆ]K[]\ÚXÏ^Û]\ÚXßH]K[[ÛÙ^Û[ÛÙH]KX[™ÜO^Ø[™Ü_H]K]Ø[Ú[™Ï^İØ[Ú[™ßH]KY˜YÙÚ[™Ï^Ù˜YÙÚ[™ßH]KY˜XÚ[™Ï^Ù˜XÚ[™ßO‚ˆ™Y^ØX˜›_HÛ\ÜÓ˜[YOH˜X˜›Hˆ›ÛOHœİ]\Èˆ\šXK[]™OHœÛ]HÛ[™_OÜ‚ˆÛ]\ÚXÈ	‰ˆÌK—K›X\
 
-  const pointInScene = (x, y) => {
-    if (!button.current) return { x, y };
-    const scene = button.current.closest('.hero')?.getBoundingClientRect();
-    if (!scene) return { x, y };
-    const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
-    const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
-    const rect = button.current.getBoundingClientRect();
-    const baseLeft = rect.left - currentX;
-    const baseTop = rect.top - currentY;
-    const width = rect.width;
-    const height = rect.height;
-    const minX = scene.left + 12 - baseLeft;
-    const maxX = scene.right - 12 - (baseLeft + width);
-    const minY = scene.top + 92 - baseTop;
-    const maxY = scene.bottom - 24 - (baseTop + height);
-    return {
-      x: gsap.utils.clamp(Math.min(minX, maxX), Math.max(minX, maxX), x),
-      y: gsap.utils.clamp(Math.min(minY, maxY), Math.max(minY, maxY), y),
-    };
-  };
+[™^
+HOˆ
+ˆ›İBˆÙ^O^Ú[™^BˆÛ\ÜÓ˜[YOH››İH‚ˆİ[O^ŞÈ	ËKY	Îˆ
+[™^
+ˆ
+H
+È	ÜÉË	ËK^	Îˆ
+[™^
+ˆŒŠH
+È	Ü	È_BˆÏ‚ˆ
+J_Bˆ]Û‚ˆ™Y^Ø]ÛŸBˆ\OH˜]Ûˆ‚ˆÛ\ÜÓ˜[YOHš××Øˆ‚ˆÛ”Ú[\‘İÛ^Ú[™TÚ[\‘İÛŸBˆÛ”Ú[\“[İ™O^Ú[™TÚ[\“[İ™_BˆÛ”Ú[\•\^Ú[™TÚ[\•\BˆÛ”Ú[\Ø[˜Ù[^Ú[™TÚ[\•\BˆÛÛXÚÏ^ÜÚÙ_BˆÛ’Ù^QİÛ^ÛYÙUÚ]Ù^X›Ø\™Bˆ\šXK[X™[H”šZY]‰ÜÈ^[Ú\˜Xİ\‹ˆ˜YÈÈ[İ™H[NÈ\ÙHH\œ›İÈÙ^\ÈÈYÙH[H[™Ø]Ú[HØ[È˜XÚÈÛYKˆ‚ˆ‚ˆÜš]H^Y\Ô™Y^Ù^Y\ßH[™ÜO^Ø[™Ü_HÏ‚ˆØ]Û‚ˆÙ]‚ˆ
+NÂŸB‚™[˜İ[Ûˆ\›ÊÈ™XYK[JHÂˆÛÛœİ›ÛİH\ÙT™YŠ[
+NÂˆÛÛœİ[Y[[™HH\ÙT™YŠ[
+NÂˆÛÛœİ™YXÙYH\ÙT™YXÙY[İ[ÛŠ
+NÂˆÛÛœİÛ]\ÚXËÙ]]\ÚX×HH\ÙTİ]J˜[ÙJNÂ‚ˆ\ÙQY™™Xİ
 
-  const returnHome = (x, y) => {
-    if (!button.current) return;
-    position.current = { x, y };
-    setAngry(true);
-    setWalking(false);
-    setDragging(false);
-    setFacing(x > 4 ? 'left' : x < -4 ? 'right' : 'home');
 
-    if (reduced) {
-      gsap.set([button.current, bubble.current].filter(Boolean), { x: 0, y: 0 });
-      gsap.set(button.current, { rotation: 0, scaleX: 1, scaleY: 1 });
-      position.current = { x: 0, y: 0 };
-      setWalking(false);
-      setFacing('home');
-      angerTimer.current = window.setTimeout(() => setAngry(false), 1200);
-      return;
-    }
+HOˆÂˆYˆ
+™YXÙY
+H™]\›ˆ[™Yš[™YÂ‚ˆÛÛœİÛÛ^HÜØ\˜ÛÛ^
 
-    const fallDistance = Math.abs(y);
-    const walkDistance = Math.abs(x);
-    const targets = [button.current, bubble.current].filter(Boolean);
-    const timeline = gsap.timeline({
-      onComplete: () => {
-        position.current = { x: 0, y: 0 };
-        gsap.set(targets, { x: 0, y: 0 });
-        gsap.set(button.current, { rotation: 0, scaleX: 1, scaleY: 1 });
-        setAngry(false);
-        setWalking(false);
-        setDragging(false);
-        setFacing('home');
-        returnTimeline.current = null;
-      },
-    });
-    returnTimeline.current?.kill();
-    returnTimeline.current = timeline;
 
-    let walkStart = 0;
+HOˆÂˆËÈY\ˆH[›ÈHÚ\˜Xİ\ˆ[™Ü›İ[™[™XYH^\İÛˆØÜ™Y[‹ÛÈH\›ÂˆËÈÛÛ[Y\ÈHØÙ[™H[œİXYÙˆ™K\İYÚ[™È]ÈİÛˆ[˜[˜ÙK‚ˆÛÛœİHÜØ\[Y[[™JÈ]\ÙYˆYHJNÂˆ[Y[[™K˜İ\œ™[HÂˆYˆ
+Z[
+H™œ›ÛJ	Ëš\›××İØ[	ËÈØØ[NˆKŒ\˜][ÛˆKŒÍKX\ÙNˆ	ÜİÙ\Œ‹›İ]	ÈK
+NÂˆ™œ›ÛJ	Ëš[™\ËKYœ›Û	ËÈØØ[VNˆ˜[œÙ›Ü›SÜšYÚ[ˆ	ÍL	H	Ë\˜][Ûˆ[ÈHˆKX\ÙNˆ	Üİ\ÊL
+IÈKŒ
+Bˆ™œ›ÛJ	Ëš\›××Ü\XÛ\ÈIËÈØØ[NˆÜXÚ]Nˆ\˜][ÛˆŒNİYÙÙ\ˆŒKX\ÙNˆ	Üİ\ÊÊIÈKŒJNÂˆYˆ
+[
+HÂˆ™œ›ÛJ	Ëš\›××İ]H˜Ú	ËÈ]]Ğ[NˆNˆM\˜][ÛˆŒMX\ÙNˆ	Üİ\ÊÊIËİYÙÙ\ˆŒKŒŠBˆ™œ›ÛJ	ËšÉËÈ]]Ğ[Nˆ\˜][ÛˆŒHK
+Bˆ™œ›ÛJ	Ëš\›××ÜİX‹š\›××ØXİ[ÛœÉËÂˆ]]Ğ[NˆNˆL‹Û\]ˆ	Ú[œÙ]
+L	H
+IË\˜][ÛˆX\ÙNˆ	ÜİÙ\ŒË›İ]	ËİYÙÙ\ˆŒKˆKŒÊBˆ™œ›ÛJ	Ë˜X˜›IËÈØØ[Nˆ›İ][ÛˆMË˜[œÙ›Ü›SÜšYÚ[ˆ	ÌL	IË\˜][ÛˆŒX\ÙNˆ	Ø˜XÚË›İ]
+‹JIÈKMJNÂˆH[ÙHÂˆ™œ›ÛJ	Ëš\›××İ]H˜Ú	ËÂˆ]]Ğ[NˆNˆLÌ›İ][Ûˆ
 
-    if (y < -6) {
-      // Gravity starts immediately on release; no horizontal motion until he lands.
-      const fallDuration = Math.min(0.72, Math.max(0.24, fallDistance / 520));
-      timeline
-        .to(targets, {
-          y: 0,
-          duration: fallDuration,
-          ease: 'power1.in',
-        }, 0)
-        .to(button.current, {
-          rotation: x >= 0 ? 3 : -3,
-          duration: 0.07,
-          ease: 'steps(2)',
-        }, 0)
-        .to(button.current, {
-          rotation: 0,
-          duration: 0.07,
-          ease: 'steps(2)',
-        }, 0.07)
-        .to(button.current, {
-          scaleX: 1.12,
-          scaleY: 0.82,
-          duration: 0.065,
-          ease: 'steps(2)',
-        }, fallDuration)
-        .to(button.current, {
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.14,
-          ease: 'power2.out',
-        }, fallDuration + 0.06);
-      walkStart = fallDuration + 0.22;
-    } else if (y > 6) {
-      // When dropped below his normal floor, he pops up to the standing height.
-      const recoverDuration = Math.min(0.42, Math.max(0.2, fallDistance / 600));
-      timeline
-        .to(targets, {
-          y: 0,
-          duration: recoverDuration,
-          ease: 'power2.out',
-        }, 0)
-        .to(button.current, {
-          scaleX: 1.08,
-          scaleY: 0.9,
-          duration: 0.06,
-          ease: 'steps(2)',
-        }, recoverDuration)
-        .to(button.current, {
-          scaleX: 1,
-          scaleY: 1,
-          duration: 0.12,
-          ease: 'power2.out',
-        }, recoverDuration + 0.05);
-      walkStart = recoverDuration + 0.17;
-    } else {
-      timeline
-        .to(button.current, { rotation: x >= 0 ? 3 : -3, duration: 0.065, ease: 'steps(2)' }, 0)
-        .to(button.current, { rotation: x >= 0 ? -3 : 3, duration: 0.065, ease: 'steps(2)' }, 0.065)
-        .to(button.current, { rotation: 0, duration: 0.055, ease: 'steps(2)' }, 0.13);
-      walkStart = 0.2;
-    }
+HOˆÜØ\][Ëœ˜[™ÛJMKJKˆØØ[NˆÌ‹\˜][Ûˆ‹X\ÙNˆ	Ø˜XÚË›İ]
+K
+IËİYÙÙ\ˆŒMKˆKŒLŠBˆ™œ›ÛJ	ËšÉËÂˆNˆ	ËMÌš	ËØØ[VˆÎØØ[VNˆKŒL‹›İ][ÛˆMËˆ\˜][ÛˆMKX\ÙNˆ	Ø›İ[˜ÙK›İ]	ËˆKÊBˆÊ	ËšÉËÈØØ[VˆKŒ‹ØØ[VNˆL‹\˜][ÛˆŒKX\ÙNˆ	ÜİÙ\ŒK›İ]	ÈKKŒÌJBˆÊ	ËšÉËÈØØ[VˆKØØ[VNˆK\˜][ÛˆŒM‹X\ÙNˆ	ÜİÙ\ŒK›İ]	ÈKK
+Bˆ™œ›ÛJ	Ëš\›××ÜİX‹š\›××ØXİ[ÛœÉËÂˆ]]Ğ[NˆNˆNÛ\]ˆ	Ú[œÙ]
+L	H
+IËˆ\˜][ÛˆX\ÙNˆ	ÜİÙ\ŒË›İ]	ËİYÙÙ\ˆŒL‹ˆKKŒMŠBˆ™œ›ÛJ	Ë˜X˜›IËÈØØ[Nˆ›İ][ÛˆMË˜[œÙ›Ü›SÜšYÚ[ˆ	ÌL	IË\˜][ÛˆŒX\ÙNˆ	Ø˜XÚË›İ]
+‹JIÈKKMJNÂˆB‚ˆÛÛœİØÜXˆHÈšYÙÙ\ˆ›Ûİ˜İ\œ™[İ\ˆ	İÜÜ	Ë[™ˆ	Ø›İÛHÜ	ËØÜXˆYHNÂˆÜØ\Ê	Ëš[™\ËKX˜XÚÉËÈT\˜Ù[ˆMX\ÙNˆ	Û›Û™IËØÜ›ÛšYÙÙ\ˆØÜXˆJNÂˆÜØ\Ê	Ëš\›××İØ[	ËÈT\˜Ù[ˆX\ÙNˆ	Û›Û™IËØÜ›ÛšYÙÙ\ˆØÜXˆJNÂˆÜØ\Ê	Ë›[\	ËÈT\˜Ù[ˆM‹X\ÙNˆ	Û›Û™IËØÜ›ÛšYÙÙ\ˆØÜXˆJNÂˆK›Ûİ
+NÂ‚ˆ™]\›ˆ
 
-    // Once feet are back on the ground, only the horizontal walk takes him home.
-    if (walkDistance > 8) {
-      timeline
-        .add(() => {
-          setWalking(true);
-          setFacing(x > 0 ? 'left' : 'right');
-        }, walkStart)
-        .to(targets, {
-          x: 0,
-          duration: Math.min(1.35, Math.max(0.32, walkDistance / 300)),
-          ease: 'power2.inOut',
-        }, walkStart + 0.02);
-    }
-  };
+HOˆÛÛ^œ™]™\
 
-  const handlePointerDown = (event) => {
-    if (event.button !== 0 || angry || walking || !button.current) return;
-    suppressClick.current = false;
-    returnTimeline.current?.kill();
-    returnTimeline.current = null;
-    gsap.killTweensOf(button.current);
-    gsap.killTweensOf(bubble.current);
-    const x = Number(gsap.getProperty(button.current, 'x')) || position.current.x || 0;
-    const y = Number(gsap.getProperty(button.current, 'y')) || position.current.y || 0;
-    const rect = button.current.getBoundingClientRect();
-    const scene = button.current.closest('.hero')?.getBoundingClientRect();
-    if (!scene) return;
-    drag.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      originX: x,
-      originY: y,
-      baseLeft: rect.left - x,
-      baseTop: rect.top - y,
-      width: rect.width,
-      height: rect.height,
-      scene,
-      moved: false,
-      x,
-      y,
-    };
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-  };
+NÂˆKÜ™YXÙY[JNÂ‚ˆ\ÙQY™™Xİ
 
-  const handlePointerMove = (event) => {
-    const current = drag.current;
-    if (!current || current.pointerId !== event.pointerId || !button.current) return;
-    const dx = event.clientX - current.startX;
-    const dy = event.clientY - current.startY;
-    if (!current.moved && Math.hypot(dx, dy) < 5) return;
-    current.moved = true;
-    setDragging(true);
-    const minX = current.scene.left + 12 - current.baseLeft;
-    const maxX = current.scene.right - 12 - (current.baseLeft + current.width);
-    const minY = current.scene.top + 92 - current.baseTop;
-    const maxY = current.scene.bottom - 24 - (current.baseTop + current.height);
-    const x = gsap.utils.clamp(Math.min(minX, maxX), Math.max(minX, maxX), current.originX + dx);
-    const y = gsap.utils.clamp(Math.min(minY, maxY), Math.max(minY, maxY), current.originY + dy);
-    current.x = x;
-    current.y = y;
-    position.current = { x, y };
-    setFacing(dx < -2 ? 'left' : dx > 2 ? 'right' : facing);
-    gsap.set(button.current, { x, y, rotation: gsap.utils.clamp(-7, 7, dx * 0.055) });
-    if (bubble.current) gsap.set(bubble.current, { x, y });
-  };
 
-  const handlePointerUp = (event) => {
-    const current = drag.current;
-    if (!current || current.pointerId !== event.pointerId) return;
-    drag.current = null;
-    if (current.moved) {
-      suppressClick.current = true;
-      returnHome(current.x, current.y);
-    } else {
-      setDragging(false);
-    }
-  };
+HOˆÂˆYˆ
+™XYJH[Y[[™K˜İ\œ™[Ëœ^J
+NÂˆKÜ™XYK™YXÙYJNÂ‚ˆ™]\›ˆ
+ˆÙXİ[ÛˆYHÜˆ™Y^Ü›ÛİHÛ\ÜÓ˜[YOHš\›ÈˆX’[™^^ËL_O‚ˆ]ˆÛ\ÜÓ˜[YOHš\›××İØ[ˆ\šXKZY[HYHˆÏ‚ˆ]ˆÛ\ÜÓ˜[YOHš\›××Ü\XÛ\Èˆ\šXKZY[HYH‚ˆĞ\œ˜^K™œ›ÛJÈ[™İˆHK
+Ë[™^
+HOˆ
+ˆBˆÙ^O^Ú[™^Bˆİ[O^ŞÂˆ	ËK^	Îˆ
 
-  const nudgeWithKeyboard = (event) => {
-    const movements = {
-      ArrowLeft: [-54, 0],
-      ArrowRight: [54, 0],
-      ArrowUp: [0, -40],
-      ArrowDown: [0, 40],
-    };
-    const delta = movements[event.key];
-    if (!delta || angry || walking || !button.current) return;
-    event.preventDefault();
-    const currentX = Number(gsap.getProperty(button.current, 'x')) || 0;
-    const currentY = Number(gsap.getProperty(button.current, 'y')) || 0;
-    const next = pointInScene(currentX + delta[0], currentY + delta[1]);
-    setFacing(delta[0] < 0 ? 'left' : delta[0] > 0 ? 'right' : 'home');
-    setWalking(true);
-    gsap.to([button.current, bubble.current].filter(Boolean), {
-      x: next.x, y: next.y,
-      duration: reduced ? 0 : 0.3,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        position.current = next;
-        returnHome(next.x, next.y);
-      },
-    });
-  };
+[™^
+ˆÍÈ
+ÈLJH	HL
+H
+È	ÉIËˆ	ËK^IÎˆ
 
-  const poke = () => {
-    if (suppressClick.current) { suppressClick.current = false; return; }
-    if (angry || walking || !button.current) return;
-    setLineIndex((value) => value + 1);
-    if (!reduced) {
-      gsap.timeline({ overwrite: 'auto' })
-        .to(button.current, { y: -28, duration: 0.18, ease: 'power2.out' })
-        .to(button.current, { y: 0, duration: 0.22, ease: 'power2.inOut' });
-    }
-  };
+[™^
+ˆŒÈ
+ÈÊH	HÍŠH
+È	ÉIËˆ	ËKY[^IÎˆ	ËIÈ
+È
 
-  const line = angry
-    ? 'HEY! I was standing right there!'
-    : music
-      ? MOOD_LINES.music
-      : (lineIndex > 0 ? LINES[(lineIndex - 1) % LINES.length] : (MOOD_LINES[mood] || LINES[0]));
+[™^	HÊH
+ˆÊH
+È	ÜÉËˆ	ËK\Ú^™IÎˆ
 
-  return (
-    <div className="hc" data-music={music} data-mood={mood} data-angry={angry} data-walking={walking} data-dragging={dragging} data-facing={facing}>
-      <p ref={bubble} className="bubble px" role="status" aria-live="polite">{line}</p>
-      {music && [0, 1, 2].map((index) => (
-        <Note
-          key={index}
-          className="note"
-          style={{ '--d': (index * 0.8) + 's', '--x': (index * 22) + 'px' }}
-        />
-      ))}
-      <button
-        ref={button}
-        type="button"
-        className="hc__btn"
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onClick={poke}
-        onKeyDown={nudgeWithKeyboard}
-        aria-label="Riiddev's pixel character. Drag to move him; use the arrow keys to nudge him and watch him walk back home."
-      >
-        <Sprite eyesRef={eyes} angry={angry} />
-      </button>
-    </div>
-  );
-}
+[™^	HÊH
+ÈJH
+ˆÈ
+È	Ü	Ëˆ_BˆÏ‚ˆ
+J_BˆÙ]‚ˆš[™\ÈÙYY^ÌL_HÛ™OH˜˜XÚÈˆÛ\ÜÓ˜[YOHš[™\Èš[™\ËKX˜XÚÈˆÏ‚ˆ]ˆÛ\ÜÓ˜[YOH›[\ˆ\šXKZY[HYHHÏˆÏÙ]‚ˆ]ˆÛ\ÜÓ˜[YOHš\›××ÙÜ›İ[™ˆ\šXKZY[HYHˆÏ‚ˆ]ˆÛ\ÜÓ˜[YOHš\›××Ú[›™\ˆ‚ˆ]ˆÛ\ÜÓ˜[YOHš\›××ØÛÜH‚ˆÛ\ÜÓ˜[YOHš\›××Ù^YXœ›İÈH\šXKZY[HYHˆÏˆİ\š[İ\È]™[Ü\‹X\›š[™ÈHZ[[™ÏÜ‚ˆHÛ\ÜÓ˜[YOHš\›××İ]Hˆ\šXK[X™[H”šZY]ˆ‚ˆÖË‹‹‰ÔšZY]‰×K›X\
 
-function Hero({ ready, held }) {
-  const root = useRef(null);
-  const timeline = useRef(null);
-  const reduced = useReducedMotion();
-  const [music, setMusic] = useState(false);
+Ú\˜Xİ\‹[™^
+HOˆ
+ˆÜ[ˆÛ\ÜÓ˜[YOH˜Úˆ\šXKZY[HYHˆÙ^O^Ú[™^OØÚ\˜Xİ\ŸOÜÜ[‚ˆ
+J_BˆÚO‚ˆÛ\ÜÓ˜[YOHš\›××ÜİXˆ‚ˆX\›š[™Èœ›Û[™ÚÚ[™È]˜XÚÙ[™[™Z[[™È[™ÜÈÈÙYHÚ]\[œËˆ›İ[ˆ^\ˆ\İİ\š[İ\Ë‚ˆÜ‚ˆ]ˆÛ\ÜÓ˜[YOHš\›××ØXİ[ÛœÈ‚ˆHÛ\ÜÓ˜[YOH˜ˆˆ™YHˆÜ›Ú™XİÈˆÛÛXÚÏ^Ê]™[
+HOˆÛÕÊ	Ü›Ú™XİÉË]™[
+_O‘^Ü™H›Ú™XİÏØO‚ˆ]ÛˆÛ\ÜÓ˜[YOH˜ˆ‹KYÚÜİˆ\šXK\™\ÜÙY^Û]\ÚXßHÛÛXÚÏ^Ê
+HOˆÙ]]\ÚXÊ
+˜[YJHOˆ]˜[YJ_O‚ˆÛ]\ÚXÈÈ	ÑX\˜YÈİ]	Èˆ	ÑX\˜YÈ[‰ßBˆØ]Û‚ˆÙ]‚ˆÛ]\ÚXÈ	‰ˆ
+ˆHÛ\ÜÓ˜[YOH^[šÈˆ™Y^ÔÔÕQ–_H\™Ù]H—Ø›[šÈˆ™[H››Ü™Y™\œ™\ˆ‚ˆÜ[ˆH^[\İÛˆÜİYBˆØO‚ˆ
+_Bˆ]ˆÛ\ÜÓ˜[YOHš\›××ÛY]Hˆ\šXK[X™[Hİ\œ™[›Øİ\È‚ˆÜ[‘œ›Û[™	˜[\ÈROÜÜ[‚ˆÜ[“X\›š[™È˜XÚÙ[™ÜÜ[‚ˆÜ[”^[	˜[\È[İ[ÛÜÜ[‚ˆÙ]‚ˆÙ]‚ˆ\›ĞÚ\˜Xİ\ˆ]\ÚXÏ^Û]\ÚXßHÏ‚ˆÙ]‚ˆš[™\ÈÙYY^Ì_HÛ™OH™œ›ÛˆX^[™Ï^ÌL_HÛ\ÜÓ˜[YOHš[™\Èš[™\ËKYœ›ÛˆÏ‚ˆHÛ\ÜÓ˜[YOHš\›××ÜØÜ›Ûˆ™YHˆØX›İ]ˆÛÛXÚÏ^Ê]™[
+HOˆÛÕÊ	ØX›İ]	Ë]™[
+_O‚ˆÜ[”ØÜ›ÛÈ^Ü™OÜÜ[H\šXKZY[HYH¸¡¤ÏÚO‚ˆØO‚ˆÜÙXİ[Û‚ˆ
+NÂŸB‚™^ÜY˜][[˜İ[Ûˆ\
 
-  useEffect(() => {
-    if (reduced) return undefined;
+HÂˆËÈ[\Èš^Y]š\œİ™[™\ˆH\›È[™È]È[˜[˜ÙHÈH[›ÈÚ[ˆÛ™H^\Ë‚ˆÛÛœİÙ›İËÙ]›İ×HH\ÙTİ]J
 
-    const context = gsap.context(() => {
-      // After the intro the character and ground already exist on screen, so the hero
-      // continues the scene instead of re-staging its own entrance.
-      const tl = gsap.timeline({ paused: true });
-      timeline.current = tl;
-      if (!held) tl.from('.hero__wall', { scale: 1.08, duration: 1.35, ease: 'power2.out' }, 0);
-      tl.from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: held ? 0.5 : 1, ease: 'steps(10)' }, 0.04)
-        .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05);
-      if (held) {
-        tl.from('.hero__title .ch', { autoAlpha: 0, y: 14, duration: 0.14, ease: 'steps(3)', stagger: 0.04 }, 0.06)
-          .from('.hc', { autoAlpha: 0, duration: 0.01 }, 0)
-          .from('.hero__sub, .hero__actions', {
-            autoAlpha: 0, y: 12, clipPath: 'inset(0 100% 0 0)', duration: 0.4, ease: 'power3.out', stagger: 0.1,
-          }, 0.3)
-          .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 0.55);
-      } else {
-        tl.from('.hero__title .ch', {
-          autoAlpha: 0, y: -30, rotation: () => gsap.utils.random(-5, 5),
-          scale: 0.72, duration: 0.46, ease: 'back.out(1.8)', stagger: 0.055,
-        }, 0.12)
-          .from('.hc', {
-            y: '-70vh', scaleX: 0.78, scaleY: 1.12, rotation: -7,
-            duration: 0.95, ease: 'bounce.out',
-          }, 0.47)
-          .to('.hc', { scaleX: 1.06, scaleY: 0.92, duration: 0.09, ease: 'power1.out' }, 1.31)
-          .to('.hc', { scaleX: 1, scaleY: 1, duration: 0.16, ease: 'power1.out' }, 1.4)
-          .from('.hero__sub, .hero__actions', {
-            autoAlpha: 0, y: 18, clipPath: 'inset(0 100% 0 0)',
-            duration: 0.48, ease: 'power3.out', stagger: 0.12,
-          }, 1.16)
-          .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 1.55);
-      }
+HOˆÂˆÛÛœİ^HH\™Y™\œÔ™YXÙY
 
-      const scrub = { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true };
-      gsap.to('.vines--back', { yPercent: 14, ease: 'none', scrollTrigger: scrub });
-      gsap.to('.hero__wall', { yPercent: 8, ease: 'none', scrollTrigger: scrub });
-      gsap.to('.lamp', { yPercent: -6, ease: 'none', scrollTrigger: scrub });
-    }, root);
+H	‰ˆZ\ÔÙY[’[›Ê
+NÂˆ™]\›ˆÈ[›Îˆ^K™XYNˆ\^K[ˆ^HNÂˆJNÂˆÛÛœİ™YXÙYH\ÙT™YXÙY[İ[ÛŠ
+NÂ‚ˆ\ÙQY™™Xİ
 
-    return () => context.revert();
-  }, [reduced, held]);
 
-  useEffect(() => {
-    if (ready) timeline.current?.play();
-  }, [ready, reduced]);
+HOˆÂˆYˆ
+›İËš[›ÊHX\šÒ[›ÔÙY[Š
+NÂˆKÙ›İËš[›×JNÂ‚ˆ\ÙQY™™Xİ
 
-  return (
-    <section id="top" ref={root} className="hero" tabIndex={-1}>
-      <div className="hero__wall" aria-hidden="true" />
-      <div className="hero__particles" aria-hidden="true">
-        {Array.from({ length: 9 }, (_, index) => (
-          <i
-            key={index}
-            style={{
-              '--x': ((index * 37 + 11) % 100) + '%',
-              '--y': ((index * 23 + 7) % 76) + '%',
-              '--delay': '-' + ((index % 7) * 0.43) + 's',
-              '--size': ((index % 3) + 1) * 3 + 'px',
-            }}
-          />
-        ))}
-      </div>
-      <Vines seed={11} tone="back" className="vines vines--back" />
-      <div className="lamp" aria-hidden="true"><i /><b /></div>
-      <div className="hero__ground" aria-hidden="true" />
-      <div className="hero__inner">
-        <div className="hero__copy">
-          <p className="hero__eyebrow"><i aria-hidden="true" /> Curious developer, learning by building</p>
-          <h1 className="hero__title" aria-label="Riiddev">
-            {[...'Riiddev'].map((character, index) => (
-              <span className="ch" aria-hidden="true" key={index}>{character}</span>
-            ))}
-          </h1>
-          <p className="hero__sub">
-            Learning frontend, poking at backend, and building things to see what happens. Not an expert. Just curious.
-          </p>
-          <div className="hero__actions">
-            <a className="btn" href="#projects" onClick={(event) => goTo('projects', event)}>Explore projects</a>
-            <button className="btn btn--ghost" aria-pressed={music} onClick={() => setMusic((value) => !value)}>
-              {music ? 'Earbuds out' : 'Earbuds in'}
-            </button>
-          </div>
-          {music && (
-            <a className="textlink" href={SPOTIFY} target="_blank" rel="noreferrer">
-              Open the playlist on Spotify
-            </a>
-          )}
-          <div className="hero__meta" aria-label="Current focus">
-            <span>Frontend &amp; UI</span>
-            <span>Learning backend</span>
-            <span>Pixel &amp; motion</span>
-          </div>
-        </div>
-        <HeroCharacter music={music} />
-      </div>
-      <Vines seed={29} tone="front" maxHang={11} className="vines vines--front" />
-      <a className="hero__scroll" href="#about" onClick={(event) => goTo('about', event)}>
-        <span>Scroll to explore</span><i aria-hidden="true">â†“</i>
-      </a>
-    </section>
-  );
-}
 
-export default function App() {
-  // held is fixed at first render: the hero hands its entrance to the intro when one plays.
-  const [flow, setFlow] = useState(() => {
-    const play = !prefersReduced() && !hasSeenIntro();
-    return { intro: play, ready: !play, held: play };
-  });
-  const reduced = useReducedMotion();
+HOˆÂˆYˆ
+™Y™\œÔ™YXÙY
 
-  useEffect(() => {
-    if (flow.intro) markIntroSeen();
-  }, [flow.intro]);
+JH™]\›ˆ[™Yš[™YÂ‚ˆÛÛœİ[š\ÈH™]È[š\ÊÂˆ\˜][ÛˆKŒMKˆX\Ú[™Îˆ
+
+HOˆHHX]œİÊHHÊKˆÛ[ÛİÚY[ˆYKˆJNÂˆÙ]Û[ÛİØÜ›Û\Š[š\ÊNÂˆ[š\Ë›ÛŠ	ÜØÜ›Û	ËØÜ›ÛšYÙÙ\‹\]JNÂ‚ˆËÈÙY\[š\È[™ÔĞTÛˆÛ™H[š[X][ÛˆÛØÚÈÛÈØÜ›Û[[šÙY[İ[Ûˆİ^\È[ˆŞ[˜Ë‚ˆÛÛœİXÚÈH
+[YJHOˆ[š\Ëœ˜YŠ[YH
+ˆL
+NÂˆÜØ\XÚÙ\‹˜Y
+XÚÊNÂˆÜØ\XÚÙ\‹›YÔÛ[Ûİ[™Ê
+NÂ‚ˆ™]\›ˆ
 
-  useEffect(() => {
-    if (prefersReduced()) return undefined;
+HOˆÂˆÜØ\XÚÙ\‹œ™[[İ™JXÚÊNÂˆ[š\Ë™\İ›ŞJ
+NÂˆÙ]Û[ÛİØÜ›Û\Š[
+NÂˆÜØ\XÚÙ\‹›YÔÛ[Ûİ[™ÊLÌÊNÂˆNÂˆK×JNÂ‚ˆ\ÙQY™™Xİ
 
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
-      smoothWheel: true,
-    });
-    setSmoothScroller(lenis);
-    lenis.on('scroll', ScrollTrigger.update);
 
-    // Keep Lenis and GSAP on one animation clock so scroll-linked motion stays in sync.
-    const tick = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+HOˆÂˆÛÛœİÛÛ^HÜØ\˜ÛÛ^
 
-    return () => {
-      gsap.ticker.remove(tick);
-      lenis.destroy();
-      setSmoothScroller(null);
-      gsap.ticker.lagSmoothing(500, 33);
-    };
-  }, []);
 
-  useEffect(() => {
-    const context = gsap.context(() => {
-      const root = document.documentElement;
-      ScrollTrigger.create({
-        start: 0,
-        end: 'max',
-        onUpdate: (self) => {
-          root.style.setProperty('--p', self.progress.toFixed(4));
-          root.style.setProperty('--t', Math.min(1, self.progress * 1.6).toFixed(3));
-        },
-      });
-      ScrollTrigger.create({
-        trigger: '#top',
-        start: 'top top',
-        end: 'bottom top',
-        onUpdate: (self) => root.style.setProperty('--h', self.progress.toFixed(3)),
-      });
+HOˆÂˆÛÛœİ›ÛİHØİ[Y[™Øİ[Y[[[Y[ÂˆØÜ›ÛšYÙÙ\‹˜Ü™X]JÂˆİ\ˆˆ[™ˆ	ÛX^	ËˆÛ•\]Nˆ
+Ù[ŠHOˆÂˆ›Ûİœİ[KœÙ]›Ü\J	ËK\	ËÙ[‹œ›ÙÜ™\ÜËÑš^Y
 
-      ['top', 'about', 'projects', 'skills', 'activity', 'contact'].forEach((id) => {
-        ScrollTrigger.create({
-          trigger: '#' + id,
-          start: 'top 55%',
-          end: 'bottom 55%',
-          onToggle: (self) => {
-            if (self.isActive) {
-              sectionStore.set(id);
-              moodStore.set(id);
-            }
-          },
-        });
-      });
+JNÂˆ›Ûİœİ[KœÙ]›Ü\J	ËK]	ËX]›Z[ŠKÙ[‹œ›ÙÜ™\ÜÈ
+ˆKŠKÑš^Y
+ÊJNÂˆKˆJNÂˆØÜ›ÛšYÙÙ\‹˜Ü™X]JÂˆšYÙÙ\ˆ	ÈİÜ	Ëˆİ\ˆ	İÜÜ	Ëˆ[™ˆ	Ø›İÛHÜ	ËˆÛ•\]Nˆ
+Ù[ŠHOˆ›Ûİœİ[KœÙ]›Ü\J	ËKZ	ËÙ[‹œ›ÙÜ™\ÜËÑš^Y
+ÊJKˆJNÂ‚ˆÉİÜ	Ë	ØX›İ]	Ë	Ü›Ú™XİÉË	ÜÚÚ[ÉË	ØXİ]š]IË	ØÛÛXİ	×K™›Ü‘XXÚ
 
-      if (!prefersReduced()) {
-        gsap.utils.toArray('.sec').forEach((section, index) => {
-          const panel = section.querySelector('.wrap');
-          const title = section.querySelector('.title');
-          const targets = section.querySelectorAll(
-            '.lede, .about__text > p, .about__mood, .sign, .sub, .slot, .chest-btn, .project-preview-dock, .fig, .contact .btn',
-          );
+Y
+HOˆÂˆØÜ›ÛšYÙÙ\‹˜Ü™X]JÂˆšYÙÙ\ˆ	ÈÉÈ
+ÈYˆİ\ˆ	İÜMIIËˆ[™ˆ	Ø›İÛHMIIËˆÛ•ÙÙÛNˆ
+Ù[ŠHOˆÂˆYˆ
+Ù[‹š\ĞXİ]™JHÂˆÙXİ[Û”İÜ™KœÙ]
+Y
+NÂˆ[ÛÙİÜ™KœÙ]
+Y
+NÂˆBˆKˆJNÂˆJNÂ‚ˆYˆ
+\™Y™\œÔ™YXÙY
 
-          if (panel) {
-            gsap.fromTo(panel,
-              { y: 42, autoAlpha: 0, scale: 0.99, rotateX: 1.2, transformPerspective: 1200 },
-              {
-                y: 0, autoAlpha: 1, scale: 1, rotateX: 0,
-                duration: 0.9, ease: 'power3.out',
-                scrollTrigger: { trigger: section, start: 'top 84%', once: true },
-              },
-            );
-          }
-          if (targets.length) {
-            gsap.fromTo(targets,
-              { autoAlpha: 0, y: 24, filter: 'blur(4px)' },
-              {
-                autoAlpha: 1, y: 0, filter: 'blur(0px)',
-                duration: 0.72, stagger: { each: 0.06, from: 'start' },
-                ease: 'power3.out',
-                scrollTrigger: { trigger: section, start: 'top 68%', once: true },
-                delay: 0.04,
-              },
-            );
-          }
-          if (title) {
-            gsap.fromTo(title,
-              { clipPath: 'inset(0 0 16% 0)', y: 16 },
-              {
-                clipPath: 'inset(0 0 0% 0)', y: 0,
-                duration: 0.8, ease: 'power3.out',
-                scrollTrigger: { trigger: title, start: 'top 86%', once: true },
-              },
-            );
-          }
-          if (panel) {
-            gsap.to(panel, {
-              y: index % 2 === 0 ? -8 : -5, ease: 'none',
-              scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
-            });
-          }
-        });
-        const preview = document.querySelector('.project-preview-dock');
-        if (preview) {
-          gsap.fromTo(preview,
-            { y: 22, rotateY: -1.5, transformPerspective: 1000 },
-            {
-              y: -10, rotateY: 0, ease: 'none',
-              scrollTrigger: { trigger: '#projects', start: 'top bottom', end: 'bottom top', scrub: 0.7 },
-            },
-          );
-        }
-      }
-    });
+JHÂˆÜØ\][ËĞ\œ˜^J	ËœÙXÉÊK™›Ü‘XXÚ
 
-    document.fonts?.ready.then(() => ScrollTrigger.refresh());
-    return () => context.revert();
-  }, []);
+ÙXİ[Û‹[™^
+HOˆÂˆÛÛœİ[™[HÙXİ[Û‹œ]Y\TÙ[XİÜŠ	ËÜ˜\	ÊNÂˆÛÛœİ]HHÙXİ[Û‹œ]Y\TÙ[XİÜŠ	Ë]IÊNÂˆÛÛœİ\™Ù]ÈHÙXİ[Û‹œ]Y\TÙ[XİÜ[
+ˆ	Ë›YK˜X›İ]×İ^ˆ˜X›İ]×Û[ÛÙœÚYÛ‹œİX‹œÛİ˜Ú\İX‹œ›Ú™Xİ\™]šY]ËYØÚË™šYË˜ÛÛXİ˜‰Ëˆ
+NÂ‚ˆYˆ
+[™[
+HÂˆÜØ\™œ›ÛUÊ[™[ˆÈNˆ‹]]Ğ[NˆØØ[NˆNK›İ]VˆKŒ‹˜[œÙ›Ü›T\œÜXİ]™NˆLŒKˆÂˆNˆ]]Ğ[NˆKØØ[NˆK›İ]Vˆˆ\˜][ÛˆKX\ÙNˆ	ÜİÙ\ŒË›İ]	ËˆØÜ›ÛšYÙÙ\ˆÈšYÙÙ\ˆÙXİ[Û‹İ\ˆ	İÜ	IËÛ˜ÙNˆYHKˆKˆ
+NÂˆBˆYˆ
+\™Ù]Ë›[™İ
+HÂˆÜØ\™œ›ÛUÊ\™Ù]ËˆÈ]]Ğ[NˆNˆš[\ˆ	Ø›\Š
+IÈKˆÂˆ]]Ğ[NˆKNˆš[\ˆ	Ø›\Š
+IËˆ\˜][ÛˆÌ‹İYÙÙ\ˆÈXXÚˆŒ‹œ›ÛNˆ	Üİ\	ÈKˆX\ÙNˆ	ÜİÙ\ŒË›İ]	ËˆØÜ›ÛšYÙÙ\ˆÈšYÙÙ\ˆÙXİ[Û‹İ\ˆ	İÜ	IËÛ˜ÙNˆYHKˆ[^NˆŒˆKˆ
+NÂˆBˆYˆ
+]JHÂˆÜØ\™œ›ÛUÊ]KˆÈÛ\]ˆ	Ú[œÙ]
+M‰H
+IËNˆMˆKˆÂˆÛ\]ˆ	Ú[œÙ]
+	H
+IËNˆˆ\˜][ÛˆX\ÙNˆ	ÜİÙ\ŒË›İ]	ËˆØÜ›ÛšYÙÙ\ˆÈšYÙÙ\ˆ]Kİ\ˆ	İÜ‰IËÛ˜ÙNˆYHKˆKˆ
+NÂˆBˆYˆ
+[™[
+HÂˆÜØ\Ê[™[ÂˆNˆ[™^	HˆOOHÈNˆMKX\ÙNˆ	Û›Û™IËˆØÜ›ÛšYÙÙ\ˆÈšYÙÙ\ˆÙXİ[Û‹İ\ˆ	İÜ›İÛIË[™ˆ	Ø›İÛHÜ	ËØÜXˆKˆJNÂˆBˆJNÂˆÛÛœİ™]šY]ÈHØİ[Y[œ]Y\TÙ[XİÜŠ	Ëœ›Ú™Xİ\™]šY]ËYØÚÉÊNÂˆYˆ
+™]šY]ÊHÂˆÜØ\™œ›ÛUÊ™]šY]ËˆÈNˆŒ‹›İ]VNˆLKK˜[œÙ›Ü›T\œÜXİ]™NˆLKˆÂˆNˆLL›İ]VNˆX\ÙNˆ	Û›Û™IËˆØÜ›ÛšYÙÙ\ˆÈšYÙÙ\ˆ	ÈÜ›Ú™XİÉËİ\ˆ	İÜ›İÛIË[™ˆ	Ø›İÛHÜ	ËØÜXˆÈKˆKˆ
+NÂˆBˆBˆJNÂ‚ˆØİ[Y[™›ÛÏËœ™XYK[Š
 
-  return (
-    <>
-      <a className="skip" href="#about" onClick={(event) => goTo('about', event)}>Skip to content</a>
-      <Sky />
-      <Hud />
-      <main>
-        <Hero ready={flow.ready} held={flow.held} />
-        <About />
-        <Projects />
-        <Skills />
-        <Activity />
-        <Contact />
-      </main>
-      <footer className="foot">
-        <p>Built with React, GSAP and a lot of tiny squares.</p>
-        {!reduced && (
-          <button type="button" className="foot__replay" onClick={() => setFlow((f) => ({ ...f, intro: true }))}>
-            Replay intro
-          </button>
-        )}
-      </footer>
-      {flow.intro && (
-        <Intro
-          onCover={() => setFlow((f) => (f.ready ? f : { ...f, ready: true }))}
-          onDone={() => setFlow((f) => ({ ...f, intro: false }))}
-        />
-      )}
-    </>
-  );
-}
+HOˆØÜ›ÛšYÙÙ\‹œ™Yœ™\Ú
+
+JNÂˆ™]\›ˆ
+
+HOˆÛÛ^œ™]™\
+
+NÂˆK×JNÂ‚ˆ™]\›ˆ
+ˆ‚ˆHÛ\ÜÓ˜[YOHœÚÚ\ˆ™YHˆØX›İ]ˆÛÛXÚÏ^Ê]™[
+HOˆÛÕÊ	ØX›İ]	Ë]™[
+_O”ÚÚ\ÈÛÛ[ØO‚ˆÚŞHÏ‚ˆYÏ‚ˆXZ[‚ˆ\›È™XYO^Ù›İËœ™XY_H[^Ù›İËš[HÏ‚ˆX›İ]Ï‚ˆ›Ú™XİÈÏ‚ˆÚÚ[ÈÏ‚ˆXİ]š]HÏ‚ˆÛÛXİÏ‚ˆÛXZ[‚ˆ›Ûİ\ˆÛ\ÜÓ˜[YOH™›Ûİ‚ˆZ[Ú]™XXİÔĞT[™HİÙˆ[HÜ]X\™\ËÜ‚ˆÈ\™YXÙY	‰ˆ
+ˆ]Ûˆ\OH˜]ÛˆˆÛ\ÜÓ˜[YOH™›Ûİ×Ü™\^HˆÛÛXÚÏ^Ê
+HOˆÙ]›İÊ
+ŠHOˆ
+È‹‹™‹[›ÎˆYHJJ_O‚ˆ™\^H[›ÂˆØ]Û‚ˆ
+_BˆÙ›Ûİ\‚ˆÛÛ\[š[Ûˆ[˜X›Y^ÈY›İËš[›ßHÏ‚ˆÙ›İËš[›È	‰ˆ
+ˆ[›ÂˆÛÛİ™\^Ê
+HOˆÙ]›İÊ
+ŠHOˆ
+‹œ™XYHÈˆˆÈ‹‹™‹™XYNˆYHJJ_BˆÛ‘Û™O^Ê
+HOˆÙ]›İÊ
+ŠHOˆ
+È‹‹™‹[›Îˆ˜[ÙHJJ_BˆÏ‚ˆ
+_BˆÏ‚ˆ
+NÂŸB

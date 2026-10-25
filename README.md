@@ -17,6 +17,7 @@ Open the local URL printed by Vite. To verify a production build, run npm run bu
 - GSAP + ScrollTrigger for the intro sequence, scroll-driven dusk-to-night transition, and project interactions.
 - Pixel portrait hand-authored as an SVG sprite. It blinks, follows the pointer, reacts to the active section, and hops when clicked.
 - Project crates start with entries confirmed from the portfolio/README and merge public non-fork repositories from the GitHub API in the visitor's browser.
+- A tiny autonomous companion (src/companion.js, src/Companion.jsx) built from the same sprite. It wanders, runs, hops, naps, peeks from behind blocks, hangs from corners and climbs back up, and reacts to the cursor, scrolling, and section changes. It is decorative only: aria-hidden, pointer-events: none, and calm and static under reduced motion.
 - Reduced-motion support, keyboard navigation, and responsive styling.
 - No backend, API key, or paid service is required. Public GitHub API limits still apply.
 

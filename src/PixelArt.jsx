@@ -99,3 +99,49 @@ export const Note = ({ className = '', style }) => (
     <path d={NOTE_D} fill="currentColor" />
   </svg>
 );
+
+// ---- Companion sprite -------------------------------------------------------
+// The same character, split into movable parts (head, torso, two legs) so the tiny
+// roaming companion can reuse the existing art instead of introducing new artwork.
+const LEG_START = ROWS.findIndex((row, index) => index > HEAD_ROWS && row[11] === '.' && row[12] === '.');
+const TORSO = pixelPaths(ROWS.slice(HEAD_ROWS, LEG_START), HEAD_ROWS);
+const LEG_L = pixelPaths(ROWS.slice(LEG_START).map((row) => row.slice(0, 12).padEnd(24, '.')), LEG_START);
+const LEG_R = pixelPaths(ROWS.slice(LEG_START).map((row) => '.'.repeat(12) + row.slice(12)), LEG_START);
+const paint = (paths) => paths.map((path) => <path key={path.colour} d={path.d} fill={PALETTE[path.colour]} />);
+
+// Sleeves and hands use the sprite's own shirt and skin colours; they only show while
+// the companion waves, cheers, pushes, or hangs from a ledge.
+const SLEEVE = PALETTE.N;
+const HAND = PALETTE.S;
+
+export const MiniSprite = memo(function MiniSprite() {
+  return (
+    <svg className="cp__svg" viewBox="-4 -8 32 50" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+      <g className="cp__legL">{paint(LEG_L)}</g>
+      <g className="cp__legR">{paint(LEG_R)}</g>
+      <g className="cp__torso">{paint(TORSO)}</g>
+      <g className="cp__armB">
+        <rect x="1" y="15" width="2" height="6" fill={SLEEVE} />
+        <rect x="1" y="21" width="2" height="2" fill={HAND} />
+      </g>
+      <g className="cp__headA">
+        <g className="cp__head">
+          {paint(HEAD)}
+          <g className="cp__eyesA">
+            <g className="cp__blink">{paint(EYES)}</g>
+          </g>
+        </g>
+      </g>
+      <g className="cp__armF">
+        <rect x="21" y="15" width="2" height="6" fill={SLEEVE} />
+        <rect x="21" y="21" width="2" height="2" fill={HAND} />
+      </g>
+      <g className="cp__hang">
+        <rect x="21" y="-3" width="2" height="19" fill={SLEEVE} />
+        <rect x="20" y="-5" width="4" height="2" fill={HAND} />
+        <rect x="1" y="15" width="2" height="5" fill={SLEEVE} />
+        <rect x="1" y="20" width="2" height="2" fill={HAND} />
+      </g>
+    </svg>
+  );
+});
