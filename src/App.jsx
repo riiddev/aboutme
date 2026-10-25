@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import Lenis from 'lenis';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Sprite, Note } from './PixelArt.jsx';
-import Intro from './Intro.jsx';
+import Intro, { shouldPlayIntro, clearIntroSeen } from './Intro.jsx';
 import { Vines, Sky } from './Scenery.jsx';
 import { About, Projects, Skills, Activity, Contact } from './Sections.jsx';
 import { NAV, SPOTIFY, LINES, MOOD_LINES } from './data.js';
@@ -16,8 +16,6 @@ import {
   moodProps,
   goTo,
   setSmoothScroller,
-  hasSeenIntro,
-  markIntroSeen,
 } from './lib.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -109,6 +107,32 @@ function HeroCharacter({ music }) {
     returnTimeline.current?.kill();
     if (angerTimer.current) window.clearTimeout(angerTimer.current);
   }, []);
+
+  // Idle behaviour: after a few quiet seconds he hops once, then waits again.
+  const busy = useRef(false);
+  busy.current = angry || walking || dragging;
+  useEffect(() => {
+    if (reduced) return undefined;
+    let last = performance.now();
+    const touch = () => { last = performance.now(); };
+    const timer = window.setInterval(() => {
+      const node = button.current;
+      if (performance.now() - last < 9000 || !node) return;
+      last = performance.now();
+      if (busy.current || drag.current || returnTimeline.current || gsap.isTweening(node)) return;
+      if (document.visibilityState !== 'visible') return;
+      gsap.timeline()
+        .to(node, { y: -16, duration: 0.14, ease: 'steps(3)' })
+        .to(node, { y: 0, duration: 0.14, ease: 'steps(3)' });
+    }, 1000);
+    window.addEventListener('pointermove', touch, { passive: true });
+    window.addEventListener('keydown', touch);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener('pointermove', touch);
+      window.removeEventListener('keydown', touch);
+    };
+  }, [reduced]);
 
   const pointInScene = (x, y) => {
     if (!button.current) return { x, y };
@@ -381,7 +405,7 @@ function HeroCharacter({ music }) {
   );
 }
 
-function Hero({ ready, held }) {
+function Hero({ ready }) {
   const root = useRef(null);
   const timeline = useRef(null);
   const reduced = useReducedMotion();
@@ -391,54 +415,33 @@ function Hero({ ready, held }) {
     if (reduced) return undefined;
 
     const context = gsap.context(() => {
-      // After the intro the character and ground already exist on screen, so the hero
-      // continues the scene instead of re-staging its own entrance.
-      const tl = gsap.timeline({ paused: true });
-      timeline.current = tl;
-      if (!held) tl.from('.hero__wall', { scale: 1.08, duration: 1.35, ease: 'power2.out' }, 0);
-      tl.from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: held ? 0.5 : 1, ease: 'steps(10)' }, 0.04)
-        .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05);
-      if (held) {
-        tl.from('.hero__title .ch', { autoAlpha: 0, y: 14, duration: 0.14, ease: 'steps(3)', stagger: 0.04 }, 0.06)
-          .from('.hc', { autoAlpha: 0, duration: 0.01 }, 0)
-          .from('.hero__sub, .hero__actions', {
-            autoAlpha: 0, y: 12, clipPath: 'inset(0 100% 0 0)', duration: 0.4, ease: 'power3.out', stagger: 0.1,
-          }, 0.3)
-          .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 0.55);
-      } else {
-        tl.from('.hero__title .ch', {
+      timeline.current = gsap.timeline({ paused: true })
+        .from('.vines--front', { scaleY: 0, transformOrigin: '50% 0', duration: 1, ease: 'steps(10)' }, 0)
+        .from('.hero__particles i', { scale: 0, opacity: 0, duration: 0.18, stagger: 0.025, ease: 'steps(3)' }, 0.05)
+        .from('.hero__title .ch', {
           autoAlpha: 0, y: -30, rotation: () => gsap.utils.random(-5, 5),
           scale: 0.72, duration: 0.46, ease: 'back.out(1.8)', stagger: 0.055,
-        }, 0.12)
-          .from('.hc', {
-            y: '-70vh', scaleX: 0.78, scaleY: 1.12, rotation: -7,
-            duration: 0.95, ease: 'bounce.out',
-          }, 0.47)
-          .to('.hc', { scaleX: 1.06, scaleY: 0.92, duration: 0.09, ease: 'power1.out' }, 1.31)
-          .to('.hc', { scaleX: 1, scaleY: 1, duration: 0.16, ease: 'power1.out' }, 1.4)
-          .from('.hero__sub, .hero__actions', {
-            autoAlpha: 0, y: 18, clipPath: 'inset(0 100% 0 0)',
-            duration: 0.48, ease: 'power3.out', stagger: 0.12,
-          }, 1.16)
-          .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 1.55);
-      }
+        }, 0.05)
+        .from('.hero__sub, .hero__actions', {
+          autoAlpha: 0, clipPath: 'inset(0 100% 0 0)',
+          duration: 0.48, ease: 'steps(8)', stagger: 0.12,
+        }, 0.5)
+        .from('.bubble', { scale: 0, rotation: -7, transformOrigin: '0 100%', duration: 0.28, ease: 'back.out(2.5)' }, 0.9);
 
       const scrub = { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true };
       gsap.to('.vines--back', { yPercent: 14, ease: 'none', scrollTrigger: scrub });
-      gsap.to('.hero__wall', { yPercent: 8, ease: 'none', scrollTrigger: scrub });
       gsap.to('.lamp', { yPercent: -6, ease: 'none', scrollTrigger: scrub });
     }, root);
 
     return () => context.revert();
-  }, [reduced, held]);
+  }, [reduced]);
 
   useEffect(() => {
-    if (ready) timeline.current?.play();
+    if (ready) timeline.current?.restart();
   }, [ready, reduced]);
 
   return (
     <section id="top" ref={root} className="hero" tabIndex={-1}>
-      <div className="hero__wall" aria-hidden="true" />
       <div className="hero__particles" aria-hidden="true">
         {Array.from({ length: 9 }, (_, index) => (
           <i
@@ -457,7 +460,6 @@ function Hero({ ready, held }) {
       <div className="hero__ground" aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">
-          <p className="hero__eyebrow"><i aria-hidden="true" /> Curious developer, learning by building</p>
           <h1 className="hero__title" aria-label="Riiddev">
             {[...'Riiddev'].map((character, index) => (
               <span className="ch" aria-hidden="true" key={index}>{character}</span>
@@ -477,33 +479,24 @@ function Hero({ ready, held }) {
               Open the playlist on Spotify
             </a>
           )}
-          <div className="hero__meta" aria-label="Current focus">
-            <span>Frontend &amp; UI</span>
-            <span>Learning backend</span>
-            <span>Pixel &amp; motion</span>
-          </div>
         </div>
         <HeroCharacter music={music} />
       </div>
       <Vines seed={29} tone="front" maxHang={11} className="vines vines--front" />
       <a className="hero__scroll" href="#about" onClick={(event) => goTo('about', event)}>
-        <span>Scroll to explore</span><i aria-hidden="true">↓</i>
+        <span>See what I've built</span><i aria-hidden="true">↓</i>
       </a>
     </section>
   );
 }
 
 export default function App() {
-  // held is fixed at first render: the hero hands its entrance to the intro when one plays.
-  const [flow, setFlow] = useState(() => {
-    const play = !prefersReduced() && !hasSeenIntro();
-    return { intro: play, ready: !play, held: play };
-  });
-  const reduced = useReducedMotion();
-
-  useEffect(() => {
-    if (flow.intro) markIntroSeen();
-  }, [flow.intro]);
+  // 'intro' = playing, 'handoff' = hero revealed while the grid dissolves, 'ready' = done.
+  const [phase, setPhase] = useState(() => (shouldPlayIntro() ? 'intro' : 'ready'));
+  const replayIntro = () => {
+    clearIntroSeen();
+    setPhase('intro');
+  };
 
   useEffect(() => {
     if (prefersReduced()) return undefined;
@@ -531,20 +524,13 @@ export default function App() {
 
   useEffect(() => {
     const context = gsap.context(() => {
-      const root = document.documentElement;
+      // Only the navigation reads --p now (set on .hud, not <html>), so a scroll tick no longer
+      // invalidates styles for the whole document. The world itself is driven by World.jsx.
+      const hud = document.querySelector('.hud');
       ScrollTrigger.create({
         start: 0,
         end: 'max',
-        onUpdate: (self) => {
-          root.style.setProperty('--p', self.progress.toFixed(4));
-          root.style.setProperty('--t', Math.min(1, self.progress * 1.6).toFixed(3));
-        },
-      });
-      ScrollTrigger.create({
-        trigger: '#top',
-        start: 'top top',
-        end: 'bottom top',
-        onUpdate: (self) => root.style.setProperty('--h', self.progress.toFixed(3)),
+        onUpdate: (self) => hud?.style.setProperty('--p', self.progress.toFixed(4)),
       });
 
       ['top', 'about', 'projects', 'skills', 'activity', 'contact'].forEach((id) => {
@@ -561,63 +547,29 @@ export default function App() {
         });
       });
 
+      // Section titles drift slower than the page, so type sits slightly behind the content.
       if (!prefersReduced()) {
-        gsap.utils.toArray('.sec').forEach((section, index) => {
-          const panel = section.querySelector('.wrap');
-          const title = section.querySelector('.title');
-          const targets = section.querySelectorAll(
-            '.lede, .about__text > p, .about__mood, .sign, .sub, .slot, .chest-btn, .project-preview-dock, .fig, .contact .btn',
-          );
-
-          if (panel) {
-            gsap.fromTo(panel,
-              { y: 42, autoAlpha: 0, scale: 0.99, rotateX: 1.2, transformPerspective: 1200 },
-              {
-                y: 0, autoAlpha: 1, scale: 1, rotateX: 0,
-                duration: 0.9, ease: 'power3.out',
-                scrollTrigger: { trigger: section, start: 'top 84%', once: true },
-              },
-            );
-          }
-          if (targets.length) {
-            gsap.fromTo(targets,
-              { autoAlpha: 0, y: 24, filter: 'blur(4px)' },
-              {
-                autoAlpha: 1, y: 0, filter: 'blur(0px)',
-                duration: 0.72, stagger: { each: 0.06, from: 'start' },
-                ease: 'power3.out',
-                scrollTrigger: { trigger: section, start: 'top 68%', once: true },
-                delay: 0.04,
-              },
-            );
-          }
-          if (title) {
-            gsap.fromTo(title,
-              { clipPath: 'inset(0 0 16% 0)', y: 16 },
-              {
-                clipPath: 'inset(0 0 0% 0)', y: 0,
-                duration: 0.8, ease: 'power3.out',
-                scrollTrigger: { trigger: title, start: 'top 86%', once: true },
-              },
-            );
-          }
-          if (panel) {
-            gsap.to(panel, {
-              y: index % 2 === 0 ? -8 : -5, ease: 'none',
-              scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
-            });
-          }
+        gsap.utils.toArray('.sec .title').forEach((title) => {
+          gsap.fromTo(title, { yPercent: 14 }, {
+            yPercent: -10, ease: 'none',
+            scrollTrigger: { trigger: title.closest('.sec'), start: 'top bottom', end: 'bottom top', scrub: true },
+          });
         });
-        const preview = document.querySelector('.project-preview-dock');
-        if (preview) {
-          gsap.fromTo(preview,
-            { y: 22, rotateY: -1.5, transformPerspective: 1000 },
+      }
+
+      // One consistent reveal for secondary content: a stepped pixel wipe, once per element.
+      if (!prefersReduced()) {
+        gsap.utils.toArray('.sec').forEach((section) => {
+          const targets = section.querySelectorAll('.lede, .about__text > p, .sign, .sub, .slot, .fig, .contact .btn');
+          if (!targets.length) return;
+          gsap.fromTo(targets,
+            { clipPath: 'inset(0 100% 0 0)' },
             {
-              y: -10, rotateY: 0, ease: 'none',
-              scrollTrigger: { trigger: '#projects', start: 'top bottom', end: 'bottom top', scrub: 0.7 },
-            },
-          );
-        }
+              clipPath: 'inset(0 0% 0 0)', duration: 0.5, ease: 'steps(8)',
+              stagger: 0.06, clearProps: 'clipPath',
+              scrollTrigger: { trigger: section, start: 'top 68%', once: true },
+            });
+        });
       }
     });
 
@@ -631,7 +583,7 @@ export default function App() {
       <Sky />
       <Hud />
       <main>
-        <Hero ready={flow.ready} held={flow.held} />
+        <Hero ready={phase !== 'intro'} />
         <About />
         <Projects />
         <Skills />
@@ -640,17 +592,10 @@ export default function App() {
       </main>
       <footer className="foot">
         <p>Built with React, GSAP and a lot of tiny squares.</p>
-        {!reduced && (
-          <button type="button" className="foot__replay" onClick={() => setFlow((f) => ({ ...f, intro: true }))}>
-            Replay intro
-          </button>
-        )}
+        {!prefersReduced() && <button type="button" onClick={replayIntro}>Replay intro</button>}
       </footer>
-      {flow.intro && (
-        <Intro
-          onCover={() => setFlow((f) => (f.ready ? f : { ...f, ready: true }))}
-          onDone={() => setFlow((f) => ({ ...f, intro: false }))}
-        />
+      {phase !== 'ready' && (
+        <Intro onHandoff={() => setPhase('handoff')} onDone={() => setPhase('ready')} />
       )}
     </>
   );

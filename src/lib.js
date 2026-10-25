@@ -48,17 +48,20 @@ export const resetMood = () => moodStore.set(sectionStore.get());
 
 // Shared scroll controller lets navigation use the same weighted motion as wheel scrolling.
 let smoothScroller = null;
-export const setSmoothScroller = (instance) => { smoothScroller = instance; };
-export const getSmoothScroller = () => smoothScroller;
+let scrollLocked = false;
+export const setSmoothScroller = (instance) => {
+  smoothScroller = instance;
+  if (instance && scrollLocked) instance.stop();
+};
 
-// The opening sequence plays once per browser; the footer offers a replay.
-const INTRO_KEY = 'riiddev:intro:v1';
-export const hasSeenIntro = () => {
-  try { return window.localStorage.getItem(INTRO_KEY) === '1'; } catch { return false; }
-};
-export const markIntroSeen = () => {
-  try { window.localStorage.setItem(INTRO_KEY, '1'); } catch { /* storage unavailable: intro simply plays again */ }
-};
+// The intro locks scrolling (native and Lenis) until its handoff.
+export function setScrollLocked(on) {
+  scrollLocked = on;
+  if (typeof document !== 'undefined') document.documentElement.classList.toggle('is-intro', on);
+  if (!smoothScroller) return;
+  if (on) smoothScroller.stop();
+  else smoothScroller.start();
+}
 
 export const moodProps = (key) => ({
   onPointerEnter: () => moodStore.set(key),
@@ -97,3 +100,22 @@ export function goTo(id, event) {
     );
   }
 }
+
+// ---- Shared world geometry ----
+// One "unit" is the pixel size of the environment art. It must match --u in styles.css: max(2px, .2vw).
+export const unit = () => Math.max(2, window.innerWidth * 0.002);
+// The mid-ground art is 500 units wide and centred, so a world X (0..500) maps to the viewport like this.
+export const worldX = (X) => window.innerWidth / 2 + (X - 250) * unit();
+
+// Things the companion can stand on. x = centre in world units, w = width, top = height above the terrace line.
+export const PLATFORMS = [
+  { id: 'crates', x: 118, w: 16, top: 13 },
+  { id: 'tank', x: 318, w: 20, top: 23, ladder: true },
+  { id: 'bench', x: 438, w: 26, top: 7 },
+];
+
+// Objects drawn in front of the companion, so he can walk behind them.
+export const FRONT_OBJECTS = [
+  { id: 'chimney', x: 214 },
+  { id: 'lantern', x: 372 },
+];

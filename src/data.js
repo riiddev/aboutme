@@ -137,7 +137,7 @@ export const PROJECTS = [
     id: 'whitman',
     featured: true,
     displayName: 'Whitman House',
-    category: 'Community quest · check-in',
+    category: 'Community check-in',
     description: 'A daily check-in experience for the Whitman House / The Main Ideas community. Members submit screenshot proof, review attendance history, generate PNG certificates, and explore the leaderboard and guide.',
     liveUrl: 'https://whitmanhouse.vercel.app/',
     liveLabel: 'Open Whitman House',
@@ -169,7 +169,7 @@ export const PROJECTS = [
   {
     id: 'notecanvas',
     displayName: 'NoteCanvas',
-    category: 'PDF annotation · study',
+    category: 'PDF annotation for studying',
     description: 'A study workspace for working directly on PDF material, with document annotations, page controls, zoom, and vertical or horizontal navigation for laptop and tablet use.',
     liveUrl: 'https://notecanvas-studio.vercel.app/',
     liveLabel: 'Open NoteCanvas',
@@ -199,7 +199,7 @@ export const PROJECTS = [
   {
     id: 'latveria',
     displayName: 'Latveria Academy',
-    category: 'UTBK-SNBT learning',
+    category: 'UTBK-SNBT practice',
     description: 'An ongoing UTBK-SNBT practice-platform experiment in Indonesian, exploring test packages, question sessions, result and EXP history, multi-subtest tryouts, and battle mode when backend services and data are available.',
     liveUrl: 'https://latveria-riiddev-web.vercel.app/',
     liveLabel: 'Open Latveria Academy',
